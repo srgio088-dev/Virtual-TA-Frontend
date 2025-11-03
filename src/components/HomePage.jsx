@@ -24,7 +24,7 @@ export default function Home() {
       <p style={styles.description}>
         Managing multiple classes, assignments, and deadlines can be overwhelming for professors.
         Virtual TA helps by centralizing course data, assisting with feedback and grading,
-        and sending reminders—while keeping you in control.
+        and sending reminders—while keeping the professor in control.
         <br /><br />
         Our goal is to save professors time, reduce stress, and allow them to focus more on teaching and engaging with students, rather than administrative tasks.
       </p>
@@ -137,3 +137,4 @@ const styles = {
     color: "#555",
   },
 };
+
