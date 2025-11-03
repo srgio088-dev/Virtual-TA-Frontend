@@ -30,27 +30,66 @@ export default function CreateAssignment() {
   };
 
   return (
-    <form className="card form" onSubmit={onSubmit} style={{ maxWidth: 720, margin: "0 auto" }}>
-      <h2>Create Assignment</h2>
+    <form
+      className="card form"
+      onSubmit={onSubmit}
+      style={{
+        maxWidth: 720,
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        padding: "20px",
+      }}
+    >
+      <h2 style={{ marginBottom: "10px" }}>Create Assignment</h2>
 
-      <label>Assignment Name</label>
+      <label style={{ fontWeight: "bold" }}>Assignment Name</label>
       <input
         placeholder="e.g., Essay 1"
         value={name}
         onChange={(e) => setName(e.target.value)}
+        style={{
+          padding: "8px",
+          fontSize: "1rem",
+          borderRadius: "6px",
+          border: "1px solid #ccc",
+        }}
       />
 
-      <label>Rubric</label>
+      <label style={{ fontWeight: "bold", marginTop: "10px" }}>Rubric</label>
       <textarea
-        rows={6}
+        rows={10}
         placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
         value={rubric}
         onChange={(e) => setRubric(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "10px",
+          fontSize: "1rem",
+          borderRadius: "6px",
+          border: "1px solid #ccc",
+          resize: "vertical",
+        }}
       />
 
-      {error && <p className="error" style={{ marginTop: 8 }}>{error}</p>}
+      {error && <p className="error" style={{ color: "red", marginTop: 4 }}>{error}</p>}
 
-      <button type="submit" disabled={busy} style={{ marginTop: 12 }}>
+      <button
+        type="submit"
+        disabled={busy}
+        style={{
+          marginTop: "12px",
+          backgroundColor: "#1a73e8",
+          color: "white",
+          fontWeight: "bold",
+          padding: "10px 20px",
+          borderRadius: "6px",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "1rem",
+        }}
+      >
         {busy ? "Creating…" : "Create"}
       </button>
     </form>
