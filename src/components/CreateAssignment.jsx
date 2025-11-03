@@ -33,32 +33,31 @@ export default function CreateAssignment() {
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
+    <div
       style={{
         width: "90%",
         maxWidth: "1200px",
-        margin: "40px auto",
+        margin: "60px auto",
         display: "flex",
         flexDirection: "column",
-        gap: "30px",
-        background: "#fff",
-        padding: "40px",
-        borderRadius: "12px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        alignItems: "center",
+        gap: "40px",
       }}
     >
-      {/* ===== Row 1: Create Assignment Section ===== */}
-      <div
+      {/* ===== Row 1: Create Assignment Box ===== */}
+      <form
+        onSubmit={onSubmit}
         style={{
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "10px",
+          padding: "30px 40px",
           display: "flex",
-          flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: "20px",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          padding: "20px",
+          gap: "30px",
+          backgroundColor: "#fff",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
         }}
       >
         <h2 style={{ margin: 0, whiteSpace: "nowrap" }}>Create Assignment</h2>
@@ -68,7 +67,7 @@ export default function CreateAssignment() {
             style={{
               fontWeight: "bold",
               display: "block",
-              marginBottom: "6px",
+              marginBottom: "8px",
             }}
           >
             Assignment Name
@@ -79,30 +78,32 @@ export default function CreateAssignment() {
             onChange={(e) => setName(e.target.value)}
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "12px",
               fontSize: "1rem",
-              borderRadius: "6px",
+              borderRadius: "8px",
               border: "1px solid #ccc",
             }}
           />
         </div>
-      </div>
+      </form>
 
-      {/* ===== Row 2: Rubric Section ===== */}
+      {/* ===== Row 2: Rubric Box ===== */}
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          padding: "20px",
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "10px",
+          padding: "30px 40px",
+          backgroundColor: "#fff",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
         }}
       >
         <label
           style={{
             fontWeight: "bold",
-            marginBottom: "8px",
+            marginBottom: "10px",
             fontSize: "1rem",
+            display: "block",
           }}
         >
           Rubric
@@ -131,19 +132,17 @@ export default function CreateAssignment() {
         </p>
       )}
 
-      {/* ===== Create Button ===== */}
+      {/* ===== Create Button (Centered) ===== */}
       <button
-        type="submit"
+        onClick={onSubmit}
         disabled={busy}
         style={{
-          alignSelf: "center",
-          marginTop: "10px",
           backgroundColor: "#1a73e8",
           color: "#fff",
           fontWeight: "bold",
           fontSize: "1.2rem",
           padding: "18px 100px",
-          borderRadius: "10px",
+          borderRadius: "12px",
           border: "none",
           cursor: "pointer",
           transition: "background 0.2s ease",
@@ -153,6 +152,6 @@ export default function CreateAssignment() {
       >
         {busy ? "Creating…" : "Create"}
       </button>
-    </form>
+    </div>
   );
 }
