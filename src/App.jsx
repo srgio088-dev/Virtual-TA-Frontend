@@ -55,10 +55,19 @@ const styles = {
     borderBottom: "1px solid #ddd",
     fontFamily: "Arial, sans-serif",
   },
+  leftContainer: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  logo: {
+    height: "40px", // adjust size as needed
+  },
   left: {
     fontSize: "1.5rem",
     fontWeight: "bold",
     color: "#FFD700",
+    textDecoration: "none",
   },
   right: {
     display: "flex",
@@ -69,10 +78,5 @@ const styles = {
     textDecoration: "none",
     fontWeight: "500",
     color: "#FFD700",
-  },
-  separator: {
-    margin: "0 10px",
-    color: "#000000",
-    fontWeight: "bold",
   },
 };
