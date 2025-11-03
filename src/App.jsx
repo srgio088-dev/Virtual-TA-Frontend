@@ -5,7 +5,7 @@ import ReviewSubmission from "./components/ReviewSubmission";
 import AssignmentSubmissions from "./components/AssignmentSubmissions";
 import CreateAssignment from "./components/CreateAssignment";
 import HomePage from "./components/HomePage"; 
-import TestEdit from "./pages/TestEdit"; //NEW EDIT
+import TestEdit from "./components/TestEdit"; //NEW EDIT
 
 export default function App() {
   return (
