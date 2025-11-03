@@ -60,7 +60,16 @@ export default function CreateAssignment() {
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
         }}
       >
-        <h2 style={{ margin: 0, whiteSpace: "nowrap" }}>Create Assignment</h2>
+        <h2
+          style={{
+            margin: 0,
+            whiteSpace: "nowrap",
+            fontSize: "1.8rem",
+            fontWeight: "bold",
+          }}
+        >
+          Create Assignment
+        </h2>
 
         <div style={{ flexGrow: 1 }}>
           <label
@@ -68,6 +77,7 @@ export default function CreateAssignment() {
               fontWeight: "bold",
               display: "block",
               marginBottom: "8px",
+              fontSize: "1rem",
             }}
           >
             Assignment Name
@@ -98,16 +108,15 @@ export default function CreateAssignment() {
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
         }}
       >
-        <label
+        <h2
           style={{
+            margin: "0 0 20px 0",
+            fontSize: "1.8rem",
             fontWeight: "bold",
-            marginBottom: "10px",
-            fontSize: "0.5rem",
-            display: "block",
           }}
         >
           Rubric
-        </label>
+        </h2>
         <textarea
           rows={12}
           placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
