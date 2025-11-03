@@ -35,13 +35,12 @@ export default function CreateAssignment() {
   return (
     <div
       style={{
-        width: "90%",
-        maxWidth: "1200px",
-        margin: "60px auto",
+        width: "95%",
+        margin: "40px auto",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "40px",
+        gap: "50px",
       }}
     >
       {/* ===== Row 1: Create Assignment Box ===== */}
@@ -50,21 +49,21 @@ export default function CreateAssignment() {
         style={{
           width: "100%",
           border: "2px solid #ccc",
-          borderRadius: "10px",
-          padding: "30px 40px",
+          borderRadius: "12px",
+          padding: "40px 60px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: "30px",
+          gap: "50px",
           backgroundColor: "#fff",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
       >
         <h2
           style={{
             margin: 0,
             whiteSpace: "nowrap",
-            fontSize: "1.8rem",
+            fontSize: "2rem",
             fontWeight: "bold",
           }}
         >
@@ -77,7 +76,7 @@ export default function CreateAssignment() {
               fontWeight: "bold",
               display: "block",
               marginBottom: "8px",
-              fontSize: "1rem",
+              fontSize: "1.1rem",
             }}
           >
             Assignment Name
@@ -88,9 +87,9 @@ export default function CreateAssignment() {
             onChange={(e) => setName(e.target.value)}
             style={{
               width: "100%",
-              padding: "12px",
-              fontSize: "1rem",
-              borderRadius: "8px",
+              padding: "16px",
+              fontSize: "1.1rem",
+              borderRadius: "10px",
               border: "1px solid #ccc",
             }}
           />
@@ -102,46 +101,46 @@ export default function CreateAssignment() {
         style={{
           width: "100%",
           border: "2px solid #ccc",
-          borderRadius: "10px",
-          padding: "30px 40px",
+          borderRadius: "12px",
+          padding: "40px 60px",
           backgroundColor: "#fff",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
       >
         <h2
           style={{
             margin: "0 0 20px 0",
-            fontSize: "1.8rem",
+            fontSize: "2rem",
             fontWeight: "bold",
           }}
         >
           Rubric
         </h2>
         <textarea
-          rows={12}
+          rows={16}
           placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
           value={rubric}
           onChange={(e) => setRubric(e.target.value)}
           style={{
             width: "100%",
-            padding: "14px",
-            fontSize: "1rem",
-            borderRadius: "8px",
+            padding: "16px",
+            fontSize: "1.1rem",
+            borderRadius: "10px",
             border: "1px solid #ccc",
             resize: "vertical",
-            minHeight: "250px",
+            minHeight: "300px",
           }}
         />
       </div>
 
       {/* ===== Error Message ===== */}
       {error && (
-        <p style={{ color: "red", fontWeight: "500", marginTop: "-10px" }}>
+        <p style={{ color: "red", fontWeight: "500", fontSize: "1rem" }}>
           {error}
         </p>
       )}
 
-      {/* ===== Create Button (Centered) ===== */}
+      {/* ===== Create Button ===== */}
       <button
         onClick={onSubmit}
         disabled={busy}
@@ -149,8 +148,8 @@ export default function CreateAssignment() {
           backgroundColor: "#1a73e8",
           color: "#fff",
           fontWeight: "bold",
-          fontSize: "1.2rem",
-          padding: "18px 100px",
+          fontSize: "1.3rem",
+          padding: "20px 140px",
           borderRadius: "12px",
           border: "none",
           cursor: "pointer",
