@@ -102,7 +102,7 @@ export default function CreateAssignment() {
           style={{
             fontWeight: "bold",
             marginBottom: "10px",
-            fontSize: "1rem",
+            fontSize: "0.5rem",
             display: "block",
           }}
         >
