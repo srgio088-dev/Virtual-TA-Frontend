@@ -34,39 +34,51 @@ export default function CreateAssignment() {
 
   return (
     <form
-      className="card form"
       onSubmit={onSubmit}
       style={{
-        maxWidth: 800,
+        width: "90%",
+        maxWidth: "1200px",
         margin: "40px auto",
-        padding: "24px",
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
+        gap: "25px",
         background: "#fff",
+        padding: "30px",
         borderRadius: "12px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
       }}
     >
-      {/* --- First Row: Title + Assignment Name --- */}
+      {/* --- Top Row: Create Assignment + Assignment Name --- */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "16px",
-          flexWrap: "wrap",
+          gap: "30px",
+          justifyContent: "flex-start",
         }}
       >
-        <h2 style={{ margin: 0, whiteSpace: "nowrap" }}>Create Assignment</h2>
+        <h2 style={{ margin: 0, whiteSpace: "nowrap", fontSize: "1.8rem" }}>
+          Create Assignment
+        </h2>
+
         <div style={{ flexGrow: 1 }}>
-          <label style={{ fontWeight: "bold" }}>Assignment Name</label>
+          <label
+            style={{
+              fontWeight: "bold",
+              display: "block",
+              marginBottom: "6px",
+              fontSize: "1rem",
+            }}
+          >
+            Assignment Name
+          </label>
           <input
             placeholder="e.g., Essay 1"
             value={name}
             onChange={(e) => setName(e.target.value)}
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "12px",
               fontSize: "1rem",
               borderRadius: "6px",
               border: "1px solid #ccc",
@@ -75,28 +87,43 @@ export default function CreateAssignment() {
         </div>
       </div>
 
-      {/* --- Second Row: Rubric Text Area --- */}
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <label style={{ fontWeight: "bold", marginBottom: "8px" }}>Rubric</label>
+      {/* --- Bottom Row: Wide Rubric Box --- */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+        }}
+      >
+        <label
+          style={{
+            fontWeight: "bold",
+            marginBottom: "8px",
+            fontSize: "1rem",
+          }}
+        >
+          Rubric
+        </label>
         <textarea
-          rows={10}
+          rows={12}
           placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
           value={rubric}
           onChange={(e) => setRubric(e.target.value)}
           style={{
             width: "100%",
-            padding: "12px",
+            padding: "14px",
             fontSize: "1rem",
-            borderRadius: "6px",
+            borderRadius: "8px",
             border: "1px solid #ccc",
             resize: "vertical",
+            minHeight: "250px",
           }}
         />
       </div>
 
       {/* --- Error Message --- */}
       {error && (
-        <p className="error" style={{ color: "red", marginTop: "-10px" }}>
+        <p style={{ color: "red", fontWeight: "500", marginTop: "-10px" }}>
           {error}
         </p>
       )}
@@ -111,9 +138,9 @@ export default function CreateAssignment() {
           backgroundColor: "#1a73e8",
           color: "#fff",
           fontWeight: "bold",
-          fontSize: "1.1rem",
-          padding: "14px 60px",
-          borderRadius: "8px",
+          fontSize: "1.2rem",
+          padding: "16px 80px",
+          borderRadius: "10px",
           border: "none",
           cursor: "pointer",
           transition: "background 0.2s ease",
