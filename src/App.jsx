@@ -11,8 +11,11 @@ export default function App() {
   return (
     <div className="layout">
       <header className="header" style={styles.header}>
-        {/* Left side: static text */}
-        <Link to="/home" style={styles.left}>Virutal TA</Link>
+        {/* Left side: logo + header link */}
+        <div style={styles.leftContainer}>
+        <img src="/images/asu_logo.png" alt="ASU Logo" style={styles.logo} />
+        <Link to="/home" style={styles.left}>Virtual TA</Link>
+      </div>
 
 
         {/* Right side: nav links */}
