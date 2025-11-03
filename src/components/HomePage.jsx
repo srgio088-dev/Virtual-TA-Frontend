@@ -58,7 +58,7 @@ export default function Home() {
       <footer style={styles.footer}>
         <p style={styles.footerText}>
           Virtual TA was created by <strong>Jed Cooper</strong>, <strong>Alexa Davis</strong>,
-          <strong> Alexia Dickinson</strong>, and <strong>Sergio Giron</strong>
+          <strong> Alexia Dickinson</strong>, and <strong>Sergio Giron </strong>
           for their IS Project course with <strong>Dr. Kaleta</strong> in Fall 2025.
         </p>
       </footer>
