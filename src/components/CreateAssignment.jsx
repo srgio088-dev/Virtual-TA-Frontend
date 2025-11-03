@@ -41,25 +41,27 @@ export default function CreateAssignment() {
         margin: "40px auto",
         display: "flex",
         flexDirection: "column",
-        gap: "25px",
+        gap: "30px",
         background: "#fff",
-        padding: "30px",
+        padding: "40px",
         borderRadius: "12px",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
       }}
     >
-      {/* --- Top Row: Create Assignment + Assignment Name --- */}
+      {/* ===== Row 1: Create Assignment Section ===== */}
       <div
         style={{
           display: "flex",
+          flexDirection: "row",
           alignItems: "center",
-          gap: "30px",
-          justifyContent: "flex-start",
+          justifyContent: "space-between",
+          gap: "20px",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "20px",
         }}
       >
-        <h2 style={{ margin: 0, whiteSpace: "nowrap", fontSize: "1.8rem" }}>
-          Create Assignment
-        </h2>
+        <h2 style={{ margin: 0, whiteSpace: "nowrap" }}>Create Assignment</h2>
 
         <div style={{ flexGrow: 1 }}>
           <label
@@ -67,7 +69,6 @@ export default function CreateAssignment() {
               fontWeight: "bold",
               display: "block",
               marginBottom: "6px",
-              fontSize: "1rem",
             }}
           >
             Assignment Name
@@ -78,7 +79,7 @@ export default function CreateAssignment() {
             onChange={(e) => setName(e.target.value)}
             style={{
               width: "100%",
-              padding: "12px",
+              padding: "10px",
               fontSize: "1rem",
               borderRadius: "6px",
               border: "1px solid #ccc",
@@ -87,12 +88,14 @@ export default function CreateAssignment() {
         </div>
       </div>
 
-      {/* --- Bottom Row: Wide Rubric Box --- */}
+      {/* ===== Row 2: Rubric Section ===== */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          width: "100%",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "20px",
         }}
       >
         <label
@@ -121,14 +124,14 @@ export default function CreateAssignment() {
         />
       </div>
 
-      {/* --- Error Message --- */}
+      {/* ===== Error Message ===== */}
       {error && (
         <p style={{ color: "red", fontWeight: "500", marginTop: "-10px" }}>
           {error}
         </p>
       )}
 
-      {/* --- Create Button --- */}
+      {/* ===== Create Button ===== */}
       <button
         type="submit"
         disabled={busy}
@@ -139,7 +142,7 @@ export default function CreateAssignment() {
           color: "#fff",
           fontWeight: "bold",
           fontSize: "1.2rem",
-          padding: "16px 80px",
+          padding: "18px 100px",
           borderRadius: "10px",
           border: "none",
           cursor: "pointer",
