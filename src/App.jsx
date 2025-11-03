@@ -4,8 +4,8 @@ import UploadForm from "./components/UploadForm";
 import ReviewSubmission from "./components/ReviewSubmission";
 import AssignmentSubmissions from "./components/AssignmentSubmissions";
 import CreateAssignment from "./components/CreateAssignment";
-import HomePage from "./components/HomePage"; //NEW
-
+import HomePage from "./components/HomePage"; 
+import TestEdit from "./pages/TestEdit"; //NEW EDIT
 
 export default function App() {
   return (
@@ -38,6 +38,7 @@ export default function App() {
           <Route path="/assignment/:id" element={<AssignmentSubmissions />} />
           <Route path="/review/:id" element={<ReviewSubmission />} />
           <Route path="/create" element={<CreateAssignment />} />
+          <Route path="/edit-assignment" element={<TestEdit />} /> {/*NEW EDIT*/}
         </Routes>
       </main>
     </div>
