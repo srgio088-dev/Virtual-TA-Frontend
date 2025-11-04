@@ -5,7 +5,7 @@ import ReviewSubmission from "./components/ReviewSubmission";
 import AssignmentSubmissions from "./components/AssignmentSubmissions";
 import CreateAssignment from "./components/CreateAssignment";
 import HomePage from "./components/HomePage"; 
-import TestEdit from "./components/TestEdit"; //NEW EDIT
+import EditAssignment from "./components/EditAssignment"; //NEW EDIT
 
 export default function App() {
   return (
@@ -38,7 +38,7 @@ export default function App() {
           <Route path="/assignment/:id" element={<AssignmentSubmissions />} />
           <Route path="/review/:id" element={<ReviewSubmission />} />
           <Route path="/create" element={<CreateAssignment />} />
-          <Route path="/edit-assignment" element={<TestEdit />} /> {/*NEW EDIT*/}
+          <Route path="/edit" element={<EditAssignment />} /> {/*NEW EDIT*/}
         </Routes>
       </main>
     </div>
