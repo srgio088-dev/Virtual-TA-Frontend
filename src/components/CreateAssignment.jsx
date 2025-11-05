@@ -50,24 +50,29 @@ export default function CreateAssignment() {
           width: "100%",
           border: "2px solid #ccc",
           borderRadius: "12px",
-          padding: "12px 16px",
-          padding: "20px 32px",
+          padding: "40px 60px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-@@ -102,64 +102,64 @@
-          width: "100%",
-          border: "2px solid #ccc",
-          borderRadius: "12px",
-          padding: "20px 30px",
-          padding: "20px 32px",
+          gap: "50px",
           backgroundColor: "#fff",
           boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
       >
         <h2
           style={{
+            margin: 0,
+            whiteSpace: "nowrap",
+            fontSize: "2rem",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+          }}
+        >
+@@ -110,56 +110,56 @@
+        <h2
+          style={{
             margin: "0 0 20px 0",
+            fontSize: "2rem",
             fontSize: "1.5rem",
             fontWeight: "bold",
           }}
@@ -107,7 +112,7 @@ export default function CreateAssignment() {
           color: "#fff",
           fontWeight: "bold",
           fontSize: "1.3rem",
-          padding: "14px 90px",
+          padding: "20px 140px",
           borderRadius: "12px",
           border: "none",
           cursor: "pointer",
