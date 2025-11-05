@@ -26,7 +26,7 @@ export default function ReviewSubmission() {
     e.preventDefault();
     try {
       await apiPostJSON(`/api/submissions/${id}/finalize`, { final_grade: finalGrade });
-      navigate("/");
+      navigate("/assignments");
     } catch (e) {
       setError("Save failed: " + e.message);
     }
