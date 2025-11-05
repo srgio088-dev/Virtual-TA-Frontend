@@ -63,7 +63,7 @@ export default function CreateAssignment() {
           style={{
             margin: 0,
             whiteSpace: "nowrap",
-            fontSize: "2rem",
+            fontSize: "1.5rem",
             fontWeight: "bold",
           }}
         >
@@ -110,7 +110,7 @@ export default function CreateAssignment() {
         <h2
           style={{
             margin: "0 0 20px 0",
-            fontSize: "2rem",
+            fontSize: "1.5rem",
             fontWeight: "bold",
           }}
         >
