@@ -35,7 +35,7 @@ export default function CreateAssignment() {
   return (
     <div
       style={{
-        width: "95%",
+        width: "110%",
         margin: "40px auto",
         display: "flex",
         flexDirection: "column",
