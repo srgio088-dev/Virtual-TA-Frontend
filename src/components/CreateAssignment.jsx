@@ -68,7 +68,7 @@ export default function CreateAssignment() {
             fontWeight: "bold",
           }}
         >
-@@ -110,56 +110,56 @@
+
         <h2
           style={{
             margin: "0 0 20px 0",
