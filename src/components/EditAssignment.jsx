@@ -57,13 +57,16 @@ export default function EditAssignment() {
     try {
       setBusy(true);
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"}/api/assignments/${id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name.trim(), rubric: rubric.trim() }),
-        }
-      );
+  `${import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"}/api/assignments/${id}`,
+  {
+    method: "PATCH",   // 👈 change from PUT to PATCH
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name.trim(),
+      rubric: rubric.trim(),
+    }),
+  }
+);
       if (!res.ok) {
         const txt = await res.text();
         throw new Error(`Update failed (${res.status}): ${txt}`);
