@@ -38,7 +38,7 @@ export default function CreateAssignment() {
         width: "95%",
         margin: "40px auto",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         alignItems: "center",
         gap: "50px",
       }}
@@ -127,7 +127,7 @@ export default function CreateAssignment() {
             fontSize: "1.1rem",
             borderRadius: "10px",
             border: "1px solid #ccc",
-            resize: "vertical",
+            resize: "horizontal",
             minHeight: "300px",
           }}
         />
