@@ -33,106 +33,84 @@ export default function CreateAssignment() {
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
+    <div
       style={{
         width: "95%",
         margin: "40px auto",
-        border: "2px solid #ccc",
-        borderRadius: "12px",
-        padding: "20px 30px",
-        backgroundColor: "#fff",
-        boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         display: "flex",
         flexDirection: "column",
-        gap: "24px",
-        fontSize: "1.1rem",
+        alignItems: "center",
+        gap: "50px",
       }}
     >
-      {/* ===== Header ===== */}
-      <h2
+      {/* ===== Row 1: Create Assignment Box ===== */}
+      <form
+        onSubmit={onSubmit}
         style={{
-          margin: 0,
-          fontSize: "1.5rem",
-          fontWeight: "bold",
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "12px",
+          padding: "12px 16px",
+          padding: "20px 32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+@@ -102,64 +102,64 @@
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "12px",
+          padding: "20px 30px",
+          padding: "20px 32px",
+          backgroundColor: "#fff",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
       >
-        Create Assignment
-      </h2>
-
-      {/* ===== Assignment Name ===== */}
-      <div>
-        <label
+        <h2
           style={{
+            margin: "0 0 20px 0",
+            fontSize: "1.5rem",
             fontWeight: "bold",
-            display: "block",
-            marginBottom: "8px",
-          }}
-        >
-          Assignment Name
-        </label>
-        <input
-          placeholder="e.g., Essay 1"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "10px",
-            border: "1px solid #ccc",
-            fontSize: "1rem",
-          }}
-        />
-      </div>
-
-      {/* ===== Rubric ===== */}
-      <div>
-        <label
-          style={{
-            fontWeight: "bold",
-            display: "block",
-            marginBottom: "8px",
           }}
         >
           Rubric
-        </label>
+        </h2>
         <textarea
-          rows={12}
+          rows={16}
           placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
           value={rubric}
           onChange={(e) => setRubric(e.target.value)}
           style={{
             width: "100%",
-            padding: "14px",
+            padding: "16px",
+            fontSize: "1.1rem",
             borderRadius: "10px",
             border: "1px solid #ccc",
-            fontSize: "1rem",
             resize: "vertical",
-            minHeight: "250px",
+            minHeight: "300px",
           }}
         />
       </div>
 
-      {/* ===== Error ===== */}
+      {/* ===== Error Message ===== */}
       {error && (
         <p style={{ color: "red", fontWeight: "500", fontSize: "1rem" }}>
           {error}
         </p>
       )}
 
-      {/* ===== Button ===== */}
+      {/* ===== Create Button ===== */}
       <button
+        onClick={onSubmit}
         disabled={busy}
         style={{
           backgroundColor: "#1a73e8",
           color: "#fff",
           fontWeight: "bold",
-          fontSize: "1.2rem",
-          padding: "12px 80px",
-          borderRadius: "10px",
+          fontSize: "1.3rem",
+          padding: "14px 90px",
+          borderRadius: "12px",
           border: "none",
           cursor: "pointer",
-          alignSelf: "center",
           transition: "background 0.2s ease",
         }}
         onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
@@ -140,6 +118,6 @@ export default function CreateAssignment() {
       >
         {busy ? "Creating…" : "Create"}
       </button>
-    </form>
+    </div>
   );
 }
