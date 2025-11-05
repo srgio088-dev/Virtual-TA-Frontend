@@ -1,59 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { apiGet, apiPostForm } from "../api/client";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiPostJSON } from "../api/client";
 
-export default function UploadForm() {
-  const [assignments, setAssignments] = useState([]);
-  const [assignmentId, setAssignmentId] = useState("");
-  const [files, setFiles] = useState([]);
-  const [status, setStatus] = useState("");
+export default function CreateAssignment() {
+  const [name, setName] = useState("");
+  const [rubric, setRubric] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    apiGet("/api/assignments").then(setAssignments);
-  }, []);
-
-  function onPick(e) {
-    setFiles(Array.from(e.target.files || []));
-  }
-
-  function onDrop(e) {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setFiles(Array.from(e.dataTransfer.files || []));
-  }
+    setError("");
 
-  function onDragOver(e) {
-    e.preventDefault();
-  }
-
-  async function submit(e) {
-    e.preventDefault();
-    if (!assignmentId || files.length === 0) {
-      setStatus("Pick an assignment and at least one file.");
+    if (!name.trim() || !rubric.trim()) {
+      setError("Both name and rubric are required.");
       return;
     }
-    const fd = new FormData();
-    fd.append("assignment_id", assignmentId);
-    for (const f of files) fd.append("files", f);
 
     try {
-      const res = await fetch(
-        `${
-          import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"
-        }/api/upload_submissions`,
-        { method: "POST", body: fd }
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      setStatus(`✅ Uploaded ${data.created_ids.length} file(s).`);
-      setFiles([]);
+      setBusy(true);
+      await apiPostJSON("/api/assignments", {
+        name: name.trim(),
+        rubric: rubric.trim(),
+      });
+      navigate("/");
     } catch (err) {
-      setStatus(`❌ ${err.message}`);
+      setError(err?.message || "Failed to create assignment.");
+    } finally {
+      setBusy(false);
     }
-  }
+  };
 
   return (
     <form
-      className="card form"
-      onSubmit={submit}
+      onSubmit={onSubmit}
       style={{
         width: "95%",
         margin: "40px auto",
@@ -62,12 +43,13 @@ export default function UploadForm() {
         padding: "20px 30px",
         backgroundColor: "#fff",
         boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
-        fontSize: "1.1rem",
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
+        gap: "24px",
+        fontSize: "1.1rem",
       }}
     >
+      {/* ===== Header ===== */}
       <h2
         style={{
           margin: 0,
@@ -75,114 +57,89 @@ export default function UploadForm() {
           fontWeight: "bold",
         }}
       >
-        Upload Student Submissions (Multi-file)
+        Create Assignment
       </h2>
 
+      {/* ===== Assignment Name ===== */}
       <div>
         <label
           style={{
             fontWeight: "bold",
             display: "block",
             marginBottom: "8px",
-            fontSize: "1.1rem",
           }}
         >
-          Assignment
+          Assignment Name
         </label>
-        <select
-          value={assignmentId}
-          onChange={(e) => setAssignmentId(e.target.value)}
+        <input
+          placeholder="e.g., Essay 1"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           style={{
             width: "100%",
-            padding: "16px",
+            padding: "14px",
             borderRadius: "10px",
             border: "1px solid #ccc",
-            fontSize: "1.1rem",
+            fontSize: "1rem",
           }}
-        >
-          <option value="">Select…</option>
-          {assignments.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </select>
+        />
       </div>
 
+      {/* ===== Rubric ===== */}
       <div>
         <label
           style={{
             fontWeight: "bold",
             display: "block",
             marginBottom: "8px",
-            fontSize: "1.1rem",
           }}
         >
-          Files
+          Rubric
         </label>
-        <div
-          className="dropzone"
-          onDrop={onDrop}
-          onDragOver={onDragOver}
+        <textarea
+          rows={12}
+          placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
+          value={rubric}
+          onChange={(e) => setRubric(e.target.value)}
           style={{
-            border: "2px dashed #ccc",
+            width: "100%",
+            padding: "14px",
             borderRadius: "10px",
-            padding: "40px",
-            textAlign: "center",
-            backgroundColor: "#fafafa",
-            fontSize: "1.1rem",
-            cursor: "pointer",
+            border: "1px solid #ccc",
+            fontSize: "1rem",
+            resize: "vertical",
+            minHeight: "250px",
           }}
-        >
-          <p>Drag & drop files here, or click to select</p>
-          <input
-            type="file"
-            multiple
-            onChange={onPick}
-            style={{
-              marginTop: "12px",
-              fontSize: "1rem",
-            }}
-          />
-        </div>
+        />
       </div>
 
-      {files.length > 0 && (
-        <ul className="list" style={{ marginTop: 8 }}>
-          {files.map((f) => (
-            <li key={f.name} style={{ fontSize: "1.1rem" }}>
-              {f.name}
-            </li>
-          ))}
-        </ul>
+      {/* ===== Error ===== */}
+      {error && (
+        <p style={{ color: "red", fontWeight: "500", fontSize: "1rem" }}>
+          {error}
+        </p>
       )}
 
+      {/* ===== Button ===== */}
       <button
+        disabled={busy}
         style={{
           backgroundColor: "#1a73e8",
           color: "#fff",
           fontWeight: "bold",
-          fontSize: "1.3rem",
-          padding: "14px 90px",
-          borderRadius: "12px",
+          fontSize: "1.2rem",
+          padding: "12px 80px",
+          borderRadius: "10px",
           border: "none",
           cursor: "pointer",
-          transition: "background 0.2s ease",
           alignSelf: "center",
-          marginTop: "10px",
+          transition: "background 0.2s ease",
         }}
         onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
         onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
-        type="submit"
       >
-        Upload
+        {busy ? "Creating…" : "Create"}
       </button>
-
-      {status && (
-        <p style={{ marginTop: 8, fontSize: "1.1rem", fontWeight: "500" }}>
-          {status}
-        </p>
-      )}
     </form>
   );
 }
