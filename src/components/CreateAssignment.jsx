@@ -102,7 +102,7 @@ export default function CreateAssignment() {
           width: "100%",
           border: "2px solid #ccc",
           borderRadius: "12px",
-          padding: "40px 60px",
+          padding: "20px 30px",
           backgroundColor: "#fff",
           boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
