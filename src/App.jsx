@@ -6,8 +6,32 @@ import AssignmentSubmissions from "./components/AssignmentSubmissions";
 import CreateAssignment from "./components/CreateAssignment";
 import HomePage from "./components/HomePage"; 
 import EditAssignment from "./components/EditAssignment"; //NEW EDIT
+import netlifyIdentity from "netlify-identity-widget";
+import { useEffect, useState } from "react";
 
 export default function App() {
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  netlifyIdentity.init({
+    APIUrl: "https://virtualteacher.netlify.app/.netlify/identity", // your site URL
+  });
+
+  netlifyIdentity.on("login", (user) => {
+    setUser(user);
+    netlifyIdentity.close();
+  });
+
+  netlifyIdentity.on("logout", () => {
+    setUser(null);
+  });
+
+  // Optional: return cleanup
+  return () => {
+    netlifyIdentity.off("login");
+    netlifyIdentity.off("logout");
+  };
+}, []);
   return (
     <div className="layout">
       <header className="header" style={styles.header}>
@@ -19,12 +43,44 @@ export default function App() {
 
 
         {/* Right side: nav links */}
-        <div style={styles.right}>
-          {/*<span style={styles.separator}>|</span>*/}
-          <Link to="/assignments" style={styles.link}>View Assignments</Link>
-          <Link to="/upload" style={styles.link}>Upload Submission</Link>
-          <Link to="/create" style={styles.link}>Create Assignment</Link>
-        </div>
+<div style={styles.right}>
+  <Link to="/assignments" style={styles.link}>View Assignments</Link>
+  <Link to="/upload" style={styles.link}>Upload Submission</Link>
+  <Link to="/create" style={styles.link}>Create Assignment</Link>
+
+  {user ? (
+    <>
+      <span style={{ color: "#FFD700" }}>Hi, {user.user_metadata?.full_name || user.email}</span>
+      <button
+        onClick={() => netlifyIdentity.logout()}
+        style={{
+          marginLeft: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#FFD700",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Log Out
+      </button>
+    </>
+  ) : (
+    <button
+      onClick={() => netlifyIdentity.open("login")}
+      style={{
+        marginLeft: "10px",
+        padding: "5px 10px",
+        backgroundColor: "#FFD700",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      Log In
+    </button>
+  )}
+</div>
       </header>
 
 
