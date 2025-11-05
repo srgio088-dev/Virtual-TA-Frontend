@@ -71,7 +71,7 @@ export default function EditAssignment() {
         const txt = await res.text();
         throw new Error(`Update failed (${res.status}): ${txt}`);
       }
-      navigate("/");
+      navigate("/assignments");
     } catch (err) {
       console.error("Update error:", err);
       setError("Update failed: " + (err.message || String(err)));
