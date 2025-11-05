@@ -127,7 +127,7 @@ export default function CreateAssignment() {
             fontSize: "1.1rem",
             borderRadius: "10px",
             border: "1px solid #ccc",
-            resize: "horizontal",
+            resize: "vertical",
             minHeight: "300px",
           }}
         />
