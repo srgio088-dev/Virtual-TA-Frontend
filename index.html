@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+  (function () {
+    var h = window.location.hash || "";
+    if (h && /(invite_token|recovery_token|confirmation_token|access_token)/.test(h)) {
+      // stash token so React Router can't wipe it
+      sessionStorage.setItem("nf_magic_hash", h);
+    }
+  })();
+</script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
