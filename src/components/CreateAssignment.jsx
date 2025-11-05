@@ -35,7 +35,7 @@ export default function CreateAssignment() {
   return (
     <div
       style={{
-        width: "110%",
+        width: "95%",
         margin: "40px auto",
         display: "flex",
         flexDirection: "column",
@@ -63,16 +63,53 @@ export default function CreateAssignment() {
           style={{
             margin: 0,
             whiteSpace: "nowrap",
-            fontSize: "2rem",
             fontSize: "1.5rem",
             fontWeight: "bold",
           }}
         >
+          Create Assignment
+        </h2>
 
+        <div style={{ flexGrow: 1 }}>
+          <label
+            style={{
+              fontWeight: "bold",
+              display: "block",
+              marginBottom: "8px",
+              fontSize: "1.1rem",
+            }}
+          >
+            Assignment Name
+          </label>
+          <input
+            placeholder="e.g., Essay 1"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "16px",
+              fontSize: "1.1rem",
+              borderRadius: "10px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+      </form>
+
+      {/* ===== Row 2: Rubric Box ===== */}
+      <div
+        style={{
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "12px",
+          padding: "40px 60px",
+          backgroundColor: "#fff",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+        }}
+      >
         <h2
           style={{
             margin: "0 0 20px 0",
-            fontSize: "2rem",
             fontSize: "1.5rem",
             fontWeight: "bold",
           }}
