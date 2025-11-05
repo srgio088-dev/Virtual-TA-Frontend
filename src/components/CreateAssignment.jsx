@@ -1,149 +1,163 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { apiPostJSON } from "../api/client";
+import React, { useEffect, useState } from "react";
+import { apiGet, apiPostForm } from "../api/client";
 
-export default function CreateAssignment() {
-  const [name, setName] = useState("");
-  const [rubric, setRubric] = useState("");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  const navigate = useNavigate();
+export default function UploadForm() {
+  const [assignments, setAssignments] = useState([]);
+  const [assignmentId, setAssignmentId] = useState("");
+  const [files, setFiles] = useState([]);
+  const [status, setStatus] = useState("");
 
-  const onSubmit = async (e) => {
+  useEffect(() => {
+    apiGet("/api/assignments").then(setAssignments);
+  }, []);
+
+  function onPick(e) {
+    setFiles(Array.from(e.target.files || []));
+  }
+
+  function onDrop(e) {
     e.preventDefault();
-    setError("");
+    setFiles(Array.from(e.dataTransfer.files || []));
+  }
 
-    if (!name.trim() || !rubric.trim()) {
-      setError("Both name and rubric are required.");
+  function onDragOver(e) {
+    e.preventDefault();
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+    if (!assignmentId || files.length === 0) {
+      setStatus("Pick an assignment and at least one file.");
       return;
     }
+    const fd = new FormData();
+    fd.append("assignment_id", assignmentId);
+    for (const f of files) fd.append("files", f);
 
     try {
-      setBusy(true);
-      await apiPostJSON("/api/assignments", {
-        name: name.trim(),
-        rubric: rubric.trim(),
-      });
-      navigate("/");
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"
+        }/api/upload_submissions`,
+        { method: "POST", body: fd }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      setStatus(`✅ Uploaded ${data.created_ids.length} file(s).`);
+      setFiles([]);
     } catch (err) {
-      setError(err?.message || "Failed to create assignment.");
-    } finally {
-      setBusy(false);
+      setStatus(`❌ ${err.message}`);
     }
-  };
+  }
 
   return (
-    <div
+    <form
+      className="card form"
+      onSubmit={submit}
       style={{
         width: "95%",
         margin: "40px auto",
+        border: "2px solid #ccc",
+        borderRadius: "12px",
+        padding: "20px 30px",
+        backgroundColor: "#fff",
+        boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+        fontSize: "1.1rem",
         display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: "50px",
+        flexDirection: "column",
+        gap: "20px",
       }}
     >
-      {/* ===== Row 1: Create Assignment Box ===== */}
-      <form
-        onSubmit={onSubmit}
+      <h2
         style={{
-          width: "100%",
-          border: "2px solid #ccc",
-          borderRadius: "12px",
-          padding: "20px 32px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "24px",
-          backgroundColor: "#fff",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+          margin: 0,
+          fontSize: "1.5rem",
+          fontWeight: "bold",
         }}
       >
-        <h2
+        Upload Student Submissions (Multi-file)
+      </h2>
+
+      <div>
+        <label
           style={{
-            margin: 0,
-            whiteSpace: "nowrap",
-            fontSize: "1.5rem",
             fontWeight: "bold",
+            display: "block",
+            marginBottom: "8px",
+            fontSize: "1.1rem",
           }}
         >
-          Create Assignment
-        </h2>
-
-        <div style={{ flexGrow: 1 }}>
-          <label
-            style={{
-              fontWeight: "bold",
-              display: "block",
-              marginBottom: "8px",
-              fontSize: "1.1rem",
-            }}
-          >
-            Assignment Name
-          </label>
-          <input
-            placeholder="e.g., Essay 1"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "16px",
-              fontSize: "1.1rem",
-              borderRadius: "10px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
-      </form>
-
-      {/* ===== Row 2: Rubric Box ===== */}
-      <div
-        style={{
-          width: "100%",
-          border: "2px solid #ccc",
-          borderRadius: "12px",
-          padding: "20px 32px",
-          backgroundColor: "#fff",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h2
-          style={{
-            margin: "0 0 20px 0",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-          }}
-        >
-          Rubric
-        </h2>
-        <textarea
-          rows={16}
-          placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
-          value={rubric}
-          onChange={(e) => setRubric(e.target.value)}
+          Assignment
+        </label>
+        <select
+          value={assignmentId}
+          onChange={(e) => setAssignmentId(e.target.value)}
           style={{
             width: "100%",
             padding: "16px",
-            fontSize: "1.1rem",
             borderRadius: "10px",
             border: "1px solid #ccc",
-            resize: "vertical",
-            minHeight: "300px",
+            fontSize: "1.1rem",
           }}
-        />
+        >
+          <option value="">Select…</option>
+          {assignments.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {/* ===== Error Message ===== */}
-      {error && (
-        <p style={{ color: "red", fontWeight: "500", fontSize: "1rem" }}>
-          {error}
-        </p>
+      <div>
+        <label
+          style={{
+            fontWeight: "bold",
+            display: "block",
+            marginBottom: "8px",
+            fontSize: "1.1rem",
+          }}
+        >
+          Files
+        </label>
+        <div
+          className="dropzone"
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          style={{
+            border: "2px dashed #ccc",
+            borderRadius: "10px",
+            padding: "40px",
+            textAlign: "center",
+            backgroundColor: "#fafafa",
+            fontSize: "1.1rem",
+            cursor: "pointer",
+          }}
+        >
+          <p>Drag & drop files here, or click to select</p>
+          <input
+            type="file"
+            multiple
+            onChange={onPick}
+            style={{
+              marginTop: "12px",
+              fontSize: "1rem",
+            }}
+          />
+        </div>
+      </div>
+
+      {files.length > 0 && (
+        <ul className="list" style={{ marginTop: 8 }}>
+          {files.map((f) => (
+            <li key={f.name} style={{ fontSize: "1.1rem" }}>
+              {f.name}
+            </li>
+          ))}
+        </ul>
       )}
 
-      {/* ===== Create Button ===== */}
       <button
-        onClick={onSubmit}
-        disabled={busy}
         style={{
           backgroundColor: "#1a73e8",
           color: "#fff",
@@ -154,12 +168,21 @@ export default function CreateAssignment() {
           border: "none",
           cursor: "pointer",
           transition: "background 0.2s ease",
+          alignSelf: "center",
+          marginTop: "10px",
         }}
         onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
         onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
+        type="submit"
       >
-        {busy ? "Creating…" : "Create"}
+        Upload
       </button>
-    </div>
+
+      {status && (
+        <p style={{ marginTop: 8, fontSize: "1.1rem", fontWeight: "500" }}>
+          {status}
+        </p>
+      )}
+    </form>
   );
 }
