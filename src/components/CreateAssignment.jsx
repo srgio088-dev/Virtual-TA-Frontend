@@ -50,7 +50,7 @@ export default function CreateAssignment() {
           width: "100%",
           border: "2px solid #ccc",
           borderRadius: "12px",
-          padding: "12px 16px",
+          padding: "20px 32px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -102,7 +102,7 @@ export default function CreateAssignment() {
           width: "100%",
           border: "2px solid #ccc",
           borderRadius: "12px",
-          padding: "20px 30px",
+          padding: "20px 32px",
           backgroundColor: "#fff",
           boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
