@@ -38,7 +38,7 @@ export default function App() {
           <Route path="/assignment/:id" element={<AssignmentSubmissions />} />
           <Route path="/review/:id" element={<ReviewSubmission />} />
           <Route path="/create" element={<CreateAssignment />} />
-          <Route path="/edit" element={<EditAssignment />} /> {/*NEW EDIT*/}
+          <Route path="/edit/:id" element={<EditAssignment />} /> {/*NEW EDIT*/}
         </Routes>
       </main>
     </div>
