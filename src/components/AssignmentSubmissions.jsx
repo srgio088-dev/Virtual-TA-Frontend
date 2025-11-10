@@ -6,6 +6,7 @@ export default function AssignmentSubmissions() {
   const { id } = useParams(); // assignment id
   const [assignment, setAssignment] = useState(null);
   const [error, setError] = useState("");
+  const [isRubricOpen, setIsRubricOpen] = useState(false);
 
   async function load() {
     try {
