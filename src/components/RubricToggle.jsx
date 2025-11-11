@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import apiFetch from '../api/client';
+import { apiGet } from '../api/client';
 
 export default function RubricToggle({ assignmentId }) {
   const [open, setOpen] = useState(false);
@@ -7,7 +7,7 @@ export default function RubricToggle({ assignmentId }) {
 
   async function toggle() {
     if (!open && !rubric) {
-      const res = await apiFetch(`/assignments/${assignmentId}/rubric`);
+      const res = await apiGet(`/api/assignments/${assignmentId}/rubric`);
       setRubric(res.rubric || 'No rubric provided.');
     }
     setOpen(!open);
