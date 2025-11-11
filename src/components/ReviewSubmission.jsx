@@ -53,6 +53,26 @@ function downloadFeedback(filename, text) {
       <h3>AI Feedback</h3>
       <pre className="pre">{submission.ai_feedback}</pre>
 
+<button
+      className="btn mt-3"
+      onClick={() => {
+        const content = [
+          `Assignment: ${assignmentName || ""}`,
+          `Student: ${submission.student_name || ""}`,
+          "",
+          "Suggested Feedback:",
+          (submission.suggested_feedback || "").trim(),
+          "",
+          "AI Feedback:",
+          (aiFeedback || "").trim(),
+        ].join("\n");
+        const safeName = (assignmentName || "assignment").replace(/\s+/g, "_");
+        downloadFeedback(`feedback-${safeName}.txt`, content);
+      }}
+    >
+      Download Feedback
+    </button>
+      
       <form onSubmit={saveFinal} className="form">
         <label>
           Final Grade
