@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiFetch } from '../api/client';
+import apiFetch from '../api/client';
 
 export default function RubricToggle({ assignmentId }) {
   const [open, setOpen] = useState(false);
