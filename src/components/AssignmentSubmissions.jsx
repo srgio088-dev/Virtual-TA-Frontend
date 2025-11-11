@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiGet } from "../api/client";
-import RubricToggle from './RubricToggle.jsx';
+import RubricToggle from "../components/RubricToggle";
 
 
 export default function AssignmentSubmissions() {
@@ -35,9 +35,8 @@ export default function AssignmentSubmissions() {
   return (
     <div className="container">
       <h1>{assignment.name} — Submissions ({subs.length})</h1>
-      <h2 className="text-lg font-bold mb-2">{assignment?.name}</h2>
-      {/* Rubric dropdown goes here */}
-      <RubricToggle assignmentId={assignment?.id || assignmentId} />
+      <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
+      <RubricToggle assignmentId={assignment.id} />
       {!subs.length ? <p>No submissions yet.</p> : (
         <ul className="list">
           {subs.map(s => (
