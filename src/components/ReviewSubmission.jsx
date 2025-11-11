@@ -38,7 +38,7 @@ export default function ReviewSubmission() {
   return (
     <div className="container">
       <h1>Review Submission</h1>
-      <p><strong>Assignment:</strong> {assignment?.name || '—'}</p>
+      <p><strong>Student:</strong> {submission.student_name}</p>
       <p><strong>Suggested Grade:</strong> {submission.ai_grade ?? "N/A"}</p>
       <h3>AI Feedback</h3>
       <pre className="pre">{submission.ai_feedback}</pre>
