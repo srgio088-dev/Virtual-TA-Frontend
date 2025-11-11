@@ -35,14 +35,16 @@ export default function ReviewSubmission() {
   if (error) return <div className="container"><p className="error">{error}</p></div>;
   if (!submission) return <div className="container"><p>Loading…</p></div>;
 
-function downloadFeedback(filename, text) {
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+function downloadText(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = filename;
+  document.body.appendChild(a);   // ensure it's in the DOM
   a.click();
-  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 0); // cleanup
 }
   
   return (
@@ -54,24 +56,25 @@ function downloadFeedback(filename, text) {
       <pre className="pre">{submission.ai_feedback}</pre>
 
 <button
-      className="btn mt-3"
-      onClick={() => {
-        const content = [
-          `Assignment: ${assignmentName || ""}`,
-          `Student: ${submission.student_name || ""}`,
-          "",
-          "Suggested Feedback:",
-          (submission.suggested_feedback || "").trim(),
-          "",
-          "AI Feedback:",
-          (aiFeedback || "").trim(),
-        ].join("\n");
-        const safeName = (assignmentName || "assignment").replace(/\s+/g, "_");
-        downloadFeedback(`feedback-${safeName}.txt`, content);
-      }}
-    >
-      Download Feedback
-    </button>
+  type="button"                // <-- important
+  className="btn mt-3"
+  onClick={() => {
+    const content = [
+      `Assignment: ${assignmentName || ""}`,
+      `Student: ${submission.student_name || ""}`,
+      "",
+      "Suggested Feedback:",
+      (submission.suggested_feedback || "").trim(),
+      "",
+      "AI Feedback:",
+      (aiFeedback || "").trim(),
+    ].join("\n");
+    const safeName = (assignmentName || "assignment").replace(/\s+/g, "_");
+    downloadText(`feedback-${safeName}.txt`, content);
+  }}
+>
+  Download Feedback
+</button>
       
       <form onSubmit={saveFinal} className="form">
         <label>
