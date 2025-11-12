@@ -39,7 +39,7 @@ export default function AssignmentSubmissions() {
 {/* Optional: remove this if you’re not using the dropdown anymore */}
 {/* <RubricToggle assignmentId={assignment.id} /> */}
 
-<div className="flex flex-col gap-2 mb-4">
+<div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
   <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
     View Rubric
   </Link>
@@ -48,6 +48,7 @@ export default function AssignmentSubmissions() {
     Back to Assignment List
   </Link>
 </div>
+
       {!subs.length ? <p>No submissions yet.</p> : (
         <ul className="list">
           {subs.map(s => (
