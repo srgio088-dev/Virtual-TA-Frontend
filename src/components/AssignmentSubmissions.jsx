@@ -40,9 +40,14 @@ export default function AssignmentSubmissions() {
 {/* <RubricToggle assignmentId={assignment.id} /> */}
 
 {/* New button to go to rubric page */}
-<Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
-  View Rubric
-</Link>
+<div className="flex gap-4 mb-4">
+  <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
+    View Rubric
+  </Link>
+  <Link className="btn" to="/assignments">
+    Back to Assignment List
+  </Link>
+</div>
       {!subs.length ? <p>No submissions yet.</p> : (
         <ul className="list">
           {subs.map(s => (
