@@ -8,6 +8,7 @@ import HomePage from "./components/HomePage";
 import EditAssignment from "./components/EditAssignment"; //NEW EDIT
 import netlifyIdentity from "netlify-identity-widget";
 import { useEffect, useState } from "react";
+import RubricPage from "./components/RubricPage.jsx";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -95,6 +96,7 @@ useEffect(() => {
           <Route path="/review/:id" element={<ReviewSubmission />} />
           <Route path="/create" element={<CreateAssignment />} />
           <Route path="/edit/:id" element={<EditAssignment />} /> {/*NEW EDIT*/}
+          <Route path="/assignment/:id/rubric" element={<RubricPage />} />
         </Routes>
       </main>
     </div>
