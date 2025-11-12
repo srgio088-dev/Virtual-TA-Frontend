@@ -23,12 +23,13 @@ export default function EditAssignment() {
     async function load() {
       try {
         setLoading(true);
-        // use apiGet helper if available; fallback to fetch if it fails
         let data;
         if (typeof apiGet === "function") {
           data = await apiGet(`/api/assignments/${id}`);
         } else {
-          const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"}/api/assignments/${id}`);
+          const res = await fetch(
+            `${import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"}/api/assignments/${id}`
+          );
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           data = await res.json();
         }
@@ -57,16 +58,16 @@ export default function EditAssignment() {
     try {
       setBusy(true);
       const res = await fetch(
-  `${import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"}/api/assignments/${id}`,
-  {
-    method: "PATCH",   // 👈 change from PUT to PATCH
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: name.trim(),
-      rubric: rubric.trim(),
-    }),
-  }
-);
+        `${import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"}/api/assignments/${id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.trim(),
+            rubric: rubric.trim(),
+          }),
+        }
+      );
       if (!res.ok) {
         const txt = await res.text();
         throw new Error(`Update failed (${res.status}): ${txt}`);
@@ -83,23 +84,126 @@ export default function EditAssignment() {
   if (loading) return <h2 style={{ padding: 40 }}>Loading…</h2>;
 
   return (
-    <div style={{ width: "95%", margin: "40px auto", display: "flex", flexDirection: "column", alignItems: "center", gap: "50px" }}>
-      <form onSubmit={onSubmit} style={{ width: "100%", border: "2px solid #ccc", borderRadius: "12px", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", backgroundColor: "#fff", boxShadow: "0 4px 14px rgba(0,0,0,0.08)" }}>
-        <h2 style={{ margin: 0, whiteSpace: "nowrap", fontSize: "1.5rem", fontWeight: "bold" }}>Edit Assignment</h2>
+    <div
+      style={{
+        width: "95%",
+        margin: "40px auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "50px",
+      }}
+    >
+      <form
+        onSubmit={onSubmit}
+        style={{
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "12px",
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "24px",
+          backgroundColor: "#fff",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+        }}
+      >
+        <h2
+          style={{
+            margin: 0,
+            whiteSpace: "nowrap",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+          }}
+        >
+          Edit Assignment
+        </h2>
         <div style={{ flexGrow: 1 }}>
-          <label style={{ fontWeight: "bold", display: "block", marginBottom: "8px", fontSize: "1.1rem" }}>Assignment Name</label>
-          <input placeholder="e.g., Essay 1" value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%", padding: "16px", fontSize: "1.1rem", borderRadius: "10px", border: "1px solid #ccc" }} />
+          <label
+            style={{
+              fontWeight: "bold",
+              display: "block",
+              marginBottom: "8px",
+              fontSize: "1.1rem",
+            }}
+          >
+            Assignment Name
+          </label>
+          <input
+            placeholder="e.g., Essay 1"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "16px",
+              fontSize: "1.1rem",
+              borderRadius: "10px",
+              border: "1px solid #ccc",
+            }}
+          />
         </div>
       </form>
 
-      <div style={{ width: "100%", border: "2px solid #ccc", borderRadius: "12px", padding: "20px30px", backgroundColor: "#fff", boxShadow: "0 4px 14px rgba(0,0,0,0.08)" }}>
-        <h2 style={{ margin: "0 0 20px 0", fontSize: "1.5rem", fontWeight: "bold" }}>Rubric</h2>
-        <textarea rows={16} placeholder="e.g., Intro (20), Evidence (40), Clarity (40)" value={rubric} onChange={(e) => setRubric(e.target.value)} style={{ width: "100%", padding: "16px", fontSize: "1.1rem", borderRadius: "10px", border: "1px solid #ccc", resize: "vertical", minHeight: "300px" }} />
+      <div
+        style={{
+          width: "100%",
+          border: "2px solid #ccc",
+          borderRadius: "12px",
+          padding: "12px 16px", // ✅ fixed padding to match Edit Assignment
+          backgroundColor: "#fff",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+        }}
+      >
+        <h2
+          style={{
+            margin: "0 0 20px 0",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+          }}
+        >
+          Rubric
+        </h2>
+        <textarea
+          rows={16}
+          placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
+          value={rubric}
+          onChange={(e) => setRubric(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "16px",
+            fontSize: "1.1rem",
+            borderRadius: "10px",
+            border: "1px solid #ccc",
+            resize: "vertical",
+            minHeight: "300px",
+          }}
+        />
       </div>
 
-      {error && <p style={{ color: "red", fontWeight: 500, fontSize: "1rem" }}>{error}</p>}
+      {error && (
+        <p style={{ color: "red", fontWeight: 500, fontSize: "1rem" }}>
+          {error}
+        </p>
+      )}
 
-      <button onClick={onSubmit} disabled={busy} style={{ backgroundColor: "#1a73e8", color: "#fff", fontWeight: "bold", fontSize: "1.3rem", padding: "14px 90px", borderRadius: "12px", border: "none", cursor: "pointer", transition: "background 0.2s ease" }} onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")} onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}>
+      <button
+        onClick={onSubmit}
+        disabled={busy}
+        style={{
+          backgroundColor: "#1a73e8",
+          color: "#fff",
+          fontWeight: "bold",
+          fontSize: "1.3rem",
+          padding: "14px 90px",
+          borderRadius: "12px",
+          border: "none",
+          cursor: "pointer",
+          transition: "background 0.2s ease",
+        }}
+        onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
+        onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
+      >
         {busy ? "Updating…" : "Update"}
       </button>
 
@@ -109,4 +213,3 @@ export default function EditAssignment() {
     </div>
   );
 }
-
