@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiGet } from "../api/client";
 import RubricToggle from "../components/RubricToggle";
-
+import { Link, /* ... */ } from "react-router-dom";
 
 export default function AssignmentSubmissions() {
   const { id } = useParams(); // assignment id
