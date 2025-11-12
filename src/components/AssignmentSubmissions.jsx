@@ -35,10 +35,14 @@ export default function AssignmentSubmissions() {
     <div className="container">
       <h1>{assignment.name} — Submissions ({subs.length})</h1>
       <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
-      <RubricToggle assignmentId={assignment.id} />
-      <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
-        View Rubric
-      </Link>
+
+{/* Optional: remove this if you’re not using the dropdown anymore */}
+{/* <RubricToggle assignmentId={assignment.id} /> */}
+
+{/* New button to go to rubric page */}
+<Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
+  View Rubric
+</Link>
       {!subs.length ? <p>No submissions yet.</p> : (
         <ul className="list">
           {subs.map(s => (
