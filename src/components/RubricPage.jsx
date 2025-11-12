@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { apiGet } from "../api/Client.jsx";
+import { apiGet } from "../api/client.js";
 
 export default function RubricPage() {
   const { id } = useParams(); // assignment id
