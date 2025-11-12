@@ -39,11 +39,11 @@ export default function AssignmentSubmissions() {
 {/* Optional: remove this if you’re not using the dropdown anymore */}
 {/* <RubricToggle assignmentId={assignment.id} /> */}
 
-{/* New button to go to rubric page */}
-<div className="flex gap-4 mb-4">
+<div className="flex flex-col gap-2 mb-4">
   <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
     View Rubric
   </Link>
+
   <Link className="btn" to="/assignments">
     Back to Assignment List
   </Link>
