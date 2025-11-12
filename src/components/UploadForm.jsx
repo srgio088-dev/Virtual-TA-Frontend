@@ -46,29 +46,134 @@ export default function UploadForm() {
   }
 
   return (
-    <form className="card form" onSubmit={submit}>
-      <h2>Upload Student Submissions (Multi-file)</h2>
+  <form
+    className="card form"
+    onSubmit={submit}
+    style={{
+      maxWidth: "700px",
+      margin: "50px auto",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "30px",
+      padding: "40px",
+      borderRadius: "12px",
+      backgroundColor: "#fff",
+      boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+    }}
+  >
+    {/* ===== Top Section ===== */}
+    <div
+      style={{
+        width: "100%",
+        textAlign: "center",
+        marginBottom: "10px",
+      }}
+    >
+      <h2 style={{ fontSize: "1.8rem", marginBottom: "20px" }}>
+        Upload Student Submissions (Multi-file)
+      </h2>
 
-      <label>Assignment</label>
-      <select value={assignmentId} onChange={(e)=>setAssignmentId(e.target.value)}>
+      <label
+        style={{
+          display: "block",
+          fontWeight: "bold",
+          marginBottom: "8px",
+          fontSize: "1.1rem",
+        }}
+      >
+        Assignment
+      </label>
+
+      <select
+        value={assignmentId}
+        onChange={(e) => setAssignmentId(e.target.value)}
+        style={{
+          width: "60%",
+          padding: "10px",
+          borderRadius: "8px",
+          border: "1px solid #ccc",
+          fontSize: "1rem",
+        }}
+      >
         <option value="">Select…</option>
-        {assignments.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+        {assignments.map((a) => (
+          <option key={a.id} value={a.id}>
+            {a.name}
+          </option>
+        ))}
       </select>
+    </div>
 
-      <label>Files</label>
-      <div className="dropzone" onDrop={onDrop} onDragOver={onDragOver}>
-        <p>Drag & drop files here, or click to select</p>
-        <input type="file" multiple onChange={onPick} />
-      </div>
+    {/* ===== File Upload Section ===== */}
+    <div
+      style={{
+        width: "100%",
+        border: "2px dashed #bbb",
+        borderRadius: "12px",
+        padding: "40px",
+        textAlign: "center",
+        backgroundColor: "#fafafa",
+      }}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+    >
+      <p style={{ fontSize: "1.1rem", color: "#555" }}>
+        Drag & drop files here, or click to select
+      </p>
+      <input
+        type="file"
+        multiple
+        onChange={onPick}
+        style={{
+          marginTop: "12px",
+          fontSize: "1rem",
+        }}
+      />
+    </div>
 
-      {files.length > 0 && (
-        <ul className="list" style={{ marginTop: 8 }}>
-          {files.map(f => <li key={f.name}>{f.name}</li>)}
-        </ul>
-      )}
+    {/* ===== File List ===== */}
+    {files.length > 0 && (
+      <ul
+        style={{
+          listStyleType: "none",
+          padding: 0,
+          width: "100%",
+          textAlign: "left",
+          color: "#333",
+        }}
+      >
+        {files.map((f) => (
+          <li key={f.name}>📄 {f.name}</li>
+        ))}
+      </ul>
+    )}
 
-      <button style={{ marginTop: 10 }} type="submit">Upload</button>
-      {status && <p style={{ marginTop: 8 }}>{status}</p>}
-    </form>
-  );
-}
+    {/* ===== Upload Button ===== */}
+    <button
+      style={{
+        backgroundColor: "#1a73e8",
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: "1.2rem",
+        padding: "14px 60px",
+        borderRadius: "10px",
+        border: "none",
+        cursor: "pointer",
+        transition: "background 0.2s ease",
+      }}
+      onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
+      onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
+      type="submit"
+    >
+      Upload
+    </button>
+
+    {/* ===== Status Message ===== */}
+    {status && (
+      <p style={{ marginTop: "10px", color: "#333", fontWeight: "500" }}>
+        {status}
+      </p>
+    )}
+  </form>
+);
