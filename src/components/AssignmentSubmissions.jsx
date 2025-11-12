@@ -42,7 +42,7 @@ export default function AssignmentSubmissions() {
 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
   <div>
     <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
-      View Rubric
+      View Rubric{"\n"}
     </Link>
   </div>
 
