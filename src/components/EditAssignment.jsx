@@ -157,7 +157,7 @@ export default function EditAssignment() {
       >
         <h2
           style={{
-            margin: "0 0 20px 0",
+            margin: "10 10 20px 0",
             fontSize: "1.5rem",
             fontWeight: "bold",
           }}
