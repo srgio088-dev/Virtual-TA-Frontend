@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiGet } from "../api/client";
 import RubricToggle from "../components/RubricToggle";
-import { Link, /* ... */ } from "react-router-dom";
 
 export default function AssignmentSubmissions() {
   const { id } = useParams(); // assignment id
@@ -37,6 +36,9 @@ export default function AssignmentSubmissions() {
       <h1>{assignment.name} — Submissions ({subs.length})</h1>
       <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
       <RubricToggle assignmentId={assignment.id} />
+      <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
+        View Rubric
+      </Link>
       {!subs.length ? <p>No submissions yet.</p> : (
         <ul className="list">
           {subs.map(s => (
