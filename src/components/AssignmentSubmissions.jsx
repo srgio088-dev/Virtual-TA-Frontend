@@ -93,25 +93,9 @@ async function downloadCSV() {
 
     <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
 
-      <button
-        className="btn"
-        style={{ flex: 1 }}
-        onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}
-      >
-        View Rubric
-      </button>
-
-      <button
-        className="btn"
-        style={{ flex: 1 }}
-        onClick={() => navigate(`/assignments`)}
-      >
-        Back to Assignment List
-      </button>
-
-      <button className="btn" onClick={downloadCSV}>
-        Download All AI Feedback (CSV)
-      </button>
+      <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}>View Rubric</button>
+      <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignments`)}>Back to Assignment List</button>
+      <button className="btn" onClick={downloadCSV}>Download All AI Feedback (CSV)</button>
 
     </div>
 
