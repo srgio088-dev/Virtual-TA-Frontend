@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiGet, apiPostJSON } from "../api/client";
 
 export default function AssignmentList() {
   const [assignments, setAssignments] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   async function load() {
     try {
@@ -37,8 +38,8 @@ export default function AssignmentList() {
                 </p>
               </div>
               <div className="row" style={{ gap: 12 }}>
-                <Link className="btn" to={`/assignment/${a.id}`}>View Submissions</Link>
-                <Link className="btn" to={`/edit/${a.id}`}>Edit</Link>
+                <button className="btn" onClick={() => navigate(`/assignment/${a.id}`)}>View Submissions</button>
+                <button className="btn" onClick={() => navigate(`/edit/${a.id}`)}>Edit</button>
                 <button className="btn" onClick={() => onDelete(a.id)}>Delete</button>
               </div>
             </li>
