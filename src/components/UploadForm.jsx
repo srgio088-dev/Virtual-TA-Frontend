@@ -152,7 +152,7 @@ export default function UploadForm() {
     {/* ===== Upload Button ===== */}
     <button
       style={{
-        backgroundColor: "#1a73e8",
+        backgroundColor: "#FFD700",
         color: "#fff",
         fontWeight: "bold",
         fontSize: "1.2rem",
