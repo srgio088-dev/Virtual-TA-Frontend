@@ -3,163 +3,166 @@ import { useNavigate } from "react-router-dom";
 import { apiPostJSON } from "../api/client";
 
 export default function CreateAssignment() {
-  const [name, setName] = useState("");
-  const [rubric, setRubric] = useState("");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
 
-  const onSubmit = async (e) => {
+  const [name, setName] = useState("");
+  const [rubricText, setRubricText] = useState("");
+  const [rubricFile, setRubricFile] = useState(null);
+  const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
+
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setStatus("");
 
-    if (!name.trim() || !rubric.trim()) {
-      setError("Both name and rubric are required.");
+    if (!name.trim()) {
+      setError("Assignment name is required.");
+      return;
+    }
+
+    if (!rubricText.trim() && !rubricFile) {
+      setError("Please provide either a text rubric OR upload a rubric file.");
       return;
     }
 
     try {
-      setBusy(true);
-      await apiPostJSON("/api/assignments", {
+      // 1) Create assignment using text rubric ONLY (even if file exists)
+      const created = await apiPostJSON("/api/assignments", {
         name: name.trim(),
-        rubric: rubric.trim(),
+        rubric: rubricText.trim() || null, // send null if empty
       });
+
+      // 2) If a rubric file was uploaded, post it separately
+      if (rubricFile) {
+        const fd = new FormData();
+        fd.append("assignment_id", created.id);
+        fd.append("rubric_file", rubricFile);
+
+        await fetch(
+          `${
+            import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"
+          }/api/assignments/upload_rubric_template`,
+          {
+            method: "POST",
+            body: fd,
+          }
+        );
+      }
+
+      setStatus("Assignment created!");
       navigate("/assignments");
     } catch (err) {
-      setError(err?.message || "Failed to create assignment.");
-    } finally {
-      setBusy(false);
+      console.error(err);
+      setError("Unable to create assignment. " + err.message);
     }
-  };
+  }
+
+  function onFileChange(e) {
+    const file = e.target.files?.[0] || null;
+    setRubricFile(file);
+  }
 
   return (
     <div
+      className="container"
       style={{
-        width: "95%",
+        maxWidth: "700px",
         margin: "40px auto",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "50px",
+        padding: "30px",
+        background: "#fff",
+        borderRadius: "12px",
+        boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
       }}
     >
-      {/* ===== Row 1: Create Assignment Box ===== */}
-      <form
-        onSubmit={onSubmit}
-        style={{
-          width: "100%",
-          border: "2px solid #ccc",
-          borderRadius: "12px",
-          padding: "40px 60px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "50px",
-          backgroundColor: "#fff",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h2
+      <h1>Create Assignment</h1>
+
+      <form className="form" onSubmit={handleSubmit}>
+        {/* Assignment name */}
+        <label>
+          Assignment Name
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
+          />
+        </label>
+
+        {/* Text rubric */}
+        <label style={{ marginTop: "20px" }}>
+          Text Rubric (optional)
+          <textarea
+            value={rubricText}
+            onChange={(e) => setRubricText(e.target.value)}
+            rows="6"
+            placeholder="Paste rubric text here..."
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginTop: "6px",
+              resize: "vertical",
+            }}
+          />
+        </label>
+
+        {/* Divider */}
+        <div
           style={{
-            margin: 0,
-            whiteSpace: "nowrap",
-            fontSize: "1.5rem",
+            textAlign: "center",
+            margin: "20px 0",
+            fontWeight: "bold",
+            color: "#444",
+          }}
+        >
+          — OR —
+        </div>
+
+        {/* Rubric file upload */}
+        <label>
+          Upload Rubric Template File (optional)
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx,.csv,.xlsx,.xls,.txt"
+            onChange={onFileChange}
+            style={{ marginTop: "6px" }}
+          />
+        </label>
+
+        {rubricFile && (
+          <p style={{ marginTop: "8px", color: "#333" }}>
+            Selected file: <strong>{rubricFile.name}</strong>
+          </p>
+        )}
+
+        {/* Error / Status */}
+        {error && (
+          <p style={{ marginTop: "10px", color: "red", fontWeight: "bold" }}>
+            {error}
+          </p>
+        )}
+        {status && (
+          <p style={{ marginTop: "10px", color: "green", fontWeight: "bold" }}>
+            {status}
+          </p>
+        )}
+
+        {/* Submit */}
+        <button
+          type="submit"
+          style={{
+            marginTop: "30px",
+            padding: "12px 30px",
+            background: "#FFD700",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
             fontWeight: "bold",
           }}
         >
           Create Assignment
-        </h2>
-
-        <div style={{ flexGrow: 1 }}>
-          <label
-            style={{
-              fontWeight: "bold",
-              display: "block",
-              marginBottom: "8px",
-              fontSize: "1.1rem",
-            }}
-          >
-            Assignment Name
-          </label>
-          <input
-            placeholder="e.g., Essay 1"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "16px",
-              fontSize: "1.1rem",
-              borderRadius: "10px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
+        </button>
       </form>
-
-      {/* ===== Row 2: Rubric Box ===== */}
-      <div
-        style={{
-          width: "100%",
-          border: "2px solid #ccc",
-          borderRadius: "12px",
-          padding: "40px 60px",
-          backgroundColor: "#fff",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h2
-          style={{
-            margin: "0 0 20px 0",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-          }}
-        >
-          Rubric
-        </h2>
-        <textarea
-          rows={16}
-          placeholder="e.g., Intro (20), Evidence (40), Clarity (40)"
-          value={rubric}
-          onChange={(e) => setRubric(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "16px",
-            fontSize: "1.1rem",
-            borderRadius: "10px",
-            border: "1px solid #ccc",
-            resize: "vertical",
-            minHeight: "300px",
-          }}
-        />
-      </div>
-
-      {/* ===== Error Message ===== */}
-      {error && (
-        <p style={{ color: "red", fontWeight: "500", fontSize: "1rem" }}>
-          {error}
-        </p>
-      )}
-
-      {/* ===== Create Button ===== */}
-      <button
-        onClick={onSubmit}
-        disabled={busy}
-        style={{
-          backgroundColor: "#FFD700",
-          color: "#fff",
-          fontWeight: "bold",
-          fontSize: "1.3rem",
-          padding: "20px 140px",
-          borderRadius: "12px",
-          border: "none",
-          cursor: "pointer",
-          transition: "background 0.2s ease",
-        }}
-        onMouseOver={(e) => (e.target.style.backgroundColor = "#E5C100")}
-        onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
-      >
-        {busy ? "Creating…" : "Create"}
-      </button>
     </div>
   );
 }
