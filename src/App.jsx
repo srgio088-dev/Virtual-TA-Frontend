@@ -27,6 +27,21 @@ useEffect(() => {
     setUser(null);
   });
 
+  const [user, setUser] = useState(netlifyIdentity.currentUser());
+
+useEffect(() => {
+  const onLogin = (u) => setUser(u);
+  const onLogout = () => setUser(null);
+
+  netlifyIdentity.on("login", onLogin);
+  netlifyIdentity.on("logout", onLogout);
+
+  return () => {
+    netlifyIdentity.off("login", onLogin);
+    netlifyIdentity.off("logout", onLogout);
+  };
+}, []);
+
   // Optional: return cleanup
   return () => {
     netlifyIdentity.off("login");
@@ -49,9 +64,42 @@ useEffect(() => {
   <Link to="/upload" style={styles.link}>Upload Submission</Link>
   <Link to="/create" style={styles.link}>Create Assignment</Link>
 
-  {user ? (
+  {!user ? (
     <>
-      <span style={{ color: "#FFD700" }}>Hi, {user.user_metadata?.full_name || user.email}</span>
+      <button
+        onClick={() => netlifyIdentity.open("login")}
+        style={{
+          marginLeft: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#FFD700",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Log In
+      </button>
+
+      <button
+        onClick={() => netlifyIdentity.open("signup")}
+        style={{
+          marginLeft: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#FFD700",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Create Account
+      </button>
+    </>
+  ) : (
+    <>
+      <span style={{ color: "#FFD700", marginLeft: "10px" }}>
+        Hi, {user.user_metadata?.full_name || user.email}
+      </span>
+
       <button
         onClick={() => netlifyIdentity.logout()}
         style={{
@@ -66,24 +114,9 @@ useEffect(() => {
         Log Out
       </button>
     </>
-  ) : (
-    <button
-      onClick={() => netlifyIdentity.open("login")}
-      style={{
-        marginLeft: "10px",
-        padding: "5px 10px",
-        backgroundColor: "#FFD700",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
-    >
-      Log In
-    </button>
   )}
 </div>
       </header>
-
 
       <main className="main">
         <Routes>
