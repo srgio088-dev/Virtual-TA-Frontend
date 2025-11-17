@@ -104,7 +104,7 @@ async function downloadCSV() {
   </div>
 
   <button className="btn" onClick={downloadCSV}>
-    Download AI Feedback (CSV)
+    Download All AI Feedback (CSV)
   </button>
 </div>
 
