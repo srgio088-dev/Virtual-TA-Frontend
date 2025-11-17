@@ -112,14 +112,9 @@ async function downloadCSV() {
               </div>
             </div>
 
-            <div className="row" style={{ gap: 12 }}>
-              <Link className="btn" to={`/review/${s.id}`}>
-                Open Review
-              </Link>
-
-              <button className="btn" onClick={() => onDeleteSubmission(s.id)}>
-                Delete
-              </button>
+            <div className="row" style={{ gap: 12 , display: "flex"}}>
+              <button className="btn" style={{ flex: 1 }} onClick={() => navigate={`/review/${s.id}`}>Review</button>
+              <button className="btn" onClick={() => onDeleteSubmission(s.id)}>Delete</button>
             </div>
 
           </li>
