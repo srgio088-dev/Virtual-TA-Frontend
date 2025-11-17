@@ -105,19 +105,29 @@ async function downloadCSV() {
       <ul className="list">
         {subs.map(s => (
           <li key={s.id} className="card">
-            <div>
-              <strong>{s.student_name || "Unknown"}</strong>
-              <div className="muted">
-                AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final: {s.final_grade || "—"}
-              </div>
-            </div>
+  <div>
+    <strong>{s.student_name || "Unknown"}</strong>
+    <div className="muted">
+      AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final: {s.final_grade || "—"}
+    </div>
+  </div>
 
-            <div className="row" style={{ gap: 12 , display: "flex"}}>
-              <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/review/${s.id}`)}>Review</button>
-              <button className="btn" onClick={() => onDeleteSubmission(s.id)}>Delete</button>
-            </div>
+  <div className="row" style={{ gap: 12 }}>
+    <button 
+      className="btn"
+      onClick={() => navigate(`/review/${s.id}`)}
+    >
+      Open Review
+    </button>
 
-          </li>
+    <button 
+      className="btn"
+      onClick={() => onDeleteSubmission(s.id)}
+    >
+      Delete
+    </button>
+  </div>
+</li>
         ))}
       </ul>
     )}
