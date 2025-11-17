@@ -78,7 +78,7 @@ useEffect(() => {
         cursor: "pointer",
       }}
     >
-      Log In
+      Login / Sign Up
     </button>
   )}
 </div>
