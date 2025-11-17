@@ -24,7 +24,7 @@ export default function CreateAssignment() {
         name: name.trim(),
         rubric: rubric.trim(),
       });
-      navigate("/");
+      navigate("/assignments");
     } catch (err) {
       setError(err?.message || "Failed to create assignment.");
     } finally {
