@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
     <script>
-/* Stash identity hash (invite_token, recovery_token, confirmation_token, access_token)
-   before React wipes/changes location.hash. */
-(function () {
-  var h = window.location.hash || "";
-  if (/#(invite_token|recovery_token|confirmation_token|access_token)=/.test(h)) {
-    sessionStorage.setItem("nf_magic_hash", h);
-  }
-})();
+  (function () {
+    var h = window.location.hash || "";
+    if (/#(invite_token|recovery_token|confirmation_token|access_token)=/.test(h)) {
+      // Stash the hash so React Router doesn't eat it
+      sessionStorage.setItem("nf_magic_hash", h);
+    }
+  })();
 </script>
-
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
