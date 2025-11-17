@@ -26,6 +26,36 @@ export default function AssignmentSubmissions() {
     await load();
   }
 
+  //THIS IS NEW FOR CSV DOWNLOAD
+  
+  function downloadCSV() {
+  if (!assignment || !assignment.submissions) return;
+
+  const header = ["Student", "AI Grade", "Final Grade", "AI Feedback"];
+  const rows = assignment.submissions.map(s => [
+    s.student_name || "",
+    s.ai_grade || "",
+    s.final_grade || "",
+    (s.ai_feedback || "").replace(/"/g, '""'), // escape quotes for CSV
+  ]);
+
+  // Build CSV string
+  const csvContent = [
+    header.join(","), 
+    ...rows.map(r => r.map(v => `"${v}"`).join(","))
+  ].join("\n");
+
+  // Trigger download
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${assignment.name}_AI_Feedback.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+  //THIS IS NEW FOR CSV DOWNLOAD^^
+
   if (error) return <div className="container"><p className="error">{error}</p></div>;
   if (!assignment) return <div className="container"><p>Loading…</p></div>;
 
@@ -35,10 +65,7 @@ export default function AssignmentSubmissions() {
     <div className="container">
       <h1>{assignment.name} — Submissions ({subs.length})</h1>
       <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
-
-{/* Optional: remove this if you’re not using the dropdown anymore */}
-{/* <RubricToggle assignmentId={assignment.id} /> */}
-
+   
 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
   <div>
     <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
@@ -51,6 +78,10 @@ export default function AssignmentSubmissions() {
       Back to Assignment List
     </Link>
   </div>
+
+  <button className="btn" onClick={downloadCSV}>
+    Download AI Feedback (CSV)
+  </button>
 </div>
 
       {!subs.length ? <p>No submissions yet.</p> : (
