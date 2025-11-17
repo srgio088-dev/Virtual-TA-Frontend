@@ -145,7 +145,7 @@ export default function CreateAssignment() {
         onClick={onSubmit}
         disabled={busy}
         style={{
-          backgroundColor: "#1a73e8",
+          backgroundColor: "#FFD700",
           color: "#fff",
           fontWeight: "bold",
           fontSize: "1.3rem",
@@ -155,7 +155,7 @@ export default function CreateAssignment() {
           cursor: "pointer",
           transition: "background 0.2s ease",
         }}
-        onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
+        onMouseOver={(e) => (e.target.style.backgroundColor = "#E5C100")}
         onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
       >
         {busy ? "Creating…" : "Create"}
