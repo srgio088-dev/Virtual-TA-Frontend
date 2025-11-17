@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { apiGet } from "../api/client";
 import RubricToggle from "../components/RubricToggle";
 
@@ -8,6 +8,7 @@ export default function AssignmentSubmissions() {
   const [assignment, setAssignment] = useState(null);
   const [error, setError] = useState("");
   const [isRubricOpen, setIsRubricOpen] = useState(false);
+  const navigate = useNavigate();
 
   async function load() {
     try {
@@ -86,46 +87,60 @@ async function downloadCSV() {
   const subs = assignment.submissions || [];
 
   return (
-    <div className="container">
-      <h1>{assignment.name} — Submissions ({subs.length})</h1>
-      <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
-   
-<div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
-  <div>
-    <Link className="btn" to={`/assignment/${assignment.id}/rubric`}>
-      View Rubric
-    </Link>
-  </div>
+  <div className="container">
+    <h1>{assignment.name} — Submissions ({subs.length})</h1>
+    <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
 
-  <div>
-    <Link className="btn" to="/assignments">
-      Back to Assignment List
-    </Link>
-  </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
 
-  <button className="btn" onClick={downloadCSV}>
-    Download All AI Feedback (CSV)
-  </button>
-</div>
+      <button
+        className="btn"
+        style={{ flex: 1 }}
+        onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}
+      >
+        View Rubric
+      </button>
 
-      {!subs.length ? <p>No submissions yet.</p> : (
-        <ul className="list">
-          {subs.map(s => (
-            <li key={s.id} className="card">
-              <div>
-                <strong>{s.student_name || "Unknown"}</strong>
-                <div className="muted">
-                  AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final: {s.final_grade || "—"}
-                </div>
-              </div>
-              <div className="row" style={{ gap: 12 }}>
-                <Link to={`/review/${s.id}`}>Open Review</Link>
-                <button onClick={() => onDeleteSubmission(s.id)}>Delete</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <button
+        className="btn"
+        style={{ flex: 1 }}
+        onClick={() => navigate(`/assignments`)}
+      >
+        Back to Assignment List
+      </button>
+
+      <button className="btn" onClick={downloadCSV}>
+        Download All AI Feedback (CSV)
+      </button>
+
     </div>
-  );
-}
+
+    {!subs.length ? (
+      <p>No submissions yet.</p>
+    ) : (
+      <ul className="list">
+        {subs.map(s => (
+          <li key={s.id} className="card">
+            <div>
+              <strong>{s.student_name || "Unknown"}</strong>
+              <div className="muted">
+                AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final: {s.final_grade || "—"}
+              </div>
+            </div>
+
+            <div className="row" style={{ gap: 12 }}>
+              <Link className="btn" to={`/review/${s.id}`}>
+                Open Review
+              </Link>
+
+              <button className="btn" onClick={() => onDeleteSubmission(s.id)}>
+                Delete
+              </button>
+            </div>
+
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
