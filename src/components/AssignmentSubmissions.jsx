@@ -27,33 +27,57 @@ export default function AssignmentSubmissions() {
   }
 
   //THIS IS NEW FOR CSV DOWNLOAD
-  
-  function downloadCSV() {
-  if (!assignment || !assignment.submissions) return;
 
+  // place this after onDeleteSubmission(...) and before the `if (error) ...` return
+async function downloadCSV() {
+  if (!assignment || !assignment.submissions || !assignment.submissions.length) return;
+
+  const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
+
+  // Fetch full submission details for every submission (uses the same endpoint ReviewSubmission uses)
+  const promises = assignment.submissions.map(async (s) => {
+    try {
+      const res = await fetch(`${base}/api/submissions/${s.id}`);
+      if (!res.ok) {
+        // fallback to the short object if something fails
+        return { ...s, ai_feedback: "" };
+      }
+      const full = await res.json();
+      return full;
+    } catch (err) {
+      return { ...s, ai_feedback: "" };
+    }
+  });
+
+  const fullSubs = await Promise.all(promises);
+
+  // Build CSV rows
   const header = ["Student", "AI Grade", "Final Grade", "AI Feedback"];
-  const rows = assignment.submissions.map(s => [
-    s.student_name || "",
-    s.ai_grade || "",
-    s.final_grade || "",
-    (s.ai_feedback || "").replace(/"/g, '""'), // escape quotes for CSV
-  ]);
+  const rows = fullSubs.map(fs => {
+    const student = (fs.student_name || "").replace(/"/g, '""');
+    const aiGrade = (fs.ai_grade || "").toString().replace(/"/g, '""');
+    const finalGrade = (fs.final_grade || "").toString().replace(/"/g, '""');
+    // Replace newlines inside feedback with literal \n to keep CSV consistent, and escape quotes
+    const feedback = (fs.ai_feedback || "").replace(/\r\n/g, "\n").replace(/\n/g, "\\n").replace(/"/g, '""');
+    return [`"${student}"`, `"${aiGrade}"`, `"${finalGrade}"`, `"${feedback}"`].join(",");
+  });
 
-  // Build CSV string
-  const csvContent = [
-    header.join(","), 
-    ...rows.map(r => r.map(v => `"${v}"`).join(","))
-  ].join("\n");
+  const csvContent = [header.join(","), ...rows].join("\n");
 
-  // Trigger download
+  // download
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${assignment.name}_AI_Feedback.csv`;
-  link.click();
+  const a = document.createElement("a");
+  a.href = url;
+  // sanitize assignment name for filename
+  const safeName = (assignment.name || "assignment").replace(/\s+/g, "_").replace(/[^\w\-_.]/g, "");
+  a.download = `${safeName}_AI_Feedback.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+  
   //THIS IS NEW FOR CSV DOWNLOAD^^
 
   if (error) return <div className="container"><p className="error">{error}</p></div>;
