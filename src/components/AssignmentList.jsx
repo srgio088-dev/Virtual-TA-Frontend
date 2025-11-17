@@ -37,9 +37,9 @@ export default function AssignmentList() {
                 </p>
               </div>
               <div className="row" style={{ gap: 12 }}>
-                <Link to={`/assignment/${a.id}`}>View Submissions</Link>
-                <Link to={`/edit/${a.id}`}>Edit</Link>
-                <button onClick={() => onDelete(a.id)}>Delete</button>
+                <Link className="btn" to={`/assignment/${a.id}`}>View Submissions</Link>
+                <Link className="btn" to={`/edit/${a.id}`}>Edit</Link>
+                <button className="btn" onClick={() => onDelete(a.id)}>Delete</button>
               </div>
             </li>
           ))}
