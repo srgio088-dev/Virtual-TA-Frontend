@@ -37,10 +37,10 @@ export default function AssignmentList() {
                   {a.rubric_id ? `Rubric #${a.rubric_id}` : `Rubric: ${a.rubric?.slice(0,100)}${a.rubric?.length>100?"…":""}`}
                 </p>
               </div>
-              <div className="row" style={{ gap: 12 }}>
-                <button className="btn" onClick={() => navigate(`/assignment/${a.id}`)}>View Submissions</button>
-                <button className="btn" onClick={() => navigate(`/edit/${a.id}`)}>Edit</button>
-                <button className="btn" onClick={() => onDelete(a.id)}>Delete</button>
+              <div className="row" style={{ gap: 12 , display: "flex"}}>
+                <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${a.id}`)}>View Submissions</button>
+                <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/edit/${a.id}`)}>Edit</button>
+                <button className="btn" style={{ flex: 1 }} onClick={() => onDelete(a.id)}>Delete</button>
               </div>
             </li>
           ))}
