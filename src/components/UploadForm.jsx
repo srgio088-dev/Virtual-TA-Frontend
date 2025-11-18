@@ -163,8 +163,8 @@ export default function UploadForm() {
         transition: "background 0.3s ease",
         width: "100%",
       }}
-      onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
-      onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
+      onMouseOver={(e) => (e.target.style.backgroundColor = "#E5C100")}
+      onMouseOut={(e) => (e.target.style.backgroundColor = "#E5C100")}
       type="submit"
     >
       Upload
