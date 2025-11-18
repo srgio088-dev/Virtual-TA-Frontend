@@ -156,7 +156,7 @@ export default function UploadForm() {
         color: "#000000",
         fontWeight: "600",
         fontSize: "1.2rem",
-        padding: "12px 18px",
+        padding: "14px 40px",
         borderRadius: "8px",
         border: "2px sold #000000",
         cursor: "pointer",
