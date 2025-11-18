@@ -29,20 +29,35 @@ export default function AssignmentList() {
       {!assignments.length ? <p>No assignments yet.</p> : (
         <ul className="list">
           {assignments.map(a => (
-            <li key={a.id} className="card">
-              <div>
-                <strong>{a.name}</strong>{" "}
-                <span className="muted">({a.submission_count ?? (a.submissions?.length || 0)} submissions)</span>
-                <p className="muted">
-                  {a.rubric_id ? `Rubric #${a.rubric_id}` : `Rubric: ${a.rubric?.slice(0,100)}${a.rubric?.length>100?"…":""}`}
-                </p>
-              </div>
-              <div className="row" style={{ gap: 12 , display: "flex"}}>
-                <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${a.id}`)}>View Submissions</button>
-                <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/edit/${a.id}`)}>Edit</button>
-                <button className="btn" style={{ flex: 1 }} onClick={() => onDelete(a.id)}>Delete</button>
-              </div>
-            </li>
+          /* NEW CODE ADDED BELOW */
+            <li key={a.id} className="card assignment-card">
+  <div>
+    <strong>{a.name}</strong>{" "}
+    <span className="muted">
+      ({a.submission_count ?? (a.submissions?.length || 0)} submissions)
+    </span>
+
+    <p className="muted">
+      {a.rubric_id
+        ? `Rubric #${a.rubric_id}`
+        : `Rubric: ${a.rubric?.slice(0, 100)}${a.rubric?.length > 100 ? "…" : ""}`}
+    </p>
+  </div>
+
+  {/* Hidden until hover */}
+  <div className="assignment-actions">
+    <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${a.id}`)}>
+      View Submissions
+    </button>
+    <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/edit/${a.id}`)}>
+      Edit
+    </button>
+    <button className="btn" style={{ flex: 1 }} onClick={() => onDelete(a.id)}>
+      Delete
+    </button>
+  </div>
+</li>
+/* NEW CODE ADDED ABOVE */
           ))}
         </ul>
       )}
