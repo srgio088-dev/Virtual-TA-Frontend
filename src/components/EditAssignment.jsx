@@ -186,23 +186,23 @@ export default function EditAssignment() {
           {error}
         </p>
       )}
-
       <button
         onClick={onSubmit}
         disabled={busy}
         style={{
-          backgroundColor: "#1a73e8",
-          color: "#fff",
-          fontWeight: "bold",
-          fontSize: "1.3rem",
-          padding: "14px 90px",
-          borderRadius: "12px",
-          border: "none",
+          backgroundColor: "#FFD700",
+          color: "#000000",
+          fontWeight: "600",
+          fontSize: "1.2rem",
+          padding: "14px",
+          borderRadius: "8px",
+          border: "2px solid #000000",
           cursor: "pointer",
-          transition: "background 0.2s ease",
+          transition: "background 0.3s ease",
+          width: "100%",
         }}
-        onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
-        onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
+        onMouseOver={(e) => (e.target.style.backgroundColor = "#E5C100")}
+        onMouseOut={(e) => (e.target.style.backgroundColor = "#E5C100")}
       >
         {busy ? "Updating…" : "Update"}
       </button>
