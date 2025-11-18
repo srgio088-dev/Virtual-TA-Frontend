@@ -153,14 +153,14 @@ export default function UploadForm() {
     <button
       style={{
         backgroundColor: "#FFD700",
-        color: "#fff",
-        fontWeight: "bold",
+        color: "#000000",
+        fontWeight: "600",
         fontSize: "1.2rem",
-        padding: "14px 60px",
-        borderRadius: "10px",
-        border: "none",
+        padding: "12px 18px",
+        borderRadius: "8px",
+        border: "2px sold #000000",
         cursor: "pointer",
-        transition: "background 0.2s ease",
+        transition: "background 0.3s ease",
       }}
       onMouseOver={(e) => (e.target.style.backgroundColor = "#155fc1")}
       onMouseOut={(e) => (e.target.style.backgroundColor = "#1a73e8")}
