@@ -30,8 +30,8 @@ export default function AssignmentList() {
         <ul className="list">
           {assignments.map(a => (
           /* NEW CODE ADDED BELOW */
-            <li key={a.id} className="card assignment-card">
-  <div>
+            <li key={a.id} className="assignment-card">
+  <div className="assignment-main">
     <strong>{a.name}</strong>{" "}
     <span className="muted">
       ({a.submission_count ?? (a.submissions?.length || 0)} submissions)
@@ -46,17 +46,12 @@ export default function AssignmentList() {
 
   {/* Hidden until hover */}
   <div className="assignment-actions">
-    <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${a.id}`)}>
-      View Submissions
-    </button>
-    <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/edit/${a.id}`)}>
-      Edit
-    </button>
-    <button className="btn" style={{ flex: 1 }} onClick={() => onDelete(a.id)}>
-      Delete
-    </button>
+    <button onClick={() => navigate(`/assignment/${a.id}`)}>View Submissions</button>
+    <button onClick={() => navigate(`/edit/${a.id}`)}>Edit</button>
+    <button onClick={() => onDelete(a.id)}>Delete</button>
   </div>
 </li>
+
 /* NEW CODE ADDED ABOVE */
           ))}
         </ul>
