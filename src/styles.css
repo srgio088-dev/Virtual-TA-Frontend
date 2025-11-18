@@ -45,12 +45,12 @@ button:hover { filter: brightness(0.9); }
   display: none;
   margin-top: 12px;
   gap: 12px;
-  width: 100%;               /* make the row stretch across the card */
-  justify-content: space-between; /* spread buttons across the row */
+  width: 100%;                
+  justify-content: space-between;
 }
 
 .assignment-actions button {
-  flex: 1;                      /* Make each button equal width */
+  flex: 1;   
   text-align: center;
 }
 
