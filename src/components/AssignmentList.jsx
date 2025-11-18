@@ -6,6 +6,7 @@ export default function AssignmentList() {
   const [assignments, setAssignments] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [selectedId, setSelectedId] = useState(null);
 
   async function load() {
     try {
@@ -30,7 +31,12 @@ export default function AssignmentList() {
         <ul className="list">
           {assignments.map(a => (
           /* NEW CODE ADDED BELOW */
-            <li key={a.id} className="assignment-card">
+            <li
+  key={a.id}
+  className={`assignment-card ${selectedId === a.id ? "selected" : ""}`}
+  onClick={() => setSelectedId(selectedId === a.id ? null : a.id)}
+>
+
   <div className="assignment-main">
     <strong>{a.name}</strong>{" "}
     <span className="muted">
