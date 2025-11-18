@@ -45,6 +45,13 @@ button:hover { filter: brightness(0.9); }
   display: none;
   margin-top: 12px;
   gap: 12px;
+  width: 100%;               /* make the row stretch across the card */
+  justify-content: space-between; /* spread buttons across the row */
+}
+
+.assignment-actions button {
+  flex: 1;                      /* Make each button equal width */
+  text-align: center;
 }
 
 .assignment-card:hover .assignment-actions {
