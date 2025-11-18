@@ -54,6 +54,28 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* NEW CODE ADDED BELOW */
+.assignment-card {
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.assignment-card:hover {
+  background: #E5C100;
+}
+
+.assignment-actions {
+  display: none;
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.assignment-card:hover .assignment-actions {
+  display: flex;
+}
+
+/* NEW CODE ADDED ABOVE */
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
