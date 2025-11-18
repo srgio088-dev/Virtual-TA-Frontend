@@ -29,12 +29,16 @@ button:hover { filter: brightness(0.9); }
 }
 /* ===== Assignment Card Hover Effects ===== */
 .assignment-card {
-  position: relative;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #fff;
   transition: background 0.2s ease;
 }
 
-.assignment-card:hover {
-  background: #E5C100;
+.assignment-main {
+  display: flex;
+  flex-direction: column;
 }
 
 .assignment-actions {
@@ -45,7 +49,4 @@ button:hover { filter: brightness(0.9); }
 
 .assignment-card:hover .assignment-actions {
   display: flex;
-}
-.dropzone:hover {
-  background: #fafafa;
 }
