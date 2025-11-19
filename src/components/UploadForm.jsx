@@ -169,6 +169,19 @@ export default function UploadForm() {
     >
       Upload
     </button>
+<p
+  style={{
+    marginTop: "10px",
+    fontSize: "0.95rem",
+    color: "#444",
+    textAlign: "center",
+    lineHeight: "1.4",
+  }}
+>
+  <strong>Best upload format:</strong><br />
+  AssignmentName_StudentFirstAndLast <br />
+  or AssignmentName_LastNameFirstInitial
+</p>
 
     {/* ===== Status Message ===== */}
     {status && (
