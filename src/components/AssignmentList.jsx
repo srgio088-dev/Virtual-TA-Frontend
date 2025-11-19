@@ -30,7 +30,6 @@ export default function AssignmentList() {
       {!assignments.length ? <p>No assignments yet.</p> : (
         <ul className="list">
           {assignments.map(a => (
-          /* NEW CODE ADDED BELOW */
             <li
   key={a.id}
   className={`assignment-card ${selectedId === a.id ? "selected" : ""}`}
@@ -48,6 +47,13 @@ export default function AssignmentList() {
         ? `Rubric #${a.rubric_id}`
         : `Rubric: ${a.rubric?.slice(0, 100)}${a.rubric?.length > 100 ? "…" : ""}`}
     </p>
+      {/* Due Date Display */}
+      <p className="muted">
+        {a.due_date
+          ? `Due: ${new Date(a.due_date).toLocaleString()}`
+          : "No due date"}
+      </p>
+
   </div>
 
   {/* Hidden until hover */}
@@ -57,8 +63,6 @@ export default function AssignmentList() {
     <button onClick={() => onDelete(a.id)}>Delete</button>
   </div>
 </li>
-
-/* NEW CODE ADDED ABOVE */
           ))}
         </ul>
       )}
