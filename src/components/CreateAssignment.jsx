@@ -8,6 +8,7 @@ export default function CreateAssignment() {
   const [baseName, setBaseName] = useState("");
   const [rubricText, setRubricText] = useState("");
   const [rubricFile, setRubricFile] = useState(null);
+  const [dueDate, setDueDate] = useState("");   // NEW 11/19
   const [assignmentCount, setAssignmentCount] = useState(1);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [error, setError] = useState("");
@@ -60,6 +61,7 @@ export default function CreateAssignment() {
         await apiPostJSON("/api/assignments", {
           name,
           rubric: rubricBody,
+          due_date: dueDate || null,    // NEW 11/19
         });
       }
 
@@ -105,6 +107,17 @@ export default function CreateAssignment() {
           </small>
         </label>
 
+        <label>
+          Due Date (optional)
+          <input
+            type="datetime-local" // NEW 11/19
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+          <small>All created assignments will share this due date.</small>
+        </label>
+
+        
         <label>
           Text Rubric (optional)
           <textarea
