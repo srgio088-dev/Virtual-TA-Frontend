@@ -83,7 +83,7 @@ export default function CreateAssignment() {
 
       <form className="form" onSubmit={handleSubmit}>
         <label>
-          Assignment Name / Base Name
+          Assignment Name
           <input
             type="text"
             value={baseName}
@@ -93,7 +93,7 @@ export default function CreateAssignment() {
         </label>
 
         <label>
-          Number of assignments (for bulk create)
+          Number of assignments (for bulk creation)
           <input
             type="number"
             min="1"
@@ -108,18 +108,18 @@ export default function CreateAssignment() {
         </label>
 
         <label>
-          Due Date (optional)
+          Due Date
           <input
             type="datetime-local" // NEW 11/19
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          <small>All created assignments will share this due date.</small>
+          <small>All created assignments will share this due date. Currently you will need to indivudally update the assignments to their correct due date.</small>
         </label>
 
         
         <label>
-          Text Rubric (optional)
+          Text Rubric
           <textarea
             rows={8}
             value={rubricText}
