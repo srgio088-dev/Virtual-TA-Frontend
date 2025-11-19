@@ -89,7 +89,6 @@ async function downloadCSV() {
   return (
   <div className="container">
     <h1>{assignment.name} — Submissions ({subs.length})</h1>
-    <h2 className="text-lg font-bold mb-2">{assignment.name}</h2>
 
     <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
 
