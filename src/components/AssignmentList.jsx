@@ -50,9 +50,9 @@ export default function AssignmentList() {
       {/* Due Date Display */}
       <p className="muted">
         {a.due_date
-          ? `Due: ${new Date(a.due_date).toLocaleString()}`
+          ? `Due: ${a.due_date}`
           : "No due date"}
-      </p>
+    </p>
 
   </div>
 
