@@ -173,16 +173,18 @@ export default function UploadForm() {
   style={{
     marginTop: "10px",
     fontSize: "0.8rem",   // Smaller text size
-    color: "#444",
+    color: "#000000",
     textAlign: "center",
     lineHeight: "1.4",
   }}
 >
-  <strong>Best upload format:</strong><br />
+  <strong>Suggedted file name format:</strong> AssignmentName_StudentFirstAndLast or AssignmentName_LastNameFirstInitial </p>
+    
+    {/* <strong>Suggedted file name format:</strong><br />
   AssignmentName_StudentFirstAndLast <br />
   or AssignmentName_LastNameFirstInitial
-</p>
-
+</p> */}
+    
     {/* ===== Status Message ===== */}
     {status && (
       <p style={{ marginTop: "10px", color: "#333", fontWeight: "500" }}>
