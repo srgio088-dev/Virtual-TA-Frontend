@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { apiGet, apiPostJSON } from "../api/client";
 
 export default function ReviewSubmission() {
-  const { id } = useParams(); // here 'id' is typically a submission id OR assignment id depending on your backend design
+  const { id } = useParams();           // submission id
   const navigate = useNavigate();
   const [submission, setSubmission] = useState(null);
   const [finalGrade, setFinalGrade] = useState("");
@@ -12,12 +12,11 @@ export default function ReviewSubmission() {
   useEffect(() => {
     (async () => {
       try {
-        // If your backend is assignment-centric, you might fetch a list of submissions for this assignment instead.
         const data = await apiGet(`/api/submissions/${id}`);
         setSubmission(data);
         setFinalGrade(data.final_grade ?? "");
       } catch (e) {
-        setError(e.message);
+        setError(e.message || "Failed to load submission.");
       }
     })();
   }, [id]);
@@ -25,63 +24,102 @@ export default function ReviewSubmission() {
   async function saveFinal(e) {
     e.preventDefault();
     try {
-      await apiPostJSON(`/api/submissions/${id}/finalize`, { final_grade: finalGrade });
+      await apiPostJSON(`/api/submissions/${id}/finalize`, {
+        final_grade: finalGrade,
+      });
       navigate("/assignments");
     } catch (e) {
       setError("Save failed: " + e.message);
     }
   }
 
-  if (error) return <div className="container"><p className="error">{error}</p></div>;
-  if (!submission) return <div className="container"><p>Loading…</p></div>;
+  function downloadFeedback() {
+    if (!submission) return;
 
-function downloadText(filename, text) {
-  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);   // ensure it's in the DOM
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 0); // cleanup
-}
-  
+    const assignmentName = submission.assignment_name || "Assignment";
+    const studentName = submission.student_name || "Student";
+    const suggested = submission.ai_grade ?? "N/A";
+    const final = finalGrade || submission.final_grade || "N/A";
+    const feedback = submission.ai_feedback || "";
+
+    const lines = [
+      `Assignment: ${assignmentName}`,
+      `Student: ${studentName}`,
+      `Suggested Grade: ${suggested}`,
+      `Final Grade: ${final}`,
+      "",
+      "AI Feedback:",
+      "",
+      feedback,
+    ];
+
+    const blob = new Blob([lines.join("\n")], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const safeName = assignmentName.replace(/[^a-z0-9_-]+/gi, "_").toLowerCase();
+
+    a.href = url;
+    a.download = `${safeName}_submission_${submission.id}_feedback.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  if (error) {
+    return (
+      <div className="container">
+        <p className="error">{error}</p>
+      </div>
+    );
+  }
+  if (!submission) {
+    return (
+      <div className="container">
+        <p>Loading…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <h1>Review Submission</h1>
-      <p><strong>Assignment:</strong> {submission.student_name}</p>
-      <p><strong>Suggested Grade:</strong> {submission.ai_grade ?? "N/A"}</p>
+
+      <p>
+        <strong>Assignment:</strong>{" "}
+        {submission.assignment_name || "—"}
+      </p>
+      <p>
+        <strong>Student:</strong>{" "}
+        {submission.student_name || "—"}
+      </p>
+      <p>
+        <strong>Suggested Grade:</strong>{" "}
+        {submission.ai_grade ?? "N/A"}
+      </p>
+
       <h3>AI Feedback</h3>
       <pre className="pre">{submission.ai_feedback}</pre>
 
-<button
-  type="button"                // <-- important
-  className="btn mt-3"
-  onClick={() => {
-    const content = [
-      `Assignment: ${assignmentName || ""}`,
-      `Student: ${submission.student_name || ""}`,
-      "",
-      "Suggested Feedback:",
-      (submission.suggested_feedback || "").trim(),
-      "",
-      "AI Feedback:",
-      (aiFeedback || "").trim(),
-    ].join("\n");
-    const safeName = (assignmentName || "assignment").replace(/\s+/g, "_");
-    downloadText(`feedback-${safeName}.txt`, content);
-  }}
->
-  Download Feedback
-</button>
-      
-      <form onSubmit={saveFinal} className="form">
+      <button className="btn" type="button" onClick={downloadFeedback}>
+        Download Feedback
+      </button>
+
+      <form onSubmit={saveFinal} className="form" style={{ marginTop: "1rem" }}>
         <label>
           Final Grade
-          <input value={finalGrade} onChange={(e) => setFinalGrade(e.target.value)} placeholder="e.g., 88" />
+          <input
+            value={finalGrade}
+            onChange={(e) => setFinalGrade(e.target.value)}
+            placeholder="e.g., 88"
+          />
         </label>
-        <button type="submit">Save Final Grade</button>
+        <button type="submit" className="btn">
+          Save Final Grade
+        </button>
       </form>
     </div>
   );
