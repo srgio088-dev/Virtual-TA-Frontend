@@ -172,7 +172,7 @@ export default function UploadForm() {
 <p
   style={{
     marginTop: "10px",
-    fontSize: "0.95rem",
+    fontSize: "0.8rem",   // Smaller text size
     color: "#444",
     textAlign: "center",
     lineHeight: "1.4",
