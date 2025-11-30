@@ -10,6 +10,7 @@ import netlifyIdentity from "netlify-identity-widget";
 import { useEffect, useState } from "react";
 import RubricPage from "./components/RubricPage.jsx";
 import PinSubmit from "./components/PinSubmit"; //New Edit 11-30
+import PinSubmit from "./components/PinSubmit"; 
 
 
 export default function App() {
