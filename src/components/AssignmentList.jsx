@@ -160,14 +160,6 @@ export default function AssignmentList() {
                     e.stopPropagation();
                     openPinModal(a);
                   }}
-                  style={{
-                    padding: "6px 10px",
-                    backgroundColor: "#FFD700",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                  }}
                 >
                   Generate PIN
                 </button>
