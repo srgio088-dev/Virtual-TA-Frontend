@@ -13,6 +13,7 @@ export default function PinEntry() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     if (!pin.trim()) {
       setError("Please enter your PIN.");
       return;
@@ -24,10 +25,10 @@ export default function PinEntry() {
       if (!res.ok) {
         throw new Error("Invalid PIN");
       }
-      const data = await res.json();
-      // data = { class_id, assignment_id, student_id }
+      const data = await res.json(); // { class_id, assignment_id, student_id }
       navigate(`/submit/${pin.trim()}`, { state: data });
     } catch (err) {
+      console.error(err);
       setError("Invalid PIN. Please check with your instructor.");
     } finally {
       setBusy(false);
@@ -50,11 +51,7 @@ export default function PinEntry() {
             placeholder="e.g. 100124"
             style={styles.input}
           />
-          <button
-            type="submit"
-            style={styles.button}
-            disabled={busy}
-          >
+          <button type="submit" style={styles.button} disabled={busy}>
             {busy ? "Checking..." : "Continue"}
           </button>
         </form>
