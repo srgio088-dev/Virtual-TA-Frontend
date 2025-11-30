@@ -183,7 +183,6 @@ export default function AssignmentList() {
               <div style={modalStyles.field}>
                 <label style={modalStyles.label}>Class ID</label>
                 <input
-                  type="number"
                   value={pinForm.classId}
                   onChange={(e) =>
                     setPinForm((prev) => ({
