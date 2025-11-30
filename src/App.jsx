@@ -9,6 +9,8 @@ import EditAssignment from "./components/EditAssignment"; //NEW EDIT
 import netlifyIdentity from "netlify-identity-widget";
 import { useEffect, useState } from "react";
 import RubricPage from "./components/RubricPage.jsx";
+import PinSubmit from "./components/PinSubmit"; //New Edit 11-30
+
 
 export default function App() {
   const [user, setUser] = useState(null);
