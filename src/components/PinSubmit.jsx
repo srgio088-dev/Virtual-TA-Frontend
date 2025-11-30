@@ -8,15 +8,17 @@ export default function PinSubmit() {
   const { pin } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const data = location.state; // { class_id, assignment_id, student_id }
+
+  // This is what we passed from PinEntry via navigate(..., { state: data })
+  const data = location.state; // expected: { class_id, assignment_id, student_id }
 
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // If user hit /submit/:pin directly (no state), send them back to PIN page
   if (!data) {
-    // If user hit /submit/:pin directly without coming from PinEntry
     return (
       <div style={styles.wrapper}>
         <div style={styles.card}>
@@ -48,7 +50,7 @@ export default function PinSubmit() {
     formData.append("assignment_id", data.assignment_id);
     formData.append("file", file);
 
-    try:
+    try {
       setBusy(true);
       const res = await fetch(`${API_BASE}/api/upload_submission`, {
         method: "POST",
@@ -63,6 +65,7 @@ export default function PinSubmit() {
       setSuccess("Your submission was uploaded and graded!");
       setFile(null);
     } catch (err) {
+      console.error(err);
       setError(err.message || "Upload failed.");
     } finally {
       setBusy(false);
