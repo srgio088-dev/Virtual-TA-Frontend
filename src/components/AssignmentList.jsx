@@ -175,13 +175,13 @@ export default function AssignmentList() {
           <div style={modalStyles.card}>
             <h2 style={modalStyles.title}>Generate PIN</h2>
             <p style={modalStyles.subtitle}>
-              Assignment ID:{" "}
+              Assignment:{" "}
               <strong>{pinForm.assignmentId}</strong>
             </p>
 
             <form onSubmit={handleGeneratePin}>
               <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Class ID</label>
+                <label style={modalStyles.label}>Course Number</label>
                 <input
                   value={pinForm.classId}
                   onChange={(e) =>
@@ -190,7 +190,7 @@ export default function AssignmentList() {
                       classId: e.target.value,
                     }))
                   }
-                  placeholder="e.g. 10"
+                  placeholder="e.g. 4850"
                   style={modalStyles.input}
                 />
               </div>
