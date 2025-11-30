@@ -100,6 +100,10 @@ useEffect(() => {
           <Route path="/create" element={<CreateAssignment />} />
           <Route path="/edit/:id" element={<EditAssignment />} /> {/*NEW EDIT*/}
           <Route path="/assignment/:id/rubric" element={<RubricPage />} />
+
+          {/* 🔐 PIN-based student submission */}
+          <Route path="/submit" element={<PinEntry />} />
+          <Route path="/submit/:pin" element={<PinSubmit />} />
         </Routes>
       </main>
     </div>
