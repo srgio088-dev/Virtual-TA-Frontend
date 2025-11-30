@@ -1,350 +1,140 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiGet, apiPostJSON } from "../api/client";
+import { apiGet } from "../api/client";
+
+// Fallback API base if you need to call fetch directly (for DELETE)
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
 export default function AssignmentList() {
   const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [selectedId, setSelectedId] = useState(null);
-
-  // 🔐 PIN generation modal state
-  const [pinModalOpen, setPinModalOpen] = useState(false);
-  const [pinForm, setPinForm] = useState({
-    classId: "",
-    studentName: "",
-    assignmentId: null,
-  });
-  const [pinLoading, setPinLoading] = useState(false);
-  const [pinError, setPinError] = useState("");
-  const [pinResult, setPinResult] = useState("");
-
-  async function load() {
-    try {
-      const data = await apiGet("/api/assignments");
-      setAssignments(data);
-    } catch (e) {
-      setError(e.message);
-    }
-  }
 
   useEffect(() => {
-    load();
+    async function loadAssignments() {
+      try {
+        setLoading(true);
+        const data = await apiGet("/api/assignments");
+        setAssignments(data || []);
+      } catch (err) {
+        console.error("Failed to load assignments", err);
+        setError(err?.message || "Failed to load assignments");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadAssignments();
   }, []);
 
-  async function onDelete(id) {
-    if (!confirm("Delete this assignment?")) return;
-    await fetch(
-      `${
-        import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"
-      }/api/assignments/${id}`,
-      { method: "DELETE" }
-    );
-    await load();
-  }
-
-  const openPinModal = (assignment) => {
-    setPinForm({
-      classId: "",
-      studentName: "",
-      assignmentId: assignment.id,
-    });
-    setPinResult("");
-    setPinError("");
-    setPinModalOpen(true);
-  };
-
-  const closePinModal = () => {
-    setPinModalOpen(false);
-  };
-
-  const handleGeneratePin = async (e) => {
-    e.preventDefault();
-    setPinError("");
-    setPinResult("");
-
-    if (!pinForm.classId.trim() || !pinForm.studentName.trim()) {
-      setPinError("Class ID and Student Name are required.");
-      return;
-    }
+  const handleDelete = async (id) => {
+    const ok = window.confirm("Are you sure you want to delete this assignment?");
+    if (!ok) return;
 
     try {
-      setPinLoading(true);
-      const body = {
-        class_id: Number(pinForm.classId),
-        assignment_id: pinForm.assignmentId,
-        student_id: pinForm.studentName.trim(),
-      };
-      const res = await apiPostJSON("/api/pins", body);
-      // backend returns { pin: "100124" }
-      setPinResult(res.pin || "");
+      const res = await fetch(`${API_BASE}/api/assignments/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Delete failed:", text);
+        throw new Error("Failed to delete assignment");
+      }
+
+      setAssignments((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
-      setPinError(err?.message || "Failed to generate PIN.");
-    } finally {
-      setPinLoading(false);
+      console.error(err);
+      setError(err?.message || "Failed to delete assignment");
     }
   };
 
   return (
-    <div className="container">
-      <h1>Assignments</h1>
-      {error && <p className="error">{error}</p>}
-      {!assignments.length ? (
-        <p>No assignments yet.</p>
+    <div className="max-w-4xl mx-auto mt-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Assignments</h1>
+        <button
+          onClick={() => navigate("/create-assignment")}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow"
+        >
+          + New Assignment
+        </button>
+      </div>
+
+      {error && (
+        <div className="mb-4 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {loading ? (
+        <p>Loading assignments...</p>
+      ) : assignments.length === 0 ? (
+        <p className="text-gray-600">
+          No assignments yet. Click <span className="font-semibold">“New Assignment”</span> to create one.
+        </p>
       ) : (
-        <ul className="list">
+        <div className="space-y-4">
           {assignments.map((a) => (
-            <li
+            <div
               key={a.id}
-              className={`assignment-card ${
-                selectedId === a.id ? "selected" : ""
-              }`}
-              onClick={() =>
-                setSelectedId(selectedId === a.id ? null : a.id)
-              }
+              className="bg-white shadow rounded p-4 flex flex-col gap-2"
             >
-              <div className="assignment-main">
-                <strong>{a.name}</strong>{" "}
-                <span className="muted">
-                  (
-                  {a.submission_count ??
-                    (a.submissions?.length || 0)}{" "}
-                  submissions)
-                </span>
-
-                <p className="muted">
-                  {a.rubric_id
-                    ? `Rubric #${a.rubric_id}`
-                    : `Rubric: ${a.rubric?.slice(0, 100)}${
-                        a.rubric?.length > 100 ? "…" : ""
-                      }`}
-                </p>
-
-                {/* Due Date Display */}
-                <p className="muted">
-                  {a.due_date ? `Due: ${a.due_date}` : "No due date"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold">{a.name}</h2>
+                  {a.due_date && (
+                    <p className="text-xs text-gray-500">
+                      Due: {new Date(a.due_date).toLocaleString()}
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Submissions: {a.submission_count ?? (a.submissions ? a.submissions.length : 0)}
+                  </p>
+                </div>
               </div>
 
-              {/* Hidden until hover */}
-              <div className="assignment-actions">
+              {/* Action buttons */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {/* Open Review (adjust route if your review path is different) */}
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/assignment/${a.id}`);
-                  }}
+                  onClick={() => navigate(`/assignments/${a.id}`)}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow"
                 >
-                  View Submissions
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/edit/${a.id}`);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(a.id);
-                  }}
-                >
-                  Delete
+                  Open Review
                 </button>
 
-                {/* 🔐 NEW: Generate PIN button */}
+                {/* 🔹 Generate PIN – styled the same as other primary buttons */}
                 <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openPinModal(a);
-                  }}
-                  style={{
-                    padding: "6px 10px",
-                    backgroundColor: "#FFD700",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                  }}
+                  onClick={() => navigate(`/pin-setup/${a.id}`)}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow"
                 >
                   Generate PIN
                 </button>
+
+                {/* Edit button */}
+                <button
+                  onClick={() => navigate(`/edit/${a.id}`)}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded shadow"
+                >
+                  Edit
+                </button>
+
+                {/* Delete button */}
+                <button
+                  onClick={() => handleDelete(a.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded shadow"
+                >
+                  Delete
+                </button>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
-      )}
-
-      {/* 🔐 PIN Modal */}
-      {pinModalOpen && (
-        <div style={modalStyles.backdrop}>
-          <div style={modalStyles.card}>
-            <h2 style={modalStyles.title}>Generate PIN</h2>
-            <p style={modalStyles.subtitle}>
-              Assignment ID:{" "}
-              <strong>{pinForm.assignmentId}</strong>
-            </p>
-
-            <form onSubmit={handleGeneratePin}>
-              <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Class ID</label>
-                <input
-                  type="number"
-                  value={pinForm.classId}
-                  onChange={(e) =>
-                    setPinForm((prev) => ({
-                      ...prev,
-                      classId: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g. 10"
-                  style={modalStyles.input}
-                />
-              </div>
-
-              <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Student Name</label>
-                <input
-                  type="text"
-                  value={pinForm.studentName}
-                  onChange={(e) =>
-                    setPinForm((prev) => ({
-                      ...prev,
-                      studentName: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g. Jane Smith"
-                  style={modalStyles.input}
-                />
-              </div>
-
-              {pinError && (
-                <p style={modalStyles.error}>{pinError}</p>
-              )}
-
-              {pinResult && (
-                <div style={modalStyles.pinBox}>
-                  <p style={{ margin: 0 }}>
-                    Share this PIN with the student:
-                  </p>
-                  <div style={modalStyles.pinValue}>{pinResult}</div>
-                </div>
-              )}
-
-              <div style={modalStyles.actions}>
-                <button
-                  type="button"
-                  onClick={closePinModal}
-                  style={modalStyles.secondaryButton}
-                >
-                  Close
-                </button>
-                <button
-                  type="submit"
-                  style={modalStyles.primaryButton}
-                  disabled={pinLoading}
-                >
-                  {pinLoading ? "Generating..." : "Generate PIN"}
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       )}
     </div>
   );
 }
-
-const modalStyles = {
-  backdrop: {
-    position: "fixed",
-    inset: 0,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999,
-  },
-  card: {
-    backgroundColor: "#111",
-    color: "#fff",
-    padding: "24px 28px",
-    borderRadius: "10px",
-    width: "100%",
-    maxWidth: "420px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.6)",
-    border: "1px solid #333",
-    fontFamily: "Arial, sans-serif",
-  },
-  title: {
-    fontSize: "1.4rem",
-    marginBottom: "4px",
-    color: "#FFD700",
-  },
-  subtitle: {
-    fontSize: "0.9rem",
-    marginBottom: "16px",
-    color: "#ddd",
-  },
-  field: {
-    marginBottom: "12px",
-  },
-  label: {
-    display: "block",
-    marginBottom: "4px",
-    fontSize: "0.9rem",
-  },
-  input: {
-    width: "100%",
-    padding: "8px 10px",
-    borderRadius: "6px",
-    border: "1px solid #444",
-    backgroundColor: "#000",
-    color: "#fff",
-  },
-  error: {
-    color: "#ff6b6b",
-    fontSize: "0.9rem",
-    marginTop: "4px",
-  },
-  pinBox: {
-    marginTop: "12px",
-    marginBottom: "12px",
-    padding: "10px 12px",
-    borderRadius: "6px",
-    border: "1px solid #FFD700",
-    backgroundColor: "#222",
-  },
-  pinValue: {
-    marginTop: "6px",
-    fontSize: "1.4rem",
-    fontWeight: "bold",
-    letterSpacing: "2px",
-    color: "#FFD700",
-  },
-  actions: {
-    marginTop: "16px",
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "10px",
-  },
-  primaryButton: {
-    padding: "8px 14px",
-    borderRadius: "6px",
-    border: "none",
-    backgroundColor: "#FFD700",
-    color: "#000",
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  secondaryButton: {
-    padding: "8px 14px",
-    borderRadius: "6px",
-    border: "1px solid #666",
-    backgroundColor: "transparent",
-    color: "#fff",
-    cursor: "pointer",
-  },
-};
