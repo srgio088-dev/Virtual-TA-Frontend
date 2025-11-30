@@ -104,6 +104,7 @@ useEffect(() => {
           {/* 🔐 PIN-based student submission */}
           <Route path="/submit" element={<PinEntry />} />
           <Route path="/submit/:pin" element={<PinSubmit />} />
+          <Route path="/pin-setup/:id" element={<PinSetup />} />
         </Routes>
       </main>
     </div>
