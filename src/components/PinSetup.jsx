@@ -19,6 +19,7 @@ export default function PinSetup() {
         const data = await apiGet(`/api/assignments/${id}`);
         setAssignment(data);
       } catch (err) {
+        console.error("Failed to load assignment", err);
         setError(err?.message || "Failed to load assignment");
       } finally {
         setLoading(false);
@@ -41,14 +42,20 @@ export default function PinSetup() {
     try {
       setBusy(true);
       const res = await apiPostJSON("/api/pins", {
-        class_id: classId,          // e.g., "3880"
-        assignment_id: Number(id),  // int
-        // student_id is optional, backend defaults to 0
+        class_id: classId,         // e.g., "3880"
+        assignment_id: Number(id), // int
+        // student_id is optional; backend defaults to 0
       });
 
-      // ✅ backend returns { "pin": "38800100", ... }
-      setPin(res.pin);
+      console.log("PIN response:", res);
+
+      if (res && res.pin) {
+        setPin(res.pin);
+      } else {
+        setError("Server did not return a PIN.");
+      }
     } catch (err) {
+      console.error("Failed to generate PIN", err);
       setError(err?.message || "Failed to generate PIN");
     } finally {
       setBusy(false);
@@ -85,7 +92,7 @@ export default function PinSetup() {
             <input
               type="text"
               inputMode="numeric"
-              pattern="\d{4}"
+              pattern="\\d{4}"            // HTML pattern: 4 digits
               maxLength={4}
               value={classId}
               onChange={(e) => {
