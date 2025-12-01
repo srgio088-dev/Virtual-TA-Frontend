@@ -27,6 +27,7 @@ export default function ReviewSubmission() {
       await apiPostJSON(`/api/submissions/${id}/finalize`, {
         final_grade: finalGrade,
       });
+      // keep this as-is if you want to go back to the assignments list
       navigate("/assignments");
     } catch (e) {
       setError("Save failed: " + e.message);
@@ -36,7 +37,14 @@ export default function ReviewSubmission() {
   function downloadFeedback() {
     if (!submission) return;
 
-    const assignmentName = submission.assignment_name || "Assignment";
+    const assignmentName =
+      submission.assignment_name ||
+      submission.file_name ||
+      submission.filename ||
+      submission.original_filename ||
+      submission.display_name ||
+      "Assignment";
+
     const studentName = submission.student_name || "Student";
     const suggested = submission.ai_grade ?? "N/A";
     const final = finalGrade || submission.final_grade || "N/A";
@@ -59,7 +67,9 @@ export default function ReviewSubmission() {
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const safeName = assignmentName.replace(/[^a-z0-9_-]+/gi, "_").toLowerCase();
+    const safeName = assignmentName
+      .replace(/[^a-z0-9_-]+/gi, "_")
+      .toLowerCase();
 
     a.href = url;
     a.download = `${safeName}_submission_${submission.id}_feedback.txt`;
@@ -84,21 +94,36 @@ export default function ReviewSubmission() {
     );
   }
 
+  const assignmentDisplay =
+    submission.assignment_name ||
+    submission.file_name ||
+    submission.filename ||
+    submission.original_filename ||
+    submission.display_name ||
+    "—";
+
   return (
     <div className="container">
+      {/* NEW: back button to go to previous page */}
+      <button
+        type="button"
+        className="btn"
+        style={{ marginBottom: "1rem" }}
+        onClick={() => navigate(-1)}
+      >
+        Back to Submissions
+      </button>
+
       <h1>Review Submission</h1>
 
       <p>
-        <strong>Assignment:</strong>{" "}
-        {submission.assignment_name || "—"}
+        <strong>Assignment:</strong> {assignmentDisplay}
       </p>
       <p>
-        <strong>Student:</strong>{" "}
-        {submission.student_name || "—"}
+        <strong>Student:</strong> {submission.student_name || "—"}
       </p>
       <p>
-        <strong>Suggested Grade:</strong>{" "}
-        {submission.ai_grade ?? "N/A"}
+        <strong>Suggested Grade:</strong> {submission.ai_grade ?? "N/A"}
       </p>
 
       <h3>AI Feedback</h3>
