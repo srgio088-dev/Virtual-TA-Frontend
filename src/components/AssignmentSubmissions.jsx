@@ -109,7 +109,6 @@ export default function AssignmentSubmissions() {
     <div
       className="container"
       style={{
-        maxWidth: "1200px",
         margin: "0 auto",
       }}
     >
@@ -157,7 +156,7 @@ export default function AssignmentSubmissions() {
               // make EACH CARD wider but keep the same vertical stack + single border
               style={{
                 width: "100%",
-                maxWidth: "1200px", // adjust this number to taste
+                //maxWidth: "1200px", // adjust this number to taste
                 margin: "0 auto 12px",
               }}
             >
