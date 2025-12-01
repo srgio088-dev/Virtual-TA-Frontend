@@ -105,7 +105,9 @@ export default function AssignmentList() {
   }
 
   return (
-    <div className="container">
+    <div 
+      className="container"
+      width="1000px">
       <h1>Assignments</h1>
       {error && <p className="error">{error}</p>}
 
