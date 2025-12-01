@@ -74,11 +74,12 @@ const styles = {
     alignItems: "center",
     minHeight: "90vh",
     textAlign: "center",
-    padding: "20px",
+    padding: "0px",
     backgroundImage: "url('/images/Linn_Cove.webp')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
+    style={{filter: 'brightness(20%)'}}
   },
   topHeader: {
     display: "flex",
@@ -140,6 +141,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
