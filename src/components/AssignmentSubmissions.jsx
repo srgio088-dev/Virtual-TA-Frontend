@@ -109,23 +109,24 @@ export default function AssignmentSubmissions() {
       <div
         className="card"
         style={{
-          maxWidth: "900px",   // ⬅️ THE ONLY CHANGE YOU WANTED
+          maxWidth: "900px",        // 👈 wider card
           width: "100%",
           margin: "0 auto",
           padding: "2rem",
+          display: "flex",          // 👈 force vertical layout
+          flexDirection: "column",  // 👈 header over section
         }}
       >
         <header style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
 
-          {/* Buttons stacked EXACTLY like before */}
           <div
             className="row"
             style={{
               display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              alignItems: "center",
+              justifyContent: "center",
+              gap: "12px",
+              flexWrap: "wrap",
             }}
           >
             <button
