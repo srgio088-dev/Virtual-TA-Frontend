@@ -157,7 +157,7 @@ export default function AssignmentSubmissions() {
               // make EACH CARD wider but keep the same vertical stack + single border
               style={{
                 width: "100%",
-                maxWidth: "800px", // adjust this number to taste
+                maxWidth: "900px", // adjust this number to taste
                 margin: "0 auto 12px",
               }}
             >
