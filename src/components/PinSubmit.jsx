@@ -148,7 +148,7 @@ const styles = {
     padding: "24px 28px",
     borderRadius: "10px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
-    border: "1px solid "#333",
+    border: "1px solid #333",
     fontFamily: "Arial, sans-serif",
   },
   title: {
