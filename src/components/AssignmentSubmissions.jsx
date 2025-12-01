@@ -88,15 +88,7 @@ async function downloadCSV() {
 
   return (
   <div className="container">
-    <h1>{assignment.name} — Submissions ({subs.length})</h1>
-
-    {/*<div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "1rem" }}>
-
-      <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}>View Rubric</button>
-      <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignments`)}>Back to Assignment List</button>
-      <button className="btn" onClick={downloadCSV}>Download All AI Feedback (CSV)</button>
-
-    </div>*/}
+    <h1>{assignment.name}</h1>
 
     <div className="button-row"
       style={{ 
@@ -109,6 +101,8 @@ async function downloadCSV() {
       <button type="button" className="btn" onClick={downloadCSV}>Download All AI Feedback (CSV)</button>
     </div>
 
+    <h1>Submissions ({subs.length})</h1>
+    
     {!subs.length ? (
       <p>No submissions yet.</p>
     ) : (
