@@ -13,15 +13,15 @@ export default function ReviewSubmission() {
     (async () => {
       try {
         const data = await apiGet(`/api/submissions/${id}`);
+        console.log("🔍 /api/submissions/:id response:", data);
         setSubmission(data);
         setFinalGrade(data.final_grade ?? "");
-        // Handy for debugging in the browser console:
-        // console.log("ReviewSubmission loaded:", data);
       } catch (e) {
         setError(e.message || "Failed to load submission.");
       }
     })();
   }, [id]);
+
 
   async function saveFinal(e) {
     e.preventDefault();
