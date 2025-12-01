@@ -22,7 +22,6 @@ export default function ReviewSubmission() {
     })();
   }, [id]);
 
-
   async function saveFinal(e) {
     e.preventDefault();
     try {
@@ -35,62 +34,74 @@ export default function ReviewSubmission() {
   }
 
   /**
-   * Resolve assignment & student display names using:
-   * 1) New fields: assignment_name, submission_name, assignment.name
-   * 2) Any filename-style field (original_filename, filename, file_name, upload_filename)
-   * 3) Legacy pattern in student_name (if it contains " - " and backend never split it)
+   * Resolve assignment & student display using:
+   * - student_name from backend when available
+   * - assignment name parsed from file_path, which looks like:
+   *   "uploads/Discussion_Post_1_Social_Engineering_-_Jed_Cooper.docx"
+   *   so we:
+   *     1) take the file name part
+   *     2) strip extension
+   *     3) split on "_-_"
+   *     4) left side -> assignment name (underscores => spaces)
+   *        right side -> student name (underscores => spaces) if needed
    */
   function resolveNames(sub) {
     if (!sub) {
-      return { assignmentDisplay: "—", studentDisplay: "—" };
+      return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
     }
 
-    // Start with whatever backend explicitly gives us
+    // Start with backend student_name
     let studentDisplay = sub.student_name || "";
-    let assignmentDisplay =
-      sub.assignment_name ||
-      sub.submission_name ||
-      (sub.assignment && sub.assignment.name) ||
-      "";
 
-    // If assignment name still missing, try to parse from a filename-like field
-    if (!assignmentDisplay) {
-      const rawFileName =
-        sub.original_filename ||
-        sub.filename ||
-        sub.file_name ||
-        sub.upload_filename ||
-        "";
+    // We will parse assignment name from file_path
+    let assignmentDisplay = "";
 
-      if (rawFileName) {
-        const withoutExt = rawFileName.replace(/\.[^/.]+$/, "");
-        const parts = withoutExt.split(" - ");
+    const rawPath = sub.file_path || "";
+    if (rawPath) {
+      // Get just the filename: "Discussion_Post_1_Social_Engineering_-_Jed_Cooper.docx"
+      const filename = rawPath.split(/[\\/]/).pop();
+      if (filename) {
+        // Strip extension
+        const withoutExt = filename.replace(/\.[^/.]+$/, "");
+        // The separator between assignment and student parts is "_-_"
+        const sep = "_-_";
+        const idx = withoutExt.lastIndexOf(sep);
 
-        if (parts.length >= 2) {
-          const studentPart = parts[parts.length - 1].trim();
-          const assignPart = parts.slice(0, parts.length - 1).join(" - ").trim();
+        if (idx !== -1) {
+          const assignmentRaw = withoutExt.slice(0, idx);
+          const studentFromFileRaw = withoutExt.slice(idx + sep.length);
 
+          // Convert underscores to spaces
+          const normalize = (s) =>
+            (s || "").replace(/_/g, " ").trim();
+
+          assignmentDisplay = normalize(assignmentRaw);
+
+          // If backend did not already supply student_name, fall back to parsed
           if (!studentDisplay) {
-            studentDisplay = studentPart || studentDisplay;
+            studentDisplay = normalize(studentFromFileRaw);
           }
-          assignmentDisplay = assignPart || assignmentDisplay;
         }
       }
     }
 
-    // Legacy fallback: if student_name itself contains " - ", treat last as student, rest as assignment
-    if ((!assignmentDisplay || !studentDisplay) && sub.student_name) {
-      const parts = sub.student_name.split(" - ");
-      if (parts.length >= 2) {
-        const studentPart = parts[parts.length - 1].trim();
-        const assignPart = parts.slice(0, parts.length - 1).join(" - ").trim();
-        if (!studentDisplay) studentDisplay = studentPart || studentDisplay;
-        if (!assignmentDisplay) assignmentDisplay = assignPart || assignmentDisplay;
+    // If assignment name still missing, fall back to "Assignment #<id>"
+    if (!assignmentDisplay) {
+      if (sub.assignment_name) {
+        assignmentDisplay = sub.assignment_name;
+      } else if (sub.assignment && sub.assignment.name) {
+        assignmentDisplay = sub.assignment.name;
+      } else if (sub.assignment_id) {
+        assignmentDisplay = `Assignment #${sub.assignment_id}`;
+      } else {
+        assignmentDisplay = "N/A";
       }
     }
 
-    if (!assignmentDisplay) assignmentDisplay = "—";
-    if (!studentDisplay) studentDisplay = "—";
+    // If student name still missing, give a safe default
+    if (!studentDisplay) {
+      studentDisplay = "N/A";
+    }
 
     return { assignmentDisplay, studentDisplay };
   }
