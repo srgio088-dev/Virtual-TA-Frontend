@@ -88,6 +88,26 @@ export default function AssignmentList() {
     }
   };
 
+function formatDueDate(due) {
+  try {
+    const d = new Date(due);
+    if (isNaN(d)) return due; // fallback: return raw string
+
+    const options = {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    return d.toLocaleString("en-US", options).replace(",", "");
+  } catch {
+    return due;
+  }
+}
+  
   return (
     <div className="container">
       <h1>Assignments</h1>
@@ -125,7 +145,7 @@ export default function AssignmentList() {
 
                 {/* Due Date Display */}
                 <p className="muted">
-                  {a.due_date ? `Due: ${a.due_date}` : "No due date"}
+                  {a.due_date ? `Due: ${formatDueDate(a.due_date)}` : "No due date"}
                 </p>
               </div>
 
