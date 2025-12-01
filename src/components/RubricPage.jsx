@@ -63,7 +63,7 @@ export default function RubricPage() {
         <button
           type="button"
           className="btn"
-          onClick={() => navigate(`/assignment/${id}`)}
+          onClick={() => navigate(`/assignment/${id}/submissions`)}
         >
           Back to Submissions
         </button>
