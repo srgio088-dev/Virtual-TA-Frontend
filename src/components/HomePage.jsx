@@ -9,7 +9,7 @@ export default function Home() {
     <div style={styles.outer}>
       {/* Left side image */}
       <img
-        src="/images/Linn_Cove.webp"
+        src="/images/boone_campus.webp"
         alt="Left decoration"
         style={styles.sideImageLeft}
       />
@@ -69,7 +69,7 @@ export default function Home() {
 
       {/* Right side image */}
       <img
-        src="/images/Linn_Cove.webp"
+        src="/images/boone_campus.webp"
         alt="Right decoration"
         style={styles.sideImageRight}
       />
@@ -181,3 +181,4 @@ const styles = {
     color: "#555",
   },
 };
+
