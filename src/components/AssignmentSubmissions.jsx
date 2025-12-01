@@ -103,50 +103,41 @@ export default function AssignmentSubmissions() {
   const subs = assignment.submissions || [];
 
   return (
+  <div
+    className="container"
+    style={{
+      maxWidth: "1200px",     // ⬅️ widened container
+      margin: "0 auto",
+    }}
+  >
     <div
-      className="container"
+      className="card"
       style={{
-        maxWidth: "1100px",
+        maxWidth: "1100px",   // ⬅️ widened internal card
         margin: "0 auto",
+        padding: "2rem",
       }}
     >
-      <header
-        style={{
-          marginBottom: "1.5rem",
-        }}
-      >
-        <h1 style={{ marginBottom: "0.75rem" }}>{assignment.name}</h1>
+      <header style={{ marginBottom: "1.5rem" }}>
+        <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
 
+        {/* TOP BUTTONS – unchanged, still side-by-side */}
         <div
-          className="button-row"
           style={{
             display: "flex",
-            flexWrap: "wrap",
-            gap: "12px",
+            justifyContent: "space-between",
+            gap: "16px",
           }}
         >
-          <button
-            type="button"
-            className="btn"
-            style={{ flex: "1 1 220px" }}
-            onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}
-          >
+          <button className="btn" onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}>
             View Rubric
           </button>
-          <button
-            type="button"
-            className="btn"
-            style={{ flex: "1 1 220px" }}
-            onClick={() => navigate(`/assignments`)}
-          >
+
+          <button className="btn" onClick={() => navigate(`/assignments`)}>
             Back to Assignment List
           </button>
-          <button
-            type="button"
-            className="btn"
-            style={{ flex: "1 1 260px" }}
-            onClick={downloadCSV}
-          >
+
+          <button className="btn" onClick={downloadCSV}>
             Download All AI Feedback (CSV)
           </button>
         </div>
