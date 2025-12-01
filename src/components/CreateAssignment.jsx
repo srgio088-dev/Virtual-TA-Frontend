@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiPostJSON } from "../api/client";
 
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
 export default function CreateAssignment() {
   const navigate = useNavigate();
 
   const [baseName, setBaseName] = useState("");
   const [rubricText, setRubricText] = useState("");
   const [rubricFile, setRubricFile] = useState(null);
-  const [dueDate, setDueDate] = useState("");   // NEW 11/19
+  const [dueDate, setDueDate] = useState(""); // NEW 11/19
   const [assignmentCount, setAssignmentCount] = useState(1);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [error, setError] = useState("");
@@ -30,39 +33,44 @@ export default function CreateAssignment() {
       return;
     }
 
+    // Require either text rubric OR file
     if (!rubricText.trim() && !rubricFile) {
       setError("Please either paste a rubric OR upload a rubric template file.");
       return;
     }
 
-    // Figure out the rubric text we’re going to send
-    let rubricBody = rubricText;
-    if (!rubricBody.trim() && rubricFile) {
-      try {
-        rubricBody = await rubricFile.text();
-      } catch (err) {
-        console.error(err);
-        setError("Could not read the uploaded rubric file.");
-        return;
-      }
-      if (!rubricBody.trim()) {
-        setError("The uploaded rubric file appears to be empty.");
-        return;
-      }
-    }
-
     const n = Math.max(1, Number(assignmentCount) || 1);
-
     setIsSubmitting(true);
+
     try {
-      // Create 1..n assignments, all with the same rubric
       for (let i = 1; i <= n; i++) {
         const name = n === 1 ? trimmedBaseName : `${trimmedBaseName} ${i}`;
-        await apiPostJSON("/api/assignments", {
-          name,
-          rubric: rubricBody,
-          due_date: dueDate || null,    // NEW 11/19
-        });
+
+        // If a file is provided, use multipart/form-data so backend can use PdfReader
+        if (rubricFile) {
+          const formData = new FormData();
+          formData.append("name", name);
+          formData.append("rubric", rubricText); // optional extra text
+          formData.append("rubric_file", rubricFile);
+          formData.append("due_date", dueDate || "");
+
+          const res = await fetch(`${API_BASE}/api/assignments`, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            const msg = await res.text();
+            throw new Error(msg || "Failed to create assignment with rubric file.");
+          }
+        } else {
+          // Original JSON behavior (no file, just text rubric)
+          await apiPostJSON("/api/assignments", {
+            name,
+            rubric: rubricText,
+            due_date: dueDate || null, // NEW 11/19
+          });
+        }
       }
 
       navigate("/assignments");
@@ -110,14 +118,17 @@ export default function CreateAssignment() {
         <label>
           Due Date
           <input
-            type="datetime-local" // NEW 11/19
+            type="datetime-local"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          <small>All created assignments will share this due date. Currently you will need to indivudally update the assignments to their correct due date.</small>
+          <small>
+            All created assignments will share this due date. Currently you will
+            need to individually update the assignments to their correct due
+            date.
+          </small>
         </label>
 
-        
         <label>
           Text Rubric
           <textarea
@@ -132,7 +143,11 @@ export default function CreateAssignment() {
 
         <label>
           Upload Rubric Template File (optional)
-          <input type="file" accept=".txt,.md,.pdf,.doc,.docx" onChange={handleFileChange} />
+          <input
+            type="file"
+            accept=".txt,.md,.pdf,.doc,.docx"
+            onChange={handleFileChange}
+          />
         </label>
 
         {selectedFileName && (
@@ -141,8 +156,8 @@ export default function CreateAssignment() {
 
         {error && <p className="error">{error}</p>}
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isSubmitting}
           style={{
             backgroundColor: "#FFD700",
@@ -157,11 +172,10 @@ export default function CreateAssignment() {
             width: "100%",
           }}
           onMouseOver={(e) => (e.target.style.backgroundColor = "#E5C100")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#E5C100")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#FFD700")}
         >
           {isSubmitting ? "Creating…" : "Create Assignment"}
         </button>
-        
       </form>
     </div>
   );
