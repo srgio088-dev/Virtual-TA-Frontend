@@ -7,6 +7,7 @@ export default function AssignmentList() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState(null);
+  const [sortOption, setSortOption] = useState("none");
 
   // 🔐 PIN generation modal state
   const [pinModalOpen, setPinModalOpen] = useState(false);
@@ -109,6 +110,23 @@ function formatDueDate(due) {
     return due;
   }
 }
+
+  // --- Sorting Logic ---
+const sortedAssignments = [...assignments].sort((a, b) => {
+  if (sortOption === "name-asc") {
+    return a.name.localeCompare(b.name);
+  }
+  if (sortOption === "name-desc") {
+    return b.name.localeCompare(a.name);
+  }
+  if (sortOption === "due-asc") {
+    return new Date(a.due_date || 0) - new Date(b.due_date || 0);
+  }
+  if (sortOption === "due-desc") {
+    return new Date(b.due_date || 0) - new Date(a.due_date || 0);
+  }
+  return 0;
+});
   
   return (
     <div className="container">
@@ -117,8 +135,30 @@ function formatDueDate(due) {
       {!assignments.length ? (
         <p>No assignments yet.</p>
       ) : (
+      <div style={{ marginBottom: "1rem" }}>
+  <label style={{ marginRight: "8px", fontWeight: "bold" }}>
+    Sort:
+  </label>
+
+  <select
+    value={sortOption}
+    onChange={(e) => setSortOption(e.target.value)}
+    style={{
+      padding: "6px 10px",
+      borderRadius: "6px",
+      border: "1px solid #999",
+    }}
+  >
+    <option value="none">Default</option>
+    <option value="name-asc">Name (A → Z)</option>
+    <option value="name-desc">Name (Z → A)</option>
+    <option value="due-asc">Due Date (Earliest First)</option>
+    <option value="due-desc">Due Date (Latest First)</option>
+  </select>
+</div>
+
         <ul className="list">
-          {assignments.map((a) => (
+          {sortedAssignments.map((a) => (
             <li
               key={a.id}
               className={`assignment-card ${
