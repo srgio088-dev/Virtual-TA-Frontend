@@ -2,21 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiGet, apiPostJSON } from "../api/client";
 
-// Helper: split "AssignmentName StudentName" into both parts
-function splitLabel(label) {
-  if (!label) return { assignment: "", student: "" };
-
-  const firstSpace = label.indexOf(" ");
-  if (firstSpace === -1) {
-    return { assignment: label.trim(), student: "" };
-  }
-
-  const assignment = label.substring(0, firstSpace).trim();
-  const student = label.substring(firstSpace + 1).trim();
-
-  return { assignment, student };
-}
-
 export default function ReviewSubmission() {
   const { id } = useParams(); // submission id
   const navigate = useNavigate();
@@ -42,8 +27,6 @@ export default function ReviewSubmission() {
       await apiPostJSON(`/api/submissions/${id}/finalize`, {
         final_grade: finalGrade,
       });
-      // stay on page after save – change if you want redirect
-      // navigate("/assignments");
     } catch (e) {
       setError("Save failed: " + e.message);
     }
@@ -52,16 +35,12 @@ export default function ReviewSubmission() {
   function downloadFeedback() {
     if (!submission) return;
 
-    const { assignment: parsedAssignment, student: parsedStudent } =
-      splitLabel(submission.student_name);
-
     const assignmentName =
       submission.assignment_name ||
       (submission.assignment && submission.assignment.name) ||
-      parsedAssignment ||
       "Assignment";
 
-    const studentName = parsedStudent || submission.student_name || "Student";
+    const studentName = submission.student_name || "Student";
     const suggested = submission.ai_grade ?? "N/A";
     const final = finalGrade || submission.final_grade || "N/A";
     const feedback = submission.ai_feedback || "";
@@ -110,18 +89,12 @@ export default function ReviewSubmission() {
     );
   }
 
-  // Use the split label for display
-  const { assignment: parsedAssignment, student: parsedStudent } = splitLabel(
-    submission.student_name
-  );
-
   const assignmentDisplay =
     submission.assignment_name ||
     (submission.assignment && submission.assignment.name) ||
-    parsedAssignment ||
     "—";
 
-  const studentDisplay = parsedStudent || submission.student_name || "—";
+  const studentDisplay = submission.student_name || "—";
 
   return (
     <div className="container">
@@ -140,50 +113,47 @@ export default function ReviewSubmission() {
       <h3>AI Feedback</h3>
       <pre className="pre">{submission.ai_feedback}</pre>
 
-      <form onSubmit={saveFinal} className="form" style={{ marginTop: "0.5rem" }}>
-          <label>
-            <h3>Final Grade</h3>
-            <input
-              value={finalGrade}
-              onChange={(e) => setFinalGrade(e.target.value)}
-              placeholder="e.g., 88"
-            />
-          </label>
-        
-          <div className="button-row"
-              style={{
-                display: "flex",
-                gap: "12px",
-                marginTop: "12px",
-              }}
-              >
-              <button
-                className="btn"
-                type="button"
-                style={{ flex: 1}}
-                onClick={downloadFeedback}
-              >
-                Download Feedback
-              </button>
-            
-              <button
-                className="btn"
-                type="submit"
-                style={{ flex: 1}}
-              >
-                Save Final Grade
-              </button>
-            
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                style={{ flex: 1}}
-                className="btn"
-              >
-                Back to Submissions
-              </button>
-            </div>
-          </form>
+      <form onSubmit={saveFinal} className="form" style={{ marginTop: "1rem" }}>
+        <label>
+          <h3>Final Grade</h3>
+          <input
+            value={finalGrade}
+            onChange={(e) => setFinalGrade(e.target.value)}
+            placeholder="e.g., 88"
+          />
+        </label>
+
+        <div
+          className="button-row"
+          style={{
+            display: "flex",
+            gap: "12px",
+            marginTop: "12px",
+          }}
+        >
+          <button
+            className="btn"
+            type="button"
+            style={{ flex: 1 }}
+            onClick={downloadFeedback}
+          >
+            Download Feedback
+          </button>
+
+          <button className="btn" type="submit" style={{ flex: 1 }}>
+            Save Final Grade
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            style={{ flex: 1 }}
+            className="btn"
+          >
+            Back to Submissions
+          </button>
         </div>
+      </form>
+    </div>
   );
 }
