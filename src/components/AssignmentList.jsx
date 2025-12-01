@@ -134,7 +134,7 @@ export default function AssignmentList() {
                     navigate(`/assignment/${a.id}`);
                   }}
                 >
-                  View Submissions
+                  View Assignment
                 </button>
                 <button
                   onClick={(e) => {
