@@ -93,11 +93,17 @@ export default function ReviewSubmission() {
   }
 
   // ✅ show assignment name OR fall back to the submission/file label
-  const assignmentDisplay =
-    submission.assignment_name ||
-    (submission.assignment && submission.assignment.name) ||
-    submission.student_name ||
-    "—";
+  // Split the combined label (e.g., "DiscussionPost1 GeorgeV")
+const { assignment, student } = splitLabel(submission.student_name);
+
+const assignmentDisplay =
+  submission.assignment_name ||
+  (submission.assignment && submission.assignment.name) ||
+  assignment ||
+  "—";
+
+const studentDisplay =
+  submission.student_name ? student : submission.student_name || "—";
 
   return (
     <div className="container">
@@ -107,7 +113,7 @@ export default function ReviewSubmission() {
         <strong>Assignment:</strong> {assignmentDisplay}
       </p>
       <p>
-        <strong>Student:</strong> {submission.student_name || "—"}
+        <strong>Student:</strong> {studentDisplay}
       </p>
       <p>
         <strong>Suggested Grade:</strong> {submission.ai_grade ?? "N/A"}
