@@ -7,7 +7,6 @@ export default function AssignmentList() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState(null);
-  const [sortOption, setSortOption] = useState("none");
 
   // 🔐 PIN generation modal state
   const [pinModalOpen, setPinModalOpen] = useState(false);
@@ -15,6 +14,7 @@ export default function AssignmentList() {
     classId: "",
     studentName: "",
     assignmentId: null,
+    assignmentName: "",
   });
   const [pinLoading, setPinLoading] = useState(false);
   const [pinError, setPinError] = useState("");
@@ -45,17 +45,16 @@ export default function AssignmentList() {
   }
 
   const openPinModal = (assignment) => {
-  setPinForm({
-    classId: "",
-    studentName: "",
-    assignmentId: assignment.id,
-    assignmentName: assignment.name,   // <-- ADD THIS
-  });
-  setPinResult("");
-  setPinError("");
-  setPinModalOpen(true);
-};
-
+    setPinForm({
+      classId: "",
+      studentName: "",
+      assignmentId: assignment.id,
+      assignmentName: assignment.name,
+    });
+    setPinResult("");
+    setPinError("");
+    setPinModalOpen(true);
+  };
 
   const closePinModal = () => {
     setPinModalOpen(false);
@@ -80,10 +79,7 @@ export default function AssignmentList() {
       };
 
       const res = await apiPostJSON("/api/pins", body);
-
-      // 🔁 UPDATED: backend returns { pin_code: "483920", ... }
       setPinResult(res.pin_code || "");
-
     } catch (err) {
       setPinError(err?.message || "Failed to generate PIN.");
     } finally {
@@ -91,78 +87,45 @@ export default function AssignmentList() {
     }
   };
 
-function formatDueDate(due) {
-  try {
-    const d = new Date(due);
-    if (isNaN(d)) return due; // fallback: return raw string
+  function formatDueDate(due) {
+    try {
+      const d = new Date(due);
+      if (isNaN(d)) return due;
 
-    const options = {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    };
+      const options = {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      };
 
-    return d.toLocaleString("en-US", options).replace(",", "");
-  } catch {
-    return due;
+      return d.toLocaleString("en-US", options).replace(",", "");
+    } catch {
+      return due;
+    }
   }
-}
 
-  // --- Sorting Logic ---
-const sortedAssignments = [...assignments].sort((a, b) => {
-  if (sortOption === "name-asc") {
-    return a.name.localeCompare(b.name);
-  }
-  if (sortOption === "name-desc") {
-    return b.name.localeCompare(a.name);
-  }
-  if (sortOption === "due-asc") {
-    return new Date(a.due_date || 0) - new Date(b.due_date || 0);
-  }
-  if (sortOption === "due-desc") {
-    return new Date(b.due_date || 0) - new Date(a.due_date || 0);
-  }
-  return 0;
-});
-  
   return (
     <div className="container">
       <h1>Assignments</h1>
       {error && <p className="error">{error}</p>}
+
       {!assignments.length ? (
         <p>No assignments yet.</p>
-      {!assignments.length ? (
-  <p>No assignments yet.</p>
-) : (
-  <div>
-    <div style={{ marginBottom: "1rem" }}>
-      <label style={{ marginRight: "8px", fontWeight: "bold" }}>Sort:</label>
-
-      <select
-        value={sortOption}
-        onChange={(e) => setSortOption(e.target.value)}
-        style={{
-          padding: "6px 10px",
-          borderRadius: "6px",
-          border: "1px solid #999",
-        }}
-      >
-        <option value="none">Default</option>
-        <option value="name-asc">Name (A → Z)</option>
-        <option value="name-desc">Name (Z → A)</option>
-        <option value="due-asc">Due Date (Earliest First)</option>
-        <option value="due-desc">Due Date (Latest First)</option>
-      </select>
-    </div>
-
-    <ul className="list">
-      {sortedAssignments.map((a) => (
-        <li key={a.id} className={`assignment-card ${selectedId === a.id ? "selected" : ""}`}
-            onClick={() => setSelectedId(selectedId === a.id ? null : a.id)}
-          
+      ) : (
+        <ul className="list">
+          {assignments.map((a) => (
+            <li
+              key={a.id}
+              className={`assignment-card ${
+                selectedId === a.id ? "selected" : ""
+              }`}
+              onClick={() =>
+                setSelectedId(selectedId === a.id ? null : a.id)
+              }
+            >
               <div className="assignment-main">
                 <strong>{a.name}</strong>{" "}
                 <span className="muted">
@@ -180,13 +143,13 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                       }`}
                 </p>
 
-                {/* Due Date Display */}
                 <p className="muted">
-                  {a.due_date ? `Due: ${formatDueDate(a.due_date)}` : "No due date"}
+                  {a.due_date
+                    ? `Due: ${formatDueDate(a.due_date)}`
+                    : "No due date"}
                 </p>
               </div>
 
-              {/* Hidden until hover */}
               <div className="assignment-actions">
                 <button
                   onClick={(e) => {
@@ -196,6 +159,7 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                 >
                   View Assignment
                 </button>
+
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -204,6 +168,7 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                 >
                   Edit
                 </button>
+
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -213,7 +178,6 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                   Delete
                 </button>
 
-                {/* 🔐 Generate PIN button */}
                 <button
                   type="button"
                   onClick={(e) => {
@@ -225,21 +189,18 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                 </button>
               </div>
             </li>
-      ))}
-    </ul>
-  </div>
-)}
+          ))}
+        </ul>
+      )}
 
-      {/* 🔐 PIN Modal */}
+      {/* PIN Modal */}
       {pinModalOpen && (
         <div style={modalStyles.backdrop}>
           <div style={modalStyles.card}>
             <h2 style={modalStyles.title}>Generate PIN</h2>
             <p style={modalStyles.subtitle}>
-              Assignment:{" "}
-              <strong>{pinForm.assignmentName}</strong>
+              Assignment: <strong>{pinForm.assignmentName}</strong>
             </p>
-
 
             <form onSubmit={handleGeneratePin}>
               <div style={modalStyles.field}>
@@ -294,6 +255,7 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                 >
                   Close
                 </button>
+
                 <button
                   type="submit"
                   style={modalStyles.primaryButton}
