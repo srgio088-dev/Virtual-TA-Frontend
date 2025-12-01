@@ -32,22 +32,56 @@ export default function ReviewSubmission() {
     }
   }
 
+  // Smart resolver for assignment + student display
+  function resolveNames(sub) {
+    if (!sub) {
+      return { assignmentDisplay: "—", studentDisplay: "—" };
+    }
+
+    // Student is whatever backend stored
+    let studentDisplay = sub.student_name || "—";
+
+    // Try backend-provided assignment name first
+    let assignmentDisplay =
+      sub.assignment_name ||
+      (sub.assignment && sub.assignment.name) ||
+      "";
+
+    // If backend didn't store assignment name, extract from original filename
+    if (!assignmentDisplay && sub.original_filename) {
+      const withoutExt = sub.original_filename.replace(/\.[^/.]+$/, "");
+      const parts = withoutExt.split(" - ");
+
+      if (parts.length >= 2) {
+        // last part = student, rest = assignment/submission name
+        const studentPart = parts[parts.length - 1].trim();
+        const assignPart = parts.slice(0, parts.length - 1).join(" - ").trim();
+
+        if (!sub.student_name) {
+          studentDisplay = studentPart || studentDisplay;
+        }
+        assignmentDisplay = assignPart || assignmentDisplay;
+      }
+    }
+
+    if (!assignmentDisplay) assignmentDisplay = "—";
+    if (!studentDisplay) studentDisplay = "—";
+
+    return { assignmentDisplay, studentDisplay };
+  }
+
   function downloadFeedback() {
     if (!submission) return;
 
-    const assignmentName =
-      submission.assignment_name ||
-      (submission.assignment && submission.assignment.name) ||
-      "Assignment";
+    const { assignmentDisplay, studentDisplay } = resolveNames(submission);
 
-    const studentName = submission.student_name || "Student";
     const suggested = submission.ai_grade ?? "N/A";
     const final = finalGrade || submission.final_grade || "N/A";
     const feedback = submission.ai_feedback || "";
 
     const lines = [
-      `Assignment: ${assignmentName}`,
-      `Student: ${studentName}`,
+      `Assignment: ${assignmentDisplay}`,
+      `Student: ${studentDisplay}`,
       `Suggested Grade: ${suggested}`,
       `Final Grade: ${final}`,
       "",
@@ -60,8 +94,8 @@ export default function ReviewSubmission() {
       type: "text/plain;charset=utf-8",
     });
 
-    // Filename like AssignmentName_StudentName_feedback.txt
-    const rawName = `${assignmentName}_${studentName}`;
+    // Filename like assignment_student_feedback.txt
+    const rawName = `${assignmentDisplay}_${studentDisplay}`;
     const safeName = rawName.replace(/[^a-z0-9_-]+/gi, "_").toLowerCase();
 
     const url = URL.createObjectURL(blob);
@@ -89,29 +123,7 @@ export default function ReviewSubmission() {
     );
   }
 
-  // Use whatever field contains "Assignment_Student"
-const rawName =
-  submission.submission_name ||
-  submission.name ||
-  submission.filename ||
-  "";
-
-// Split on first underscore only
-let parsedAssignment = "—";
-let parsedStudent = "—";
-
-if (rawName.includes("_")) {
-  const splitIndex = rawName.indexOf("_");
-  parsedAssignment = rawName.slice(0, splitIndex);
-  parsedStudent = rawName.slice(splitIndex + 1);
-}
-  
-  const assignmentDisplay =
-    submission.assignment_name ||
-    (submission.assignment && submission.assignment.name) ||
-    "—";
-
-  const studentDisplay = submission.student_name || "—";
+  const { assignmentDisplay, studentDisplay } = resolveNames(submission);
 
   return (
     <div className="container">
