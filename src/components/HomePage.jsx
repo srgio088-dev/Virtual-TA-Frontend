@@ -1,107 +1,142 @@
-import React, { useState } from "react";
+// src/components/HomePage.jsx
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ReviewSubmission({ submission }) {
+
+export default function Home() {
   const navigate = useNavigate();
-  const [finalGrade, setFinalGrade] = useState("");
 
-  // Parse Assignment + Student from filename
-  const parseNamesFromFile = (filename) => {
-    try {
-      if (!filename || !filename.includes("_")) {
-        return { assignment: "N/A", student: "N/A" };
-      }
-
-      const noExtension = filename.split(".")[0];
-      const [assignment, student] = noExtension.split("_");
-
-      if (!assignment || !student) {
-        return { assignment: "N/A", student: "N/A" };
-      }
-
-      return { assignment, student };
-    } catch (error) {
-      return { assignment: "N/A", student: "N/A" };
-    }
-  };
-
-  const { assignment: assignmentDisplay, student: studentDisplay } =
-    parseNamesFromFile(submission?.file_name);
-
-  const saveFinal = (e) => {
-    e.preventDefault();
-    console.log("Final grade saved:", finalGrade);
-  };
-
-  const downloadFeedback = () => {
-    console.log("Downloading feedback...");
-  };
 
   return (
-    <div className="outer-container">
-      <img
-        className="side-img left"
-        src="/images/Linn_Cove.webp"
-        alt="Left decoration"
-      />
-
-      <div className="container">
-        <h1>Review Submission</h1>
-
-        <p>
-          <strong>Assignment:</strong> {assignmentDisplay}
-        </p>
-
-        <p>
-          <strong>Student:</strong> {studentDisplay}
-        </p>
-
-        <p>
-          <strong>Suggested Grade:</strong> {submission?.ai_grade ?? "N/A"}
-        </p>
-
-        <h3>AI Feedback</h3>
-        <pre className="pre">{submission?.ai_feedback}</pre>
-
-        <form onSubmit={saveFinal} className="form">
-          <label>
-            <h3>Final Grade</h3>
-            <input
-              value={finalGrade}
-              onChange={(e) => setFinalGrade(e.target.value)}
-              placeholder="e.g., 88"
-            />
-          </label>
-
-          <div className="button-row">
-            <button
-              className="btn"
-              type="button"
-              onClick={downloadFeedback}
-            >
-              Download Feedback
-            </button>
-
-            <button className="btn" type="submit">
-              Save Final Grade
-            </button>
-
-            <button
-              className="btn"
-              type="button"
-              onClick={() => navigate(-1)}
-            >
-              Back to Submissions
-            </button>
-          </div>
-        </form>
+    <div style={styles.container}>
+      {/* Title and Logo Side by Side */}
+      <div style={styles.topHeader}>
+        <h1 style={styles.title}>Welcome to the Virtual Teaching Assitant!</h1>
+        <img
+          src="/images/robot.png"
+          alt=""
+          style={styles.image}
+        />
       </div>
 
-      <img
-        className="side-img right"
-        src="/images/Linn_Cove.webp"
-        alt="Right decoration"
-      />
+
+      {/* Simplified Description */}
+      <p style={styles.description}>
+        Managing multiple classes, assignments, and deadlines can be overwhelming for professors.
+        Virtual TA helps by centralizing course data and assisting with feedback and grading—while keeping the professor in control.
+        <br /><br />
+        Our goal is to save professors time, reduce stress, and allow them to focus more on teaching and engaging with students, rather than administrative tasks.
+      </p>
+
+
+      {/* Navigation Section */}
+      <div style={styles.header}>
+        <h2 style={styles.subtitle}>Navigate to:</h2>
+      </div>
+
+
+      {/* Buttons that navigate */}
+      <div style={styles.linksContainer}>
+        <button style={styles.button} onClick={() => navigate("/assignments")}>
+          View Assignments
+        </button>
+
+
+        <button style={styles.button} onClick={() => navigate("/upload")}>
+          Upload Student Submission
+        </button>
+
+
+        <button style={styles.button} onClick={() => navigate("/create")}>
+          Create New Assignment
+        </button>
+      </div>
+
+
+      {/* Footer / Credits */}
+      <footer style={styles.footer}>
+        <p style={styles.footerText}>
+          Virtual TA was created by <strong>Jed Cooper</strong>, <strong>Alexa Davis</strong>,
+          <strong> Alexia Dickinson</strong>, and <strong>Sergio Giron </strong>
+          for their IS Project course with <strong>Dr. Kaleta</strong> in Fall 2025.
+        </p>
+      </footer>
     </div>
   );
 }
+
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    minHeight: "90vh",
+    textAlign: "center",
+    padding: "0px",
+    //backgroundImage: "url('/images/Linn_Cove.webp')",
+    //backgroundSize: "cover",
+    //backgroundPosition: "center",
+    //backgroundRepeat: "no-repeat",
+  },
+  topHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: "15px",
+    marginBottom: "20px",
+  },
+  title: {
+    fontSize: "2rem",
+    fontWeight: "bold",
+  },
+  image: {
+    width: "50px",
+    height: "50px",
+    borderRadius: "8px",
+  },
+  description: {
+    fontSize: "1.1rem",
+    maxWidth: "700px",
+    lineHeight: "1.5",
+    marginBottom: "40px",
+  },
+  header: {
+    marginBottom: "15px",
+  },
+  subtitle: {
+    fontSize: "1.5rem",
+    fontWeight: "600",
+  },
+  linksContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+    marginBottom: "40px",
+    alignItems: "center",
+    width: "100%",
+    maxWidth: "420px",
+  },
+  button: {
+  width: "100%",
+  padding: "12px 18px",
+  fontSize: "1rem",
+  fontWeight: "600",
+  color: "#000000", // Black text
+  backgroundColor: "#FFD700", // Bright yellow
+  border: "2px solid #000000", // Optional black border for contrast
+  borderRadius: "8px",
+  cursor: "pointer",
+  transition: "background-color 0.3s ease, transform 0.2s ease",
+},
+  footer: {
+    marginTop: "auto",
+    paddingTop: "20px",
+    borderTop: "1px solid #ccc",
+    width: "100%",
+  },
+  footerText: {
+    fontSize: "0.9rem",
+    color: "#555",
+  },
+};
