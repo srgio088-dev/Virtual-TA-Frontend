@@ -33,84 +33,55 @@ export default function ReviewSubmission() {
     }
   }
 
-  /**
-   * Resolve assignment & student display using:
-   * - student_name from backend when available
-   * - assignment name parsed from file_path, which looks like:
-   *   "uploads/Discussion_Post_1_Social_Engineering_-_Jed_Cooper.docx"
-   *   so we:
-   *     1) take the file name part
-   *     2) strip extension
-   *     3) split on "_-_"
-   *     4) left side -> assignment name (underscores => spaces)
-   *        right side -> student name (underscores => spaces) if needed
-   */
+  /*
+    EXAMPLE FILENAME: DiscussionPost1_JohnSmith.docx
+
+    LEFT  of "_" = assignment
+    RIGHT of "_" = student
+
+    If ANYTHING fails -> N/A
+  */
+  
   function resolveNames(sub) {
-    if (!sub) {
+    try {
+      if (!sub || !sub.file_path) {
+        return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
+      }
+
+  // Get just the filename
+      const filename = sub.file_path.split(/[\\/]/).pop();
+
+      // Remove the extension
+      const withoutExt = filename.replace(/\.[^/.]+$/, "");
+
+      // Find underscore
+      const underscoreIndex = withoutExt.indexOf("_");
+
+      if (underscoreIndex === -1) {
+        return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
+      }
+
+      const assignmentRaw = withoutExt.slice(0, underscoreIndex);
+      const studentRaw = withoutExt.slice(underscoreIndex + 1);
+
+      if (!assignmentRaw || !studentRaw) {
+        return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
+      }
+
+      return {
+        assignmentDisplay: assignmentRaw,
+        studentDisplay: studentRaw,
+      };
+    } catch (err) {
+      console.error("Name parsing failed:", err);
       return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
     }
-
-    // Start with backend student_name
-    let studentDisplay = sub.student_name || "";
-
-    // We will parse assignment name from file_path
-    let assignmentDisplay = "";
-
-    const rawPath = sub.file_path || "";
-    if (rawPath) {
-      // Get just the filename: "Discussion_Post_1_Social_Engineering_-_Jed_Cooper.docx"
-      const filename = rawPath.split(/[\\/]/).pop();
-      if (filename) {
-        // Strip extension
-        const withoutExt = filename.replace(/\.[^/.]+$/, "");
-        // The separator between assignment and student parts is "_-_"
-        const sep = "_-_";
-        const idx = withoutExt.lastIndexOf(sep);
-
-        if (idx !== -1) {
-          const assignmentRaw = withoutExt.slice(0, idx);
-          const studentFromFileRaw = withoutExt.slice(idx + sep.length);
-
-          // Convert underscores to spaces
-          const normalize = (s) =>
-            (s || "").replace(/_/g, " ").trim();
-
-          assignmentDisplay = normalize(assignmentRaw);
-
-          // If backend did not already supply student_name, fall back to parsed
-          if (!studentDisplay) {
-            studentDisplay = normalize(studentFromFileRaw);
-          }
-        }
-      }
-    }
-
-    // If assignment name still missing, fall back to "Assignment #<id>"
-    if (!assignmentDisplay) {
-      if (sub.assignment_name) {
-        assignmentDisplay = sub.assignment_name;
-      } else if (sub.assignment && sub.assignment.name) {
-        assignmentDisplay = sub.assignment.name;
-      } else if (sub.assignment_id) {
-        assignmentDisplay = `Assignment #${sub.assignment_id}`;
-      } else {
-        assignmentDisplay = "N/A";
-      }
-    }
-
-    // If student name still missing, give a safe default
-    if (!studentDisplay) {
-      studentDisplay = "N/A";
-    }
-
-    return { assignmentDisplay, studentDisplay };
   }
 
   function downloadFeedback() {
     if (!submission) return;
 
     const { assignmentDisplay, studentDisplay } = resolveNames(submission);
-
     const suggested = submission.ai_grade ?? "N/A";
     const final = finalGrade || submission.final_grade || "N/A";
     const feedback = submission.ai_feedback || "";
@@ -130,7 +101,6 @@ export default function ReviewSubmission() {
       type: "text/plain;charset=utf-8",
     });
 
-    // Filename like assignment_student_feedback.txt
     const rawName = `${assignmentDisplay}_${studentDisplay}`;
     const safeName = rawName.replace(/[^a-z0-9_-]+/gi, "_").toLowerCase();
 
