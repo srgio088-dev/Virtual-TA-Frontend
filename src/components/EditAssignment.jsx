@@ -111,9 +111,9 @@ export default function EditAssignment() {
           borderRadius: "12px",
           padding: "12px 16px",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          flexDirection: "column",
           gap: "24px",
+          alignItems: "flex-start",
           backgroundColor: "#fff",
           boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
@@ -121,14 +121,13 @@ export default function EditAssignment() {
         <h2
           style={{
             margin: 0,
-            whiteSpace: "nowrap",
             fontSize: "1.5rem",
             fontWeight: "bold",
           }}
         >
           Edit Assignment
         </h2>
-        <div style={{ flexGrow: 1 }}>
+        <div style={{ width: "100%" }}>
           <label
             style={{
               fontWeight: "bold",
@@ -152,7 +151,7 @@ export default function EditAssignment() {
             }}
           />
         </div>
-        <div style={{ flexGrow: 1 }}>
+        <div style={{ width: "100%" }}>
   <label
     style={{
       fontWeight: "bold",
