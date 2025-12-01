@@ -11,82 +11,83 @@ import { useEffect, useState } from "react";
 import RubricPage from "./components/RubricPage.jsx";
 import PinEntry from "./components/PinEntry";
 import PinSubmit from "./components/PinSubmit"; //New Edit 11-30
-
+import PinSetup from "./components/PinSetup";   // ✅ NEW: route for Generate PIN
 
 export default function App() {
   const [user, setUser] = useState(null);
 
-useEffect(() => {
-  netlifyIdentity.init({
-    APIUrl: "https://virtualteacher.netlify.app/.netlify/identity", // your site URL
-  });
+  useEffect(() => {
+    netlifyIdentity.init({
+      APIUrl: "https://virtualteacher.netlify.app/.netlify/identity", // your site URL
+    });
 
-  netlifyIdentity.on("login", (user) => {
-    setUser(user);
-    netlifyIdentity.close();
-  });
+    netlifyIdentity.on("login", (user) => {
+      setUser(user);
+      netlifyIdentity.close();
+    });
 
-  netlifyIdentity.on("logout", () => {
-    setUser(null);
-  });
+    netlifyIdentity.on("logout", () => {
+      setUser(null);
+    });
 
-  // Optional: return cleanup
-  return () => {
-    netlifyIdentity.off("login");
-    netlifyIdentity.off("logout");
-  };
-}, []);
+    // Optional: return cleanup
+    return () => {
+      netlifyIdentity.off("login");
+      netlifyIdentity.off("logout");
+    };
+  }, []);
+
   return (
     <div className="layout">
       <header className="header" style={styles.header}>
         {/* Left side: logo + header link */}
         <div style={styles.leftContainer}>
-        <img src="/images/asu_logo.png" alt="ASU Logo" style={styles.logo} />
-        <Link to="/home" style={styles.left}>Virtual TA</Link>
-      </div>
-
+          <img src="/images/asu_logo.png" alt="ASU Logo" style={styles.logo} />
+          <Link to="/home" style={styles.left}>Virtual TA</Link>
+        </div>
 
         {/* Right side: nav links */}
-<div style={styles.right}>
-  <Link to="/assignments" style={styles.link}>View Assignments</Link>
-  <Link to="/upload" style={styles.link}>Upload Submission</Link>
-  <Link to="/create" style={styles.link}>Create Assignment</Link>
+        <div style={styles.right}>
+          <Link to="/assignments" style={styles.link}>View Assignments</Link>
+          <Link to="/upload" style={styles.link}>Upload Submission</Link>
+          <Link to="/create" style={styles.link}>Create Assignment</Link>
 
-  {user ? (
-    <>
-      <span style={{ color: "#FFD700" }}>Hi, {user.user_metadata?.full_name || user.email}</span>
-      <button
-        onClick={() => netlifyIdentity.logout()}
-        style={{
-          marginLeft: "10px",
-          padding: "5px 10px",
-          backgroundColor: "#FFD700",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Log Out
-      </button>
-    </>
-  ) : (
-    <button
-      onClick={() => netlifyIdentity.open("login")}
-      style={{
-        marginLeft: "10px",
-        padding: "5px 10px",
-        backgroundColor: "#FFD700",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
-    >
-      Login / Sign Up
-    </button>
-  )}
-</div>
+          {user ? (
+            <>
+              <span style={{ color: "#FFD700" }}>
+                Hi, {user.user_metadata?.full_name || user.email}
+              </span>
+              <button
+                onClick={() => netlifyIdentity.logout()}
+                style={{
+                  marginLeft: "10px",
+                  padding: "5px 10px",
+                  backgroundColor: "#FFD700",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => netlifyIdentity.open("login")}
+              style={{
+                marginLeft: "10px",
+                padding: "5px 10px",
+                backgroundColor: "#FFD700",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Login / Sign Up
+            </button>
+          )}
+        </div>
       </header>
-
 
       <main className="main">
         <Routes>
@@ -104,12 +105,14 @@ useEffect(() => {
           {/* 🔐 PIN-based student submission */}
           <Route path="/submit" element={<PinEntry />} />
           <Route path="/submit/:pin" element={<PinSubmit />} />
+
+          {/* ✅ NEW: PIN setup (professor generates code) */}
+          <Route path="/pin-setup/:id" element={<PinSetup />} />
         </Routes>
       </main>
     </div>
   );
 }
-
 
 const styles = {
   header: {
