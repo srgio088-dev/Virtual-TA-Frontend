@@ -1,5 +1,5 @@
 // src/components/PinSubmit.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -10,12 +10,16 @@ export default function PinSubmit() {
   const navigate = useNavigate();
 
   // This is what we passed from PinEntry via navigate(..., { state: data })
-  const data = location.state; // expected: { class_id, assignment_id, student_id }
+  // expected: { class_id, assignment_id, student_id }
+  const data = location.state;
 
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // NEW: store assignment name for display
+  const [assignmentName, setAssignmentName] = useState("");
 
   // If user hit /submit/:pin directly (no state), send them back to PIN page
   if (!data) {
@@ -33,6 +37,26 @@ export default function PinSubmit() {
       </div>
     );
   }
+
+  // Fetch assignment details so we can show the assignment name
+  useEffect(() => {
+    async function fetchAssignment() {
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/assignments/${data.assignment_id}`
+        );
+        if (!res.ok) return;
+        const assignment = await res.json();
+        setAssignmentName(assignment.name || "");
+      } catch (err) {
+        console.error("Failed to load assignment for PIN submit", err);
+      }
+    }
+
+    if (data?.assignment_id) {
+      fetchAssignment();
+    }
+  }, [data]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,9 +103,11 @@ export default function PinSubmit() {
         <p style={styles.subtitle}>
           PIN: <strong>{pin}</strong>
           <br />
-          Assignment ID: <strong>{data.assignment_id}</strong>
-          <br />
-          Student: <strong>{data.student_id}</strong>
+          {/* CHANGED: show Assignment name instead of "Assignment ID" + number */}
+          Assignment:{" "}
+          <strong>
+            {assignmentName || `#${data.assignment_id}`}
+          </strong>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -122,7 +148,7 @@ const styles = {
     padding: "24px 28px",
     borderRadius: "10px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
-    border: "1px solid #333",
+    border: "1px solid "#333",
     fontFamily: "Arial, sans-serif",
   },
   title: {
