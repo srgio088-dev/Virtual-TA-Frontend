@@ -1,171 +1,128 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { apiGet } from "../api/client";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function AssignmentSubmissions() {
   const { id } = useParams();
-  const [assignment, setAssignment] = useState(null);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  async function load() {
-    try {
-      const assignments = await apiGet("/api/assignments");
-      const a = assignments.find((x) => String(x.id) === String(id));
-      if (!a) throw new Error("Assignment not found");
-      setAssignment(a);
-    } catch (e) {
-      setError(e.message);
-    }
-  }
+  const [assignment, setAssignment] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
-    load();
+    axios.get(`${import.meta.env.VITE_API_URL}/assignments/${id}`)
+      .then(res => setAssignment(res.data))
+      .catch(err => console.error(err));
+
+    axios.get(`${import.meta.env.VITE_API_URL}/submissions/by-assignment/${id}`)
+      .then(res => setSubmissions(res.data))
+      .catch(err => console.error(err));
   }, [id]);
 
-  async function onDeleteSubmission(sid) {
-    if (!confirm("Delete this submission?")) return;
-    await fetch(
-      `${
-        import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"
-      }/api/submissions/${sid}`,
-      { method: "DELETE" }
-    );
-    await load();
-  }
+  const deleteSubmission = async (submissionId) => {
+    if (!window.confirm("Are you sure you want to delete this submission?")) return;
 
-  async function downloadCSV() {
-    if (!assignment?.submissions?.length) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/submissions/${submissionId}`);
+      setSubmissions(prev => prev.filter(s => s.id !== submissionId));
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  };
 
-    const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
-
-    const fullSubs = await Promise.all(
-      assignment.submissions.map(async (s) => {
-        try {
-          const res = await fetch(`${base}/api/submissions/${s.id}`);
-          if (!res.ok) return { ...s, ai_feedback: "" };
-          return await res.json();
-        } catch {
-          return { ...s, ai_feedback: "" };
-        }
-      })
-    );
-
-    const header = ["Student", "AI Grade", "Final Grade", "AI Feedback"];
-    const rows = fullSubs.map((fs) => {
-      const student = (fs.student_name || "").replace(/"/g, '""');
-      const aiGrade = (fs.ai_grade || "").toString().replace(/"/g, '""');
-      const finalGrade = (fs.final_grade || "").toString().replace(/"/g, '""');
-      const feedback = (fs.ai_feedback || "")
-        .replace(/\r?\n/g, "\\n")
-        .replace(/"/g, '""');
-
-      return [`"${student}"`, `"${aiGrade}"`, `"${finalGrade}"`, `"${feedback}"`].join(
-        ","
-      );
-    });
-
-    const csvContent = [header.join(","), ...rows].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    const safeName = (assignment.name || "assignment")
-      .replace(/\s+/g, "_")
-      .replace(/[^\w\-_.]/g, "");
-    a.href = url;
-    a.download = `${safeName}_AI_Feedback.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  if (error) return <div className="container"><p className="error">{error}</p></div>;
-  if (!assignment) return <div className="container"><p>Loading…</p></div>;
-
-  const subs = assignment.submissions || [];
+  if (!assignment) return <div className="text-center mt-10">Loading...</div>;
 
   return (
-    <div className="container" style={{ margin: "0 auto" }}>
-      <div
-        className="card"
-        style={{
-          maxWidth: "900px",
-          width: "100%",
-          margin: "0 auto",
-          padding: "2rem 2.5rem",
-          display: "flex",
-          flexDirection: "column"
-        }}
-      >
-        <header style={{ marginBottom: "1.5rem", textAlign: "center" }}>
-          <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
+    <div className="min-h-screen bg-gray-100 flex justify-center p-6">
+      {/* OUTER CARD — this is the ONLY CARD */}
+      <div className="w-full max-w-6xl bg-white p-10 rounded-2xl shadow-lg">
 
-          <div
+        {/* Page Title */}
+        <h1 className="text-4xl font-bold text-center mb-8">
+          {assignment.name}
+        </h1>
+
+        {/* Top Buttons (unchanged layout) */}
+        <div className="flex justify-center gap-4 mb-8">
+          <button
+            className="btn"
+            onClick={() => navigate(`/rubric/${assignment.id}`)}
             style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "12px",
-              flexWrap: "wrap",
-              marginBottom: "1rem",
+              backgroundColor: "#facc15",
+              border: "2px solid #000",
             }}
           >
-            <button className="btn" onClick={() => navigate(`/assignment/${id}/rubric`)}>
-              View Rubric
-            </button>
+            View Rubric
+          </button>
 
-            <button className="btn" onClick={() => navigate(`/assignments`)}>
-              Back to Assignment List
-            </button>
+          <button
+            className="btn"
+            onClick={() => navigate("/assignments")}
+            style={{
+              backgroundColor: "#facc15",
+              border: "2px solid #000",
+            }}
+          >
+            Back to Assignment List
+          </button>
 
-            <button className="btn" onClick={downloadCSV}>
-              Download All AI Feedback (CSV)
-            </button>
-          </div>
-        </header>
+          <button
+            className="btn"
+            style={{
+              backgroundColor: "#facc15",
+              border: "2px solid #000",
+            }}
+            onClick={() =>
+              window.location.href = `${import.meta.env.VITE_API_URL}/submissions/export/${id}`
+            }
+          >
+            Download All AI Feedback (CSV)
+          </button>
+        </div>
 
-        <section>
-          <h2 style={{ marginBottom: "1rem" }}>Submissions ({subs.length})</h2>
+        {/* Submissions Header */}
+        <h2 className="text-2xl font-bold mb-4">Submissions ({submissions.length})</h2>
 
-          {!subs.length ? (
-            <p>No submissions yet.</p>
-          ) : (
-            <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "18px" }}>
-              {subs.map((s) => (
-                <li
-                  key={s.id}
+        {/* Submission List */}
+        <div className="space-y-6">
+          {submissions.map((sub) => (
+            <div
+              key={sub.id}
+              className="flex items-center justify-between p-4 rounded-xl bg-gray-50"
+              style={{ border: "1px solid #e5e7eb" }}
+            >
+              <div>
+                <p className="font-semibold">{sub.file_name}</p>
+                <p className="text-sm">AI: {sub.ai_grade}  |  Final: {sub.final_grade ?? "—"}</p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  className="btn"
+                  onClick={() => navigate(`/review/${sub.id}`)}
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "12px 18px",
-                    borderRadius: "10px",
-                    background: "#fff",
-                    border: "1px solid #e5e5e5",
+                    backgroundColor: "#facc15",
+                    border: "2px solid #000",
                   }}
                 >
-                  <div>
-                    <strong>{s.student_name}</strong>
-                    <div className="muted">
-                      AI: {s.ai_grade || "—"} | Final: {s.final_grade || "—"}
-                    </div>
-                  </div>
+                  Open Review
+                </button>
 
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <button className="btn" onClick={() => navigate(`/review/${s.id}`)}>
-                      Open Review
-                    </button>
+                <button
+                  className="btn"
+                  onClick={() => deleteSubmission(sub.id)}
+                  style={{
+                    backgroundColor: "#facc15",
+                    border: "2px solid #000",
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                    <button className="btn" onClick={() => onDeleteSubmission(s.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
       </div>
     </div>
   );
