@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiGet, apiPostJSON } from "../api/client";
 
@@ -7,6 +7,7 @@ export default function AssignmentList() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState(null);
+  const [sortOption, setSortOption] = useState("none");
 
   // 🔐 PIN generation modal state
   const [pinModalOpen, setPinModalOpen] = useState(false);
@@ -107,16 +108,78 @@ export default function AssignmentList() {
     }
   }
 
+  const sortedAssignments = useMemo(() => {
+  // shallow copy so we don't mutate state directly
+  const arr = [...assignments];
+
+  const parseDue = (item) => {
+    // handle missing/null/empty string
+    if (!item?.due_date) return null;
+    const t = Date.parse(item.due_date);
+    return isNaN(t) ? null : t;
+  };
+
+  switch (sortOption) {
+    case "name-asc":
+      return arr.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    case "name-desc":
+      return arr.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+    case "due-asc":
+      return arr.sort((a, b) => {
+        const ad = parseDue(a);
+        const bd = parseDue(b);
+        if (ad === null && bd === null) return 0;
+        if (ad === null) return 1; // nulls last
+        if (bd === null) return -1;
+        return ad - bd;
+      });
+    case "due-desc":
+      return arr.sort((a, b) => {
+        const ad = parseDue(a);
+        const bd = parseDue(b);
+        if (ad === null && bd === null) return 0;
+        if (ad === null) return 1;
+        if (bd === null) return -1;
+        return bd - ad;
+      });
+    default:
+      return arr; // original order
+  }
+}, [assignments, sortOption]);
+  
   return (
     <div className="container">
       <h1>Assignments</h1>
       {error && <p className="error">{error}</p>}
 
       {!assignments.length ? (
-        <p>No assignments yet.</p>
-      ) : (
+  <p>No assignments yet.</p>
+) : (
+  <>
+    <div style={{ marginBottom: "1rem" }}>
+      <label style={{ marginRight: "8px", fontWeight: "bold" }}>
+        Sort:
+      </label>
+
+      <select
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+        style={{
+          padding: "6px 10px",
+          borderRadius: "6px",
+          border: "1px solid #999",
+        }}
+      >
+        <option value="none">Default</option>
+        <option value="name-asc">Name (A → Z)</option>
+        <option value="name-desc">Name (Z → A)</option>
+        <option value="due-asc">Due Date (Earliest First)</option>
+        <option value="due-desc">Due Date (Latest First)</option>
+      </select>
+    </div>
+      
         <ul className="list">
-          {assignments.map((a) => (
+          {sortedAssignments.map((a) => (
             <li
               key={a.id}
               className={`assignment-card ${
