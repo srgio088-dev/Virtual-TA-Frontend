@@ -82,12 +82,18 @@ export default function RubricPage() {
         <button
           type="button"
           className="btn"
+          style={{ flex: 1 }}
           onClick={() => navigate(`/assignment/${id}`)}
         >
           Back to Submissions
         </button>
 
-        <button type="button" className="btn" style={{ flex: 1 }} onClick={() => window.print()}>
+        <button 
+          type="button" 
+          className="btn" 
+          style={{ flex: 1 }} 
+          onClick={() => window.print()}
+        >
           Print
         </button>
 
