@@ -1,24 +1,25 @@
 :root { font-family: Inter, system-ui, Arial; }
 * { box-sizing: border-box; }
 body { margin: 0; width: 100%; background: #f6f7fb; }
-.layout { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
-.header { background: #1f2937; color: white; padding: 0.75rem 1rem; }
-.nav { display: flex; gap: 1rem; }
-.nav a { color: white; text-decoration: none; }
-.nav a:hover { text-decoration: underline; }
-.main { padding: 1rem; width: 100%; margin: 0 auto; }
-.container { background: white; width: 100%; padding: 1rem; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
-.form { display: grid; gap: 0.75rem; margin-top: 1rem; }
-.form label { display: grid; gap: 0.25rem; font-weight: 600; }
-.form input, .form select, .form textarea { padding: 0.5rem; border: 1px solid #ddd; border-radius: 8px; }
+  .layout { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+  .header { background: #000000; color: white; padding: 0.75rem 1rem; }
+  .nav { display: flex; gap: 1rem; }
+  .nav a { color: white; text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .main { padding: 1rem; width: 100%; margin: 0 auto; }
+  .container { background: white; width: 100%; padding: 1rem; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+  .form { display: grid; gap: 0.75rem; margin-top: 1rem; }
+  .form label { display: grid; gap: 0.25rem; font-weight: 600; }
+  .form input, .form select, .form textarea { padding: 0.5rem; border: 1px solid #ddd; border-radius: 8px; }
 button { padding: 0.6rem 1rem; border: "2px solid #000000"; border-radius: 8px; cursor: pointer; background: #FFD700; color: #000000; font-weight: 600; }
 button:hover { filter: brightness(0.9); }
-.list { display: grid; gap: 0.75rem; padding-left: 0; list-style: none; margin: 1rem 0 0; }
-.card { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #eee; border-radius: 12px; background: #fff; }
-.row { display: flex; gap: 0.5rem; align-items: center; }
-.muted { color: #666; font-size: 0.9rem; }
-.error { color: #b91c1c; font-weight: 600; }
-.pre { white-space: pre-wrap; background: #fafafa; border: 1px solid #eee; padding: 0.75rem; border-radius: 8px; }
+  .list { display: grid; gap: 0.75rem; padding-left: 0; list-style: none; margin: 1rem 0 0; }
+  .card { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #eee; border-radius: 12px; background: #fff; }
+  .row { display: flex; gap: 0.5rem; align-items: center; }
+  .muted { color: #666; font-size: 0.9rem; }
+  .error { color: #b91c1c; font-weight: 600; }
+  .pre { white-space: pre-wrap; background: #fafafa; border: 1px solid #eee; padding: 0.75rem; border-radius: 8px; }
+
 /* ===== Multi-upload dropzone ===== */
 .dropzone {
   border: 2px dashed #bbb;
