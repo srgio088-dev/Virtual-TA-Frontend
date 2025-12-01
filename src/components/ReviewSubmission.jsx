@@ -161,7 +161,7 @@ export default function ReviewSubmission() {
         className="btn" 
         type="submit" > 
         Save Final Grade
-      </button></form>
+      </button>
         
       <button 
         type="button"
@@ -170,5 +170,6 @@ export default function ReviewSubmission() {
         Back to Submissions
         </button>
     </div>
+  </form>
   );
 }
