@@ -153,21 +153,14 @@ export default function ReviewSubmission() {
             placeholder="e.g., 88"
           />
         </label>
-        <button type="submit" className="btn">
-          Save Final Grade
+        <button type="submit" className="btn"> Save Final Grade</button></form>
+        
+      <button 
+        type="button"
+        onClick={() => navigate(-1)}
+        className="btn">
+        Back to Submissions
         </button>
-      </form>
-
-     <button
-  type="button"
-  onClick={() => navigate(-1)}
-  className="btn"
-  style={{
-    marginTop: "0.75rem",
-  }}
->
-  Back to Submissions
-</button>
     </div>
   );
 }
