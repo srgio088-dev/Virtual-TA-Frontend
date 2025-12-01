@@ -2,8 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiGet, apiPostJSON } from "../api/client";
 
+// Helper: split "AssignmentName StudentName" into both parts
+function splitLabel(label) {
+  if (!label) return { assignment: "", student: "" };
+
+  const firstSpace = label.indexOf(" ");
+  if (firstSpace === -1) {
+    return { assignment: label.trim(), student: "" };
+  }
+
+  const assignment = label.substring(0, firstSpace).trim();
+  const student = label.substring(firstSpace + 1).trim();
+
+  return { assignment, student };
+}
+
 export default function ReviewSubmission() {
-  const { id } = useParams();           // submission id
+  const { id } = useParams(); // submission id
   const navigate = useNavigate();
   const [submission, setSubmission] = useState(null);
   const [finalGrade, setFinalGrade] = useState("");
@@ -27,7 +42,7 @@ export default function ReviewSubmission() {
       await apiPostJSON(`/api/submissions/${id}/finalize`, {
         final_grade: finalGrade,
       });
-      // stay on page after save – you can change this if you want to redirect
+      // stay on page after save – change if you want redirect
       // navigate("/assignments");
     } catch (e) {
       setError("Save failed: " + e.message);
@@ -37,13 +52,16 @@ export default function ReviewSubmission() {
   function downloadFeedback() {
     if (!submission) return;
 
+    const { assignment: parsedAssignment, student: parsedStudent } =
+      splitLabel(submission.student_name);
+
     const assignmentName =
       submission.assignment_name ||
       (submission.assignment && submission.assignment.name) ||
-      submission.student_name || // fallback: file/submission label
+      parsedAssignment ||
       "Assignment";
 
-    const studentName = submission.student_name || "Student";
+    const studentName = parsedStudent || submission.student_name || "Student";
     const suggested = submission.ai_grade ?? "N/A";
     const final = finalGrade || submission.final_grade || "N/A";
     const feedback = submission.ai_feedback || "";
@@ -63,14 +81,14 @@ export default function ReviewSubmission() {
       type: "text/plain;charset=utf-8",
     });
 
+    // Filename like AssignmentName_StudentName_feedback.txt
+    const rawName = `${assignmentName}_${studentName}`;
+    const safeName = rawName.replace(/[^a-z0-9_-]+/gi, "_").toLowerCase();
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const safeName = assignmentName
-      .replace(/[^a-z0-9_-]+/gi, "_")
-      .toLowerCase();
-
     a.href = url;
-    a.download = `${safeName}_submission_${submission.id}_feedback.txt`;
+    a.download = `${safeName}_feedback.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -92,18 +110,18 @@ export default function ReviewSubmission() {
     );
   }
 
-  // ✅ show assignment name OR fall back to the submission/file label
-  // Split the combined label (e.g., "DiscussionPost1 GeorgeV")
-const { assignment, student } = splitLabel(submission.student_name);
+  // Use the split label for display
+  const { assignment: parsedAssignment, student: parsedStudent } = splitLabel(
+    submission.student_name
+  );
 
-const assignmentDisplay =
-  submission.assignment_name ||
-  (submission.assignment && submission.assignment.name) ||
-  assignment ||
-  "—";
+  const assignmentDisplay =
+    submission.assignment_name ||
+    (submission.assignment && submission.assignment.name) ||
+    parsedAssignment ||
+    "—";
 
-const studentDisplay =
-  submission.student_name ? student : submission.student_name || "—";
+  const studentDisplay = parsedStudent || submission.student_name || "—";
 
   return (
     <div className="container">
@@ -140,7 +158,6 @@ const studentDisplay =
         </button>
       </form>
 
-      {/* ✅ Back button under Save Final Grade */}
       <button
         type="button"
         onClick={() => navigate(-1)}
