@@ -102,8 +102,7 @@ async function downloadCSV() {
       style={{ 
         display: "flex", 
         gap: "12px", 
-        marginTop: "12px",
-        marginBottom: "12px" }}>
+        marginBottom: "8px" }}>
 
       <button type="button" className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}>View Rubric</button>
       <button type="button" className="btn" style={{ flex: 1 }} onClick={() => navigate(`/assignments`)}>Back to Assignment List</button>
