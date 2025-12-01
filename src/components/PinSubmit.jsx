@@ -18,7 +18,7 @@ export default function PinSubmit() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // NEW: store assignment name for display
+  // Store assignment name for display
   const [assignmentName, setAssignmentName] = useState("");
 
   // If user hit /submit/:pin directly (no state), send them back to PIN page
@@ -68,21 +68,18 @@ export default function PinSubmit() {
       return;
     }
 
-    // 🔍 Parse filename: "Submission Name - Your Name.ext"
+    // 🔍 Parse filename: "<anything> - <anything> - <Student Name>.ext"
     const fullName = file.name || "";
     const withoutExt = fullName.replace(/\.[^/.]+$/, ""); // strip extension
     const parts = withoutExt.split(" - ");
 
-    let submissionName = "";
-    let studentName = "";
+    let submissionName = withoutExt;
+    let studentName = "Unknown";
 
     if (parts.length >= 2) {
-      submissionName = parts[0].trim();
-      studentName = parts.slice(1).join(" - ").trim();
-    } else {
-      // Fallback if they don't follow the format
-      submissionName = withoutExt.trim();
-      studentName = "Unknown";
+      // last part = student name, rest = submission/assignment name
+      studentName = parts[parts.length - 1].trim();
+      submissionName = parts.slice(0, parts.length - 1).join(" - ").trim();
     }
 
     const formData = new FormData();
