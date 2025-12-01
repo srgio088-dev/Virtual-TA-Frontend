@@ -173,7 +173,8 @@ export default function ReviewSubmission() {
             >
               Back to Submissions
             </button>
-      </form>
+          </div>
+        </form>
       </div>
   );
 }
