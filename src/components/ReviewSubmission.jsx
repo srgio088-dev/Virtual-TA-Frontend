@@ -15,6 +15,8 @@ export default function ReviewSubmission() {
         const data = await apiGet(`/api/submissions/${id}`);
         setSubmission(data);
         setFinalGrade(data.final_grade ?? "");
+        // Handy for debugging in the browser console:
+        // console.log("ReviewSubmission loaded:", data);
       } catch (e) {
         setError(e.message || "Failed to load submission.");
       }
@@ -32,35 +34,58 @@ export default function ReviewSubmission() {
     }
   }
 
-  // Smart resolver for assignment + student display
+  /**
+   * Resolve assignment & student display names using:
+   * 1) New fields: assignment_name, submission_name, assignment.name
+   * 2) Any filename-style field (original_filename, filename, file_name, upload_filename)
+   * 3) Legacy pattern in student_name (if it contains " - " and backend never split it)
+   */
   function resolveNames(sub) {
     if (!sub) {
       return { assignmentDisplay: "—", studentDisplay: "—" };
     }
 
-    // Student is whatever backend stored
-    let studentDisplay = sub.student_name || "—";
-
-    // Try backend-provided assignment name first
+    // Start with whatever backend explicitly gives us
+    let studentDisplay = sub.student_name || "";
     let assignmentDisplay =
       sub.assignment_name ||
+      sub.submission_name ||
       (sub.assignment && sub.assignment.name) ||
       "";
 
-    // If backend didn't store assignment name, extract from original filename
-    if (!assignmentDisplay && sub.original_filename) {
-      const withoutExt = sub.original_filename.replace(/\.[^/.]+$/, "");
-      const parts = withoutExt.split(" - ");
+    // If assignment name still missing, try to parse from a filename-like field
+    if (!assignmentDisplay) {
+      const rawFileName =
+        sub.original_filename ||
+        sub.filename ||
+        sub.file_name ||
+        sub.upload_filename ||
+        "";
 
+      if (rawFileName) {
+        const withoutExt = rawFileName.replace(/\.[^/.]+$/, "");
+        const parts = withoutExt.split(" - ");
+
+        if (parts.length >= 2) {
+          const studentPart = parts[parts.length - 1].trim();
+          const assignPart = parts.slice(0, parts.length - 1).join(" - ").trim();
+
+          if (!studentDisplay) {
+            studentDisplay = studentPart || studentDisplay;
+          }
+          assignmentDisplay = assignPart || assignmentDisplay;
+        }
+      }
+    }
+
+    // Legacy fallback: if student_name itself contains " - ", treat last as student, rest as assignment
+    if ((!assignmentDisplay || !studentDisplay) && sub.student_name) {
+      const parts = sub.student_name.split(" - ");
       if (parts.length >= 2) {
-        // last part = student, rest = assignment/submission name
         const studentPart = parts[parts.length - 1].trim();
         const assignPart = parts.slice(0, parts.length - 1).join(" - ").trim();
-
-        if (!sub.student_name) {
-          studentDisplay = studentPart || studentDisplay;
-        }
-        assignmentDisplay = assignPart || assignmentDisplay;
+        if (!studentDisplay) studentDisplay = studentPart || studentDisplay;
+        if (!assignmentDisplay) assignmentDisplay = assignPart || assignmentDisplay;
       }
     }
 
@@ -130,10 +155,10 @@ export default function ReviewSubmission() {
       <h1>Review Submission</h1>
 
       <p>
-        <strong>Assignment:</strong> {parsedAssignment}
+        <strong>Assignment:</strong> {assignmentDisplay}
       </p>
       <p>
-        <strong>Student:</strong> {parsedStudent}
+        <strong>Student:</strong> {studentDisplay}
       </p>
       <p>
         <strong>Suggested Grade:</strong> {submission.ai_grade ?? "N/A"}
