@@ -57,3 +57,60 @@ button:hover { filter: brightness(0.9); }
 .assignment-card:hover .assignment-actions {
   display: flex;
 }
+
+/* ================================
+   GLOBAL STYLING FOR DATETIME PICKER
+   ================================ */
+
+/* Main input appearance */
+input[type="datetime-local"] {
+  border: 2px solid #000000;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: #000;
+}
+
+/* Calendar icon */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(12%) sepia(98%) saturate(7485%) hue-rotate(0deg) brightness(95%) contrast(105%);
+}
+
+/* TIME & DATE POPUP BUTTONS (Chrome/Edge/Safari) */
+::part(calendar-cell) {
+  color: #000 !important;
+}
+
+::part(calendar-cell-selected),
+::part(calendar-cell-day-selected) {
+  background-color: #FFD700 !important;
+  color: #000 !important;
+}
+
+/* Month/Year navigation arrows */
+::part(calendar-view) button,
+::part(spin-button) {
+  background-color: #000 !important;
+  color: #FFD700 !important;
+  border: 1px solid #FFD700 !important;
+}
+
+/* Time spinner (hour/minute AM/PM buttons) */
+::part(time-button) {
+  background-color: #000 !important;
+  color: #FFD700 !important;
+  border: 1px solid #FFD700;
+}
+
+::part(time-button-selected) {
+  background-color: #FFD700 !important;
+  color: #000 !important;
+}
+
+/* Popup dropdown panel border */
+::part(picker-panel) {
+  border: 2px solid #000 !important;
+  border-radius: 6px;
+}
