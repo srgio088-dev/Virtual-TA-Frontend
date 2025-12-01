@@ -158,19 +158,16 @@ export default function ReviewSubmission() {
         </button>
       </form>
 
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="btn"
-        style={{
-          marginTop: "0.75rem",
-          backgroundColor: "#ffffff",
-          color: "#000000",
-          border: "2px solid #facc15",
-        }}
-      >
-        Back to Submissions
-      </button>
+     <button
+  type="button"
+  onClick={() => navigate(-1)}
+  className="btn"
+  style={{
+    marginTop: "0.75rem",
+  }}
+>
+  Back to Submissions
+</button>
     </div>
   );
 }
