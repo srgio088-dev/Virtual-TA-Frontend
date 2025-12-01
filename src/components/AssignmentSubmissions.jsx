@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { apiGet } from "../api/client";
 
 export default function AssignmentSubmissions() {
-  const { id } = useParams(); // assignment id
+  const { id } = useParams();
   const [assignment, setAssignment] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -35,25 +35,21 @@ export default function AssignmentSubmissions() {
   }
 
   async function downloadCSV() {
-    if (!assignment || !assignment.submissions || !assignment.submissions.length)
-      return;
+    if (!assignment?.submissions?.length) return;
 
     const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
 
-    const promises = assignment.submissions.map(async (s) => {
-      try {
-        const res = await fetch(`${base}/api/submissions/${s.id}`);
-        if (!res.ok) {
+    const fullSubs = await Promise.all(
+      assignment.submissions.map(async (s) => {
+        try {
+          const res = await fetch(`${base}/api/submissions/${s.id}`);
+          if (!res.ok) return { ...s, ai_feedback: "" };
+          return await res.json();
+        } catch {
           return { ...s, ai_feedback: "" };
         }
-        const full = await res.json();
-        return full;
-      } catch (err) {
-        return { ...s, ai_feedback: "" };
-      }
-    });
-
-    const fullSubs = await Promise.all(promises);
+      })
+    );
 
     const header = ["Student", "AI Grade", "Final Grade", "AI Feedback"];
     const rows = fullSubs.map((fs) => {
@@ -61,22 +57,18 @@ export default function AssignmentSubmissions() {
       const aiGrade = (fs.ai_grade || "").toString().replace(/"/g, '""');
       const finalGrade = (fs.final_grade || "").toString().replace(/"/g, '""');
       const feedback = (fs.ai_feedback || "")
-        .replace(/\r\n/g, "\n")
-        .replace(/\n/g, "\\n")
+        .replace(/\r?\n/g, "\\n")
         .replace(/"/g, '""');
 
-      return [
-        `"${student}"`,
-        `"${aiGrade}"`,
-        `"${finalGrade}"`,
-        `"${feedback}"`,
-      ].join(",");
+      return [`"${student}"`, `"${aiGrade}"`, `"${finalGrade}"`, `"${feedback}"`].join(
+        ","
+      );
     });
 
     const csvContent = [header.join(","), ...rows].join("\n");
-
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement("a");
     const safeName = (assignment.name || "assignment")
       .replace(/\s+/g, "_")
@@ -89,18 +81,8 @@ export default function AssignmentSubmissions() {
     URL.revokeObjectURL(url);
   }
 
-  if (error)
-    return (
-      <div className="container">
-        <p className="error">{error}</p>
-      </div>
-    );
-  if (!assignment)
-    return (
-      <div className="container">
-        <p>Loading…</p>
-      </div>
-    );
+  if (error) return <div className="container"><p className="error">{error}</p></div>;
+  if (!assignment) return <div className="container"><p>Loading…</p></div>;
 
   const subs = assignment.submissions || [];
 
@@ -109,30 +91,27 @@ export default function AssignmentSubmissions() {
       <div
         className="card"
         style={{
-          maxWidth: "900px",        // 👈 wider card
+          maxWidth: "900px",
           width: "100%",
           margin: "0 auto",
-          padding: "2rem",
-          display: "flex",          // 👈 force vertical layout
-          flexDirection: "column",  // 👈 header over section
+          padding: "2rem 2.5rem",
+          display: "flex",
+          flexDirection: "column"
         }}
       >
         <header style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
 
           <div
-            className="row"
             style={{
               display: "flex",
               justifyContent: "center",
               gap: "12px",
               flexWrap: "wrap",
+              marginBottom: "1rem",
             }}
           >
-            <button
-              className="btn"
-              onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}
-            >
+            <button className="btn" onClick={() => navigate(`/assignment/${id}/rubric`)}>
               View Rubric
             </button>
 
@@ -147,63 +126,38 @@ export default function AssignmentSubmissions() {
         </header>
 
         <section>
-          <h2 style={{ marginBottom: "0.75rem" }}>
-            Submissions ({subs.length})
-          </h2>
+          <h2 style={{ marginBottom: "1rem" }}>Submissions ({subs.length})</h2>
 
           {!subs.length ? (
             <p>No submissions yet.</p>
           ) : (
-            <ul
-              className="list"
-              style={{
-                listStyle: "none",
-                padding: 0,
-                margin: 0,
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-              }}
-            >
+            <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "18px" }}>
               {subs.map((s) => (
                 <li
                   key={s.id}
-                  className="card"
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "14px 20px",
-                    gap: "16px",
+                    padding: "12px 18px",
+                    borderRadius: "10px",
+                    background: "#fff",
+                    border: "1px solid #e5e5e5",
                   }}
                 >
-                  <div style={{ flex: "1 1 auto" }}>
-                    <strong>{s.student_name || "Unknown"}</strong>
+                  <div>
+                    <strong>{s.student_name}</strong>
                     <div className="muted">
-                      AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final:{" "}
-                      {s.final_grade || "—"}
+                      AI: {s.ai_grade || "—"} | Final: {s.final_grade || "—"}
                     </div>
                   </div>
 
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <button
-                      className="btn"
-                      onClick={() => navigate(`/review/${s.id}`)}
-                    >
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button className="btn" onClick={() => navigate(`/review/${s.id}`)}>
                       Open Review
                     </button>
 
-                    <button
-                      className="btn"
-                      onClick={() => onDeleteSubmission(s.id)}
-                    >
+                    <button className="btn" onClick={() => onDeleteSubmission(s.id)}>
                       Delete
                     </button>
                   </div>
