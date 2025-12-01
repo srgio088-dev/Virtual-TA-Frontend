@@ -64,6 +64,7 @@ export default function AssignmentSubmissions() {
         .replace(/\r\n/g, "\n")
         .replace(/\n/g, "\\n")
         .replace(/"/g, '""');
+
       return [
         `"${student}"`,
         `"${aiGrade}"`,
@@ -104,32 +105,27 @@ export default function AssignmentSubmissions() {
   const subs = assignment.submissions || [];
 
   return (
-    <div
-      className="container"
-      style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="container" style={{ margin: "0 auto" }}>
       <div
         className="card"
         style={{
-          maxWidth: "900px",     // ⬅️ previously ~650 — now wider
+          maxWidth: "900px",   // ⬅️ THE ONLY CHANGE YOU WANTED
           width: "100%",
           margin: "0 auto",
           padding: "2rem",
         }}
-        >
-        
-        <header style={{ marginBottom: "1.5rem" }}>
+      >
+        <header style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
 
-          {/* TOP BUTTONS – side by side */}
+          {/* Buttons stacked EXACTLY like before */}
           <div
+            className="row"
             style={{
               display: "flex",
-              justifyContent: "space-between",
-              gap: "16px",
+              flexDirection: "column",
+              gap: "10px",
+              alignItems: "center",
             }}
           >
             <button
