@@ -193,46 +193,66 @@ export default function AssignmentList() {
         </ul>
       )}
 
-      {/* PIN Modal */}
-      {pinModalOpen && (
-        <div style={modalStyles.backdrop}>
-          <div style={modalStyles.card}>
-            <h2 style={modalStyles.title}>Generate PIN</h2>
-            <p style={modalStyles.subtitle}>
-              Assignment: <strong>{pinForm.assignmentName}</strong>
-            </p>
+      {/* 🔐 PIN Modal */}
+{pinModalOpen && (
+  <div style={modalStyles.backdrop}>
+    <div style={modalStyles.card}>
+      <h2 style={modalStyles.title}>Generate PIN</h2>
+      <p style={modalStyles.subtitle}>
+        Assignment: <strong>{pinForm.assignmentName}</strong>
+      </p>
 
-            <form onSubmit={handleGeneratePin}>
-              <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Course Number</label>
-                <input
-                  value={pinForm.classId}
-                  onChange={(e) =>
-                    setPinForm((prev) => ({
-                      ...prev,
-                      classId: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g. 4850"
-                  style={modalStyles.input}
-                />
-              </div>
+      <form onSubmit={handleGeneratePin}>
+        {/* Course Number */}
+        <div style={modalStyles.field}>
+          <label style={modalStyles.label}>Course Number</label>
+          <input
+            value={pinForm.classId}
+            onChange={(e) =>
+              setPinForm((prev) => ({
+                ...prev,
+                classId: e.target.value,
+              }))
+            }
+            placeholder="e.g. 4850"
+            style={modalStyles.input}
+          />
+        </div>
 
-              <div style={modalStyles.field}>
-                <label style={modalStyles.label}>Student Name</label>
-                <input
-                  type="text"
-                  value={pinForm.studentName}
-                  onChange={(e) =>
-                    setPinForm((prev) => ({
-                      ...prev,
-                      studentName: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g. Jane Smith"
-                  style={modalStyles.input}
-                />
-              </div>
+        {/* Display PIN result */}
+        {pinError && (
+          <p style={modalStyles.error}>{pinError}</p>
+        )}
+
+        {pinResult && (
+          <div style={modalStyles.pinBox}>
+            <p style={{ margin: 0 }}>Share this PIN with the student:</p>
+            <div style={modalStyles.pinValue}>{pinResult}</div>
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div style={modalStyles.actions}>
+          <button
+            type="button"
+            onClick={closePinModal}
+            style={modalStyles.secondaryButton}
+          >
+            Close
+          </button>
+          <button
+            type="submit"
+            style={modalStyles.primaryButton}
+            disabled={pinLoading}
+          >
+            {pinLoading ? "Generating..." : "Generate PIN"}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
 
               {pinError && (
                 <p style={modalStyles.error}>{pinError}</p>
