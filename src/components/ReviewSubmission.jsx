@@ -169,7 +169,7 @@ export default function ReviewSubmission() {
         className="btn">
         Back to Submissions
         </button>
-    </div>
-  </form>
+      </form>
+      </div>
   );
 }
