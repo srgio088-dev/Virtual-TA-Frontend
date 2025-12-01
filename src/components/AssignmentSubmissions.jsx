@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { apiGet } from "../api/client";
-import RubricToggle from "../components/RubricToggle";
 
 export default function AssignmentSubmissions() {
   const { id } = useParams(); // assignment id
   const [assignment, setAssignment] = useState(null);
   const [error, setError] = useState("");
-  const [isRubricOpen, setIsRubricOpen] = useState(false);
   const navigate = useNavigate();
 
   async function load() {
@@ -66,9 +64,12 @@ export default function AssignmentSubmissions() {
         .replace(/\r\n/g, "\n")
         .replace(/\n/g, "\\n")
         .replace(/"/g, '""');
-      return [`"${student}"`, `"${aiGrade}"`, `"${finalGrade}"`, `"${feedback}"`].join(
-        ","
-      );
+      return [
+        `"${student}"`,
+        `"${aiGrade}"`,
+        `"${finalGrade}"`,
+        `"${feedback}"`,
+      ].join(",");
     });
 
     const csvContent = [header.join(","), ...rows].join("\n");
@@ -103,112 +104,116 @@ export default function AssignmentSubmissions() {
   const subs = assignment.submissions || [];
 
   return (
-  <div
-    className="container"
-    style={{
-      maxWidth: "1200px",     // ⬅️ widened container
-      margin: "0 auto",
-    }}
-  >
     <div
-      className="card"
+      className="container"
       style={{
-        maxWidth: "1100px",   // ⬅️ widened internal card
+        maxWidth: "1200px",
         margin: "0 auto",
-        padding: "2rem",
       }}
     >
-      <header style={{ marginBottom: "1.5rem" }}>
-        <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
+      <div
+        className="card"
+        style={{
+          maxWidth: "1100px",
+          margin: "0 auto",
+          padding: "2rem",
+        }}
+      >
+        <header style={{ marginBottom: "1.5rem" }}>
+          <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
 
-        {/* TOP BUTTONS – unchanged, still side-by-side */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "16px",
-          }}
-        >
-          <button className="btn" onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}>
-            View Rubric
-          </button>
-
-          <button className="btn" onClick={() => navigate(`/assignments`)}>
-            Back to Assignment List
-          </button>
-
-          <button className="btn" onClick={downloadCSV}>
-            Download All AI Feedback (CSV)
-          </button>
-        </div>
-      </header>
-
-      <section>
-        <h2 style={{ marginBottom: "0.75rem" }}>
-          Submissions ({subs.length})
-        </h2>
-
-        {!subs.length ? (
-          <p>No submissions yet.</p>
-        ) : (
-          <ul
-            className="list"
+          {/* TOP BUTTONS – side by side */}
+          <div
             style={{
-              listStyle: "none",
-              padding: 0,
-              margin: 0,
               display: "flex",
-              flexDirection: "column",
-              gap: "12px",
+              justifyContent: "space-between",
+              gap: "16px",
             }}
           >
-            {subs.map((s) => (
-              <li
-                key={s.id}
-                className="card"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "14px 20px",
-                  gap: "16px",
-                }}
-              >
-                <div style={{ flex: "1 1 auto" }}>
-                  <strong>{s.student_name || "Unknown"}</strong>
-                  <div className="muted">
-                    AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final:{" "}
-                    {s.final_grade || "—"}
-                  </div>
-                </div>
+            <button
+              className="btn"
+              onClick={() => navigate(`/assignment/${assignment.id}/rubric`)}
+            >
+              View Rubric
+            </button>
 
-                <div
-                  className="row"
+            <button className="btn" onClick={() => navigate(`/assignments`)}>
+              Back to Assignment List
+            </button>
+
+            <button className="btn" onClick={downloadCSV}>
+              Download All AI Feedback (CSV)
+            </button>
+          </div>
+        </header>
+
+        <section>
+          <h2 style={{ marginBottom: "0.75rem" }}>
+            Submissions ({subs.length})
+          </h2>
+
+          {!subs.length ? (
+            <p>No submissions yet.</p>
+          ) : (
+            <ul
+              className="list"
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              {subs.map((s) => (
+                <li
+                  key={s.id}
+                  className="card"
                   style={{
                     display: "flex",
-                    gap: "10px",
-                    flexShrink: 0,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "14px 20px",
+                    gap: "16px",
                   }}
                 >
-                  <button
-                    className="btn"
-                    onClick={() => navigate(`/review/${s.id}`)}
-                  >
-                    Open Review
-                  </button>
+                  <div style={{ flex: "1 1 auto" }}>
+                    <strong>{s.student_name || "Unknown"}</strong>
+                    <div className="muted">
+                      AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final:{" "}
+                      {s.final_grade || "—"}
+                    </div>
+                  </div>
 
-                  <button
-                    className="btn"
-                    onClick={() => onDeleteSubmission(s.id)}
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      flexShrink: 0,
+                    }}
                   >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+                    <button
+                      className="btn"
+                      onClick={() => navigate(`/review/${s.id}`)}
+                    >
+                      Open Review
+                    </button>
+
+                    <button
+                      className="btn"
+                      onClick={() => onDeleteSubmission(s.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
