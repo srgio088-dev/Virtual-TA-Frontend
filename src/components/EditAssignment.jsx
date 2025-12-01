@@ -8,6 +8,7 @@ export default function EditAssignment() {
 
   const [name, setName] = useState("");
   const [rubric, setRubric] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,13 @@ export default function EditAssignment() {
         console.log("Loaded assignment data:", data);
         setName(data.name || "");
         setRubric(data.rubric || "");
+        if (data.due_date) {
+          const dt = new Date(data.due_date);
+          const iso = dt.toISOString().slice(0, 16);
+          setDueDate(iso);
+        } else {
+          setDueDate("");
+        }
       } catch (err) {
         console.error("Failed to load assignment:", err);
         setError("Failed to load assignment: " + (err.message || String(err)));
@@ -65,6 +73,7 @@ export default function EditAssignment() {
           body: JSON.stringify({
             name: name.trim(),
             rubric: rubric.trim(),
+            due_date: dueDate || null,
           }),
         }
       );
@@ -143,6 +152,30 @@ export default function EditAssignment() {
             }}
           />
         </div>
+        <div style={{ flexGrow: 1 }}>
+  <label
+    style={{
+      fontWeight: "bold",
+      display: "block",
+      marginBottom: "8px",
+      fontSize: "1.1rem",
+    }}
+  >
+    Due Date
+  </label>
+  <input
+    type="datetime-local"
+    value={dueDate}
+    onChange={(e) => setDueDate(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "16px",
+      fontSize: "1.1rem",
+      borderRadius: "10px",
+      border: "1px solid #ccc",
+    }}
+  />
+</div>
       </form>
 
       <div
@@ -150,7 +183,7 @@ export default function EditAssignment() {
           width: "100%",
           border: "2px solid #ccc",
           borderRadius: "12px",
-          padding: "12px 16px", // ✅ fixed padding to match Edit Assignment
+          padding: "12px 16px", 
           backgroundColor: "#fff",
           boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
         }}
