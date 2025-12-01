@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { apiGet } from "../api/client.js";
 
 export default function RubricPage() {
-  const { id } = useParams(); // assignment id
+  const { id } = useParams(); // assignment id from URL
+  const navigate = useNavigate();
+
   const [assignmentName, setAssignmentName] = useState("—");
   const [rubric, setRubric] = useState("");
   const [error, setError] = useState("");
@@ -24,12 +26,12 @@ export default function RubricPage() {
   useEffect(() => {
     (async () => {
       try {
-        // try the rubric endpoint first
+        // Try the rubric endpoint first
         const r = await apiGet(`/api/assignments/${id}/rubric`);
         setRubric(r.rubric || "No rubric provided.");
         setAssignmentName(r.name || "—");
       } catch {
-        // fallback: fetch the assignment itself and read .rubric
+        // Fallback: fetch assignment and read `.rubric`
         try {
           const a = await apiGet(`/api/assignments/${id}`);
           setRubric(a.rubric || "No rubric provided.");
@@ -43,8 +45,19 @@ export default function RubricPage() {
     })();
   }, [id]);
 
-  if (loading) return <div className="container"><p>Loading…</p></div>;
-  if (error)   return <div className="container"><p className="error">{error}</p></div>;
+  if (loading)
+    return (
+      <div className="container">
+        <p>Loading…</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="container">
+        <p className="error">{error}</p>
+      </div>
+    );
 
   return (
     <div className="container">
@@ -58,32 +71,30 @@ export default function RubricPage() {
         {rubric}
       </div>
 
+      {/* Button row */}
       <div className="row" style={{ gap: 12, marginTop: 12 }}>
 
-        <button
-  type="button"
-  onClick={() => navigate(-1)}
-  className="btn"
-  style={{
-    marginTop: "0.75rem",
-  }}
->
-  Back to Submissions
-</button>
-        
+        {/* ✅ FIXED: Back button works */}
         <button
           type="button"
           className="btn"
-          onClick={() => window.print()}
+          onClick={() => navigate(`/assignment/${id}`)}
         >
+          Back to Submissions
+        </button>
+
+        <button type="button" className="btn" onClick={() => window.print()}>
           Print
         </button>
+
         <button
           type="button"
           className="btn"
           onClick={() =>
             downloadText(
-              `rubric-${(assignmentName || "assignment").replace(/\s+/g, "_")}.txt`,
+              `rubric-${(assignmentName || "assignment")
+                .replace(/\s+/g, "_")
+                .toLowerCase()}.txt`,
               rubric || ""
             )
           }
