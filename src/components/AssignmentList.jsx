@@ -106,8 +106,8 @@ export default function AssignmentList() {
 
   return (
     <div 
-      className="container"
-      width="1000px">
+      className="container",
+      maxWidth: "1200px">
       <h1>Assignments</h1>
       {error && <p className="error">{error}</p>}
 
