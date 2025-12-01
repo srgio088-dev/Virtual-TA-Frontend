@@ -27,8 +27,8 @@ export default function ReviewSubmission() {
       await apiPostJSON(`/api/submissions/${id}/finalize`, {
         final_grade: finalGrade,
       });
-      // keep this as-is if you want to go back to the assignments list
-      navigate("/assignments");
+      // stay on page after save – you can change this if you want to redirect
+      // navigate("/assignments");
     } catch (e) {
       setError("Save failed: " + e.message);
     }
@@ -39,10 +39,8 @@ export default function ReviewSubmission() {
 
     const assignmentName =
       submission.assignment_name ||
-      submission.file_name ||
-      submission.filename ||
-      submission.original_filename ||
-      submission.display_name ||
+      (submission.assignment && submission.assignment.name) ||
+      submission.student_name || // fallback: file/submission label
       "Assignment";
 
     const studentName = submission.student_name || "Student";
@@ -94,26 +92,15 @@ export default function ReviewSubmission() {
     );
   }
 
+  // ✅ show assignment name OR fall back to the submission/file label
   const assignmentDisplay =
     submission.assignment_name ||
-    submission.file_name ||
-    submission.filename ||
-    submission.original_filename ||
-    submission.display_name ||
+    (submission.assignment && submission.assignment.name) ||
+    submission.student_name ||
     "—";
 
   return (
     <div className="container">
-      {/* NEW: back button to go to previous page */}
-      <button
-        type="button"
-        className="btn"
-        style={{ marginBottom: "1rem" }}
-        onClick={() => navigate(-1)}
-      >
-        Back to Submissions
-      </button>
-
       <h1>Review Submission</h1>
 
       <p>
@@ -146,6 +133,21 @@ export default function ReviewSubmission() {
           Save Final Grade
         </button>
       </form>
+
+      {/* ✅ Back button under Save Final Grade */}
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="btn"
+        style={{
+          marginTop: "0.75rem",
+          backgroundColor: "#ffffff",
+          color: "#000000",
+          border: "2px solid #facc15",
+        }}
+      >
+        Back to Submissions
+      </button>
     </div>
   );
 }
