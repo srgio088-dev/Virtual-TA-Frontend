@@ -140,10 +140,6 @@ export default function ReviewSubmission() {
       <h3>AI Feedback</h3>
       <pre className="pre">{submission.ai_feedback}</pre>
 
-      <button className="btn" type="button" onClick={downloadFeedback}>
-        Download Feedback
-      </button>
-
       <form onSubmit={saveFinal} className="form" style={{ marginTop: "1rem" }}>
         <label>
           Final Grade
@@ -153,7 +149,15 @@ export default function ReviewSubmission() {
             placeholder="e.g., 88"
           />
         </label>
-        <button type="submit" className="btn"> Save Final Grade</button></form>
+      
+      <button
+        className="btn" 
+        type="button" 
+        onClick={downloadFeedback}> '
+        Download Feedback 
+      </button>
+      
+      <button type="submit" className="btn"> Save Final Grade</button></form>
         
       <button 
         type="button"
