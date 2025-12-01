@@ -59,7 +59,15 @@ export default function RubricPage() {
       </div>
 
       <div className="row" style={{ gap: 12, marginTop: 12 }}>
-        <Link className="btn" to={`/assignment/${id}`}>Back to Submissions</Link>
+
+        <button
+          type="button"
+          className="btn"
+          onClick={() => navigate(`/assignment/${id}`)}
+        >
+          Back to Submissions
+        </button>
+        
         <button
           type="button"
           className="btn"
