@@ -135,32 +135,30 @@ const sortedAssignments = [...assignments].sort((a, b) => {
       {!assignments.length ? (
         <p>No assignments yet.</p>
       ) : (
-      <div style={{ marginBottom: "1rem" }}>
-  <label style={{ marginRight: "8px", fontWeight: "bold" }}>
-    Sort:
-  </label>
+  <div>
+    <div style={{ marginBottom: "1rem" }}>
+      <label style={{ marginRight: "8px", fontWeight: "bold" }}>Sort:</label>
 
-  <select
-    value={sortOption}
-    onChange={(e) => setSortOption(e.target.value)}
-    style={{
-      padding: "6px 10px",
-      borderRadius: "6px",
-      border: "1px solid #999",
-    }}
-  >
-    <option value="none">Default</option>
-    <option value="name-asc">Name (A → Z)</option>
-    <option value="name-desc">Name (Z → A)</option>
-    <option value="due-asc">Due Date (Earliest First)</option>
-    <option value="due-desc">Due Date (Latest First)</option>
-  </select>
-</div>
+      <select
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+        style={{
+          padding: "6px 10px",
+          borderRadius: "6px",
+          border: "1px solid #999",
+        }}
+      >
+        <option value="none">Default</option>
+        <option value="name-asc">Name (A → Z)</option>
+        <option value="name-desc">Name (Z → A)</option>
+        <option value="due-asc">Due Date (Earliest First)</option>
+        <option value="due-desc">Due Date (Latest First)</option>
+      </select>
+    </div>
 
         <ul className="list">
           {sortedAssignments.map((a) => (
-            <li
-              key={a.id}
+            <li key={a.id}
               className={`assignment-card ${
                 selectedId === a.id ? "selected" : ""
               }`}
@@ -230,9 +228,10 @@ const sortedAssignments = [...assignments].sort((a, b) => {
                 </button>
               </div>
             </li>
-          ))}
-        </ul>
-      )}
+      ))}
+    </ul>
+  </div>
+)}
 
       {/* 🔐 PIN Modal */}
       {pinModalOpen && (
