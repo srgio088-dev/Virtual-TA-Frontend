@@ -75,9 +75,12 @@ export default function AssignmentList() {
         assignment_id: pinForm.assignmentId,
         student_id: pinForm.studentName.trim(),
       };
+
       const res = await apiPostJSON("/api/pins", body);
-      // backend returns { pin: "100124" }
-      setPinResult(res.pin || "");
+
+      // 🔁 UPDATED: backend returns { pin_code: "483920", ... }
+      setPinResult(res.pin_code || "");
+
     } catch (err) {
       setPinError(err?.message || "Failed to generate PIN.");
     } finally {
@@ -153,7 +156,7 @@ export default function AssignmentList() {
                   Delete
                 </button>
 
-                {/* 🔐 NEW: Generate PIN button */}
+                {/* 🔐 Generate PIN button */}
                 <button
                   type="button"
                   onClick={(e) => {
