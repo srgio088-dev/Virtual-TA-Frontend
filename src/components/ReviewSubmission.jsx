@@ -142,7 +142,7 @@ export default function ReviewSubmission() {
 
       <form onSubmit={saveFinal} className="form" style={{ marginTop: "1rem" }}>
         <label>
-          Final Grade
+          <h3>Final Grade</h3>
           <input
             value={finalGrade}
             onChange={(e) => setFinalGrade(e.target.value)}
@@ -157,7 +157,11 @@ export default function ReviewSubmission() {
         Download Feedback 
       </button>
       
-      <button type="submit" className="btn"> Save Final Grade</button></form>
+      <button 
+        className="btn" 
+        type="submit" > 
+        Save Final Grade
+      </button></form>
         
       <button 
         type="button"
