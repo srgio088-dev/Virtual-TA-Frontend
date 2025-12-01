@@ -140,7 +140,7 @@ export default function ReviewSubmission() {
       <h3>AI Feedback</h3>
       <pre className="pre">{submission.ai_feedback}</pre>
 
-      <form onSubmit={saveFinal} className="form" style={{ marginTop: "1rem" }}>
+      <form onSubmit={saveFinal} className="form" style={{ marginTop: "0.5rem" }}>
           <label>
             <h3>Final Grade</h3>
             <input
