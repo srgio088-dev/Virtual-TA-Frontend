@@ -50,7 +50,6 @@ export default function UploadForm() {
     className="card form"
     onSubmit={submit}
     style={{
-      maxWidth: "700px",
       margin: "50px auto",
       display: "flex",
       flexDirection: "column",
@@ -179,11 +178,6 @@ export default function UploadForm() {
   }}
 >
   <strong>Suggested File Name Format:</strong> AssignmentName_StudentName </p>
-    
-    {/* <strong>Suggedted file name format:</strong><br />
-  AssignmentName_StudentFirstAndLast <br />
-  or AssignmentName_LastNameFirstInitial
-</p> */}
     
     {/* ===== Status Message ===== */}
     {status && (
