@@ -141,34 +141,38 @@ export default function ReviewSubmission() {
       <pre className="pre">{submission.ai_feedback}</pre>
 
       <form onSubmit={saveFinal} className="form" style={{ marginTop: "1rem" }}>
-        <label>
-          <h3>Final Grade</h3>
-          <input
-            value={finalGrade}
-            onChange={(e) => setFinalGrade(e.target.value)}
-            placeholder="e.g., 88"
-          />
-        </label>
-      
-      <button
-        className="btn" 
-        type="button" 
-        onClick={downloadFeedback}>
-        Download Feedback 
-      </button>
-      
-      <button 
-        className="btn" 
-        type="submit" > 
-        Save Final Grade
-      </button>
+          <label>
+            <h3>Final Grade</h3>
+            <input
+              value={finalGrade}
+              onChange={(e) => setFinalGrade(e.target.value)}
+              placeholder="e.g., 88"
+            />
+          </label>
         
-      <button 
-        type="button"
-        onClick={() => navigate(-1)}
-        className="btn">
-        Back to Submissions
-        </button>
+          <div className="button-row">
+            <button
+              className="btn"
+              type="button"
+              onClick={downloadFeedback}
+            >
+              Download Feedback
+            </button>
+        
+            <button
+              className="btn"
+              type="submit"
+            >
+              Save Final Grade
+            </button>
+        
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="btn"
+            >
+              Back to Submissions
+            </button>
       </form>
       </div>
   );
