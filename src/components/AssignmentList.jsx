@@ -134,7 +134,9 @@ const sortedAssignments = [...assignments].sort((a, b) => {
       {error && <p className="error">{error}</p>}
       {!assignments.length ? (
         <p>No assignments yet.</p>
-      ) : (
+      {!assignments.length ? (
+  <p>No assignments yet.</p>
+) : (
   <div>
     <div style={{ marginBottom: "1rem" }}>
       <label style={{ marginRight: "8px", fontWeight: "bold" }}>Sort:</label>
@@ -156,16 +158,11 @@ const sortedAssignments = [...assignments].sort((a, b) => {
       </select>
     </div>
 
-        <ul className="list">
-          {sortedAssignments.map((a) => (
-            <li key={a.id}
-              className={`assignment-card ${
-                selectedId === a.id ? "selected" : ""
-              }`}
-              onClick={() =>
-                setSelectedId(selectedId === a.id ? null : a.id)
-              }
-            >
+    <ul className="list">
+      {sortedAssignments.map((a) => (
+        <li key={a.id} className={`assignment-card ${selectedId === a.id ? "selected" : ""}`}
+            onClick={() => setSelectedId(selectedId === a.id ? null : a.id)}
+          
               <div className="assignment-main">
                 <strong>{a.name}</strong>{" "}
                 <span className="muted">
