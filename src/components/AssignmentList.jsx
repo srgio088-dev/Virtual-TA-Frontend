@@ -106,8 +106,9 @@ export default function AssignmentList() {
 
   return (
     <div 
-      className="container",
-      maxWidth: "1200px">
+      className="container"
+      style={{ maxWidth: "1200px" }}
+    >
       <h1>Assignments</h1>
       {error && <p className="error">{error}</p>}
 
