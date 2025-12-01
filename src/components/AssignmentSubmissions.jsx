@@ -114,11 +114,13 @@ export default function AssignmentSubmissions() {
       <div
         className="card"
         style={{
-          maxWidth: "1100px",
+          maxWidth: "900px",     // ⬅️ previously ~650 — now wider
+          width: "100%",
           margin: "0 auto",
           padding: "2rem",
         }}
-      >
+        >
+        
         <header style={{ marginBottom: "1.5rem" }}>
           <h1 style={{ marginBottom: "1rem" }}>{assignment.name}</h1>
 
