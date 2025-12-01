@@ -112,14 +112,19 @@ export default function PinSubmit() {
 
         <form onSubmit={handleSubmit}>
           <label style={styles.label}>
-            Choose file (txt, pdf, docx):
+            Choose File:
             <input
               type="file"
               accept=".txt,.pdf,.docx"
               onChange={(e) => setFile(e.target.files[0] || null)}
               style={styles.fileInput}
             />
+
+            <p style={{ color: "#ccc", fontSize: "0.85rem", marginTop: "-4px" }}>
+              Format as: <strong>'Submission Name' - 'Your Name'</strong>
+            </p>
           </label>
+
 
           <button type="submit" style={styles.button} disabled={busy}>
             {busy ? "Uploading..." : "Upload & Submit"}
