@@ -10,7 +10,7 @@ export default function PinSubmit() {
   const navigate = useNavigate();
 
   // This is what we passed from PinEntry via navigate(..., { state: data })
-  // expected: { class_id, assignment_id, student_id }
+  // expected: { class_id, assignment_id }
   const data = location.state;
 
   const [file, setFile] = useState(null);
@@ -68,11 +68,31 @@ export default function PinSubmit() {
       return;
     }
 
+    // 🔍 Parse filename: "Submission Name - Your Name.ext"
+    const fullName = file.name || "";
+    const withoutExt = fullName.replace(/\.[^/.]+$/, ""); // strip extension
+    const parts = withoutExt.split(" - ");
+
+    let submissionName = "";
+    let studentName = "";
+
+    if (parts.length >= 2) {
+      submissionName = parts[0].trim();
+      studentName = parts.slice(1).join(" - ").trim();
+    } else {
+      // Fallback if they don't follow the format
+      submissionName = withoutExt.trim();
+      studentName = "Unknown";
+    }
+
     const formData = new FormData();
-    // backend expects: student_name, assignment_id, file
-    formData.append("student_name", data.student_id); // from PIN
+    // backend expects at least: student_name, assignment_id, file
+    formData.append("student_name", studentName);
     formData.append("assignment_id", data.assignment_id);
     formData.append("file", file);
+
+    // Optional: if backend supports it, this can populate a submission title
+    formData.append("submission_name", submissionName);
 
     try {
       setBusy(true);
@@ -103,11 +123,8 @@ export default function PinSubmit() {
         <p style={styles.subtitle}>
           PIN: <strong>{pin}</strong>
           <br />
-          {/* CHANGED: show Assignment name instead of "Assignment ID" + number */}
           Assignment:{" "}
-          <strong>
-            {assignmentName || `#${data.assignment_id}`}
-          </strong>
+          <strong>{assignmentName || `#${data.assignment_id}`}</strong>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -119,12 +136,16 @@ export default function PinSubmit() {
               onChange={(e) => setFile(e.target.files[0] || null)}
               style={styles.fileInput}
             />
-
-            <p style={{ color: "#ccc", fontSize: "0.85rem", marginTop: "-4px" }}>
+            <p
+              style={{
+                color: "#ccc",
+                fontSize: "0.85rem",
+                marginTop: "-4px",
+              }}
+            >
               Format as: <strong>'Submission Name' - 'Your Name'</strong>
             </p>
           </label>
-
 
           <button type="submit" style={styles.button} disabled={busy}>
             {busy ? "Uploading..." : "Upload & Submit"}
@@ -174,7 +195,7 @@ const styles = {
   fileInput: {
     display: "block",
     marginTop: "6px",
-    marginBottom: "16px",
+    marginBottom: "8px",
   },
   button: {
     width: "100%",
