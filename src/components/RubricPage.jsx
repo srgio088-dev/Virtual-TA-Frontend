@@ -67,8 +67,11 @@ export default function RubricPage() {
         <strong>Assignment:</strong> {assignmentName}
       </div>
 
-      <div className="p-3 border rounded bg-white whitespace-pre-wrap">
-        {rubric}
+      <div id="print-area">
+        <h1>{assignmentName}</h1>
+        <div className="p-3 border rounded bg-white whitespace-pre-wrap">
+          {rubric}
+        </div>
       </div>
 
       {/* Button row */}
@@ -88,11 +91,40 @@ export default function RubricPage() {
           Back to Submissions
         </button>
 
-        <button 
+        {/*<button 
           type="button" 
           className="btn" 
           style={{ flex: 1 }} 
           onClick={() => window.print()}
+        >
+          Print
+        </button>*/}
+        <button
+          type="button"
+          className="btn"
+          style={{ flex: 1 }}
+          onClick={() => {
+            const printContent = document.getElementById("print-area").innerHTML;
+            const w = window.open("", "_blank");
+            w.document.write(`
+              <html>
+                <head>
+                  <title>Rubric</title>
+                  <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    h1 { font-size: 24px; margin-bottom: 10px; }
+                    pre { white-space: pre-wrap; }
+                  </style>
+                </head>
+                <body>
+                  ${printContent}
+                </body>
+              </html>
+            `);
+            w.document.close();
+            w.print();
+            w.close();
+          }}
         >
           Print
         </button>
