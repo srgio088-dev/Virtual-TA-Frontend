@@ -79,7 +79,6 @@ const styles = {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    style={{filter: 'brightness(20%)'}}
   },
   topHeader: {
     display: "flex",
@@ -141,6 +140,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
