@@ -89,6 +89,23 @@ export default function ReviewSubmission() {
     );
   }
 
+  // Use whatever field contains "Assignment_Student"
+const rawName =
+  submission.submission_name ||
+  submission.name ||
+  submission.filename ||
+  "";
+
+// Split on first underscore only
+let parsedAssignment = "—";
+let parsedStudent = "—";
+
+if (rawName.includes("_")) {
+  const splitIndex = rawName.indexOf("_");
+  parsedAssignment = rawName.slice(0, splitIndex);
+  parsedStudent = rawName.slice(splitIndex + 1);
+}
+  
   const assignmentDisplay =
     submission.assignment_name ||
     (submission.assignment && submission.assignment.name) ||
