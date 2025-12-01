@@ -130,10 +130,10 @@ export default function ReviewSubmission() {
       <h1>Review Submission</h1>
 
       <p>
-        <strong>Assignment:</strong> {assignmentDisplay}
+        <strong>Assignment:</strong> {parsedAssignment}
       </p>
       <p>
-        <strong>Student:</strong> {studentDisplay}
+        <strong>Student:</strong> {parsedStudent}
       </p>
       <p>
         <strong>Suggested Grade:</strong> {submission.ai_grade ?? "N/A"}
