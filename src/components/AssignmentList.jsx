@@ -273,7 +273,7 @@ const modalStyles = {
     width: "100%",
     maxWidth: "420px",
     boxShadow: "0 4px 12px rgba(0,0,0,0.6)",
-    border: "1px solid "#333",
+    border: "1px solid #333",
     fontFamily: "Arial, sans-serif",
   },
   title: {
