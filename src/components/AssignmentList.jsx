@@ -44,15 +44,17 @@ export default function AssignmentList() {
   }
 
   const openPinModal = (assignment) => {
-    setPinForm({
-      classId: "",
-      studentName: "",
-      assignmentId: assignment.id,
-    });
-    setPinResult("");
-    setPinError("");
-    setPinModalOpen(true);
-  };
+  setPinForm({
+    classId: "",
+    studentName: "",
+    assignmentId: assignment.id,
+    assignmentName: assignment.name,   // <-- ADD THIS
+  });
+  setPinResult("");
+  setPinError("");
+  setPinModalOpen(true);
+};
+
 
   const closePinModal = () => {
     setPinModalOpen(false);
@@ -199,8 +201,9 @@ function formatDueDate(due) {
             <h2 style={modalStyles.title}>Generate PIN</h2>
             <p style={modalStyles.subtitle}>
               Assignment:{" "}
-              <strong>{pinForm.assignmentId}</strong>
+              <strong>{pinForm.assignmentName}</strong>
             </p>
+
 
             <form onSubmit={handleGeneratePin}>
               <div style={modalStyles.field}>
