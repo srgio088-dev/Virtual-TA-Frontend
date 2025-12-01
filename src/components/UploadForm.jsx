@@ -178,7 +178,7 @@ export default function UploadForm() {
     lineHeight: "1.4",
   }}
 >
-  <strong>Suggedted file name format:</strong> AssignmentName_StudentFirstAndLast or AssignmentName_LastNameFirstInitial </p>
+  <strong>Suggested File Name Format:</strong> AssignmentName_StudentName </p>
     
     {/* <strong>Suggedted file name format:</strong><br />
   AssignmentName_StudentFirstAndLast <br />
