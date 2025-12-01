@@ -72,9 +72,13 @@ export default function RubricPage() {
       </div>
 
       {/* Button row */}
-      <div className="row" style={{ gap: 12, marginTop: 12 }}>
-
-        {/* ✅ FIXED: Back button works */}
+      <div className="button-row" 
+        style={{
+          display: "flex",
+          gap: "12px",
+          marginTop: "12px",
+        }}
+        >
         <button
           type="button"
           className="btn"
@@ -83,13 +87,14 @@ export default function RubricPage() {
           Back to Submissions
         </button>
 
-        <button type="button" className="btn" onClick={() => window.print()}>
+        <button type="button" className="btn" style={{ flex: 1 }} onClick={() => window.print()}>
           Print
         </button>
 
         <button
           type="button"
           className="btn"
+          style={{ flex: 1 }}
           onClick={() =>
             downloadText(
               `rubric-${(assignmentName || "assignment")
