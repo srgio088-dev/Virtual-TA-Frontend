@@ -150,31 +150,40 @@ export default function ReviewSubmission() {
             />
           </label>
         
-          <div className="button-row">
-            <button
-              className="btn"
-              type="button"
-              onClick={downloadFeedback}
-            >
-              Download Feedback
-            </button>
-        
-            <button
-              className="btn"
-              type="submit"
-            >
-              Save Final Grade
-            </button>
-        
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="btn"
-            >
-              Back to Submissions
-            </button>
-          </div>
-        </form>
-      </div>
+          <div className="button-row"
+              style={{
+                display: "flex",
+                gap: "12px",
+                marginTop: "12px",
+              }}
+              >
+              <button
+                className="btn"
+                type="button"
+                style={{ flex: 1}}
+                onClick={downloadFeedback}
+              >
+                Download Feedback
+              </button>
+            
+              <button
+                className="btn"
+                type="submit"
+                style={{ flex: 1}}
+              >
+                Save Final Grade
+              </button>
+            
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                style={{ flex: 1}}
+                className="btn"
+              >
+                Back to Submissions
+              </button>
+            </div>
+          </form>
+        </div>
   );
 }
