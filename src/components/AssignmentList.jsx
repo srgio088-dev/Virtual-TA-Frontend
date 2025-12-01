@@ -125,8 +125,7 @@ export default function AssignmentList() {
 
                 {/* Due Date Display */}
                 <p className="muted">
-                  {/*a.due_date ? `Due: ${a.due_date}` : "No due date"*/}
-                  {a.due_date && a.due_date.trim() !== "" ? `Due: ${a.due_date}` : "No due date"}
+                  {a.due_date ? `Due: ${a.due_date}` : "No due date"}
                 </p>
               </div>
 
