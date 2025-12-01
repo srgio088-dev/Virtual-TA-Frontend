@@ -12,7 +12,6 @@ export default function AssignmentList() {
   const [pinModalOpen, setPinModalOpen] = useState(false);
   const [pinForm, setPinForm] = useState({
     classId: "",
-    studentName: "",
     assignmentId: null,
     assignmentName: "",
   });
@@ -47,7 +46,6 @@ export default function AssignmentList() {
   const openPinModal = (assignment) => {
     setPinForm({
       classId: "",
-      studentName: "",
       assignmentId: assignment.id,
       assignmentName: assignment.name,
     });
@@ -65,8 +63,8 @@ export default function AssignmentList() {
     setPinError("");
     setPinResult("");
 
-    if (!pinForm.classId.trim() || !pinForm.studentName.trim()) {
-      setPinError("Class ID and Student Name are required.");
+    if (!pinForm.classId.trim()) {
+      setPinError("Course Number is required.");
       return;
     }
 
@@ -75,7 +73,6 @@ export default function AssignmentList() {
       const body = {
         class_id: Number(pinForm.classId),
         assignment_id: pinForm.assignmentId,
-        student_id: pinForm.studentName.trim(),
       };
 
       const res = await apiPostJSON("/api/pins", body);
@@ -194,66 +191,32 @@ export default function AssignmentList() {
       )}
 
       {/* 🔐 PIN Modal */}
-{pinModalOpen && (
-  <div style={modalStyles.backdrop}>
-    <div style={modalStyles.card}>
-      <h2 style={modalStyles.title}>Generate PIN</h2>
-      <p style={modalStyles.subtitle}>
-        Assignment: <strong>{pinForm.assignmentName}</strong>
-      </p>
+      {pinModalOpen && (
+        <div style={modalStyles.backdrop}>
+          <div style={modalStyles.card}>
+            <h2 style={modalStyles.title}>Generate PIN</h2>
+            <p style={modalStyles.subtitle}>
+              Assignment: <strong>{pinForm.assignmentName}</strong>
+            </p>
 
-      <form onSubmit={handleGeneratePin}>
-        {/* Course Number */}
-        <div style={modalStyles.field}>
-          <label style={modalStyles.label}>Course Number</label>
-          <input
-            value={pinForm.classId}
-            onChange={(e) =>
-              setPinForm((prev) => ({
-                ...prev,
-                classId: e.target.value,
-              }))
-            }
-            placeholder="e.g. 4850"
-            style={modalStyles.input}
-          />
-        </div>
+            <form onSubmit={handleGeneratePin}>
+              {/* Course Number */}
+              <div style={modalStyles.field}>
+                <label style={modalStyles.label}>Course Number</label>
+                <input
+                  value={pinForm.classId}
+                  onChange={(e) =>
+                    setPinForm((prev) => ({
+                      ...prev,
+                      classId: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g. 4850"
+                  style={modalStyles.input}
+                />
+              </div>
 
-        {/* Display PIN result */}
-        {pinError && (
-          <p style={modalStyles.error}>{pinError}</p>
-        )}
-
-        {pinResult && (
-          <div style={modalStyles.pinBox}>
-            <p style={{ margin: 0 }}>Share this PIN with the student:</p>
-            <div style={modalStyles.pinValue}>{pinResult}</div>
-          </div>
-        )}
-
-        {/* Buttons */}
-        <div style={modalStyles.actions}>
-          <button
-            type="button"
-            onClick={closePinModal}
-            style={modalStyles.secondaryButton}
-          >
-            Close
-          </button>
-          <button
-            type="submit"
-            style={modalStyles.primaryButton}
-            disabled={pinLoading}
-          >
-            {pinLoading ? "Generating..." : "Generate PIN"}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
-
+              {/* Display errors / PIN */}
               {pinError && (
                 <p style={modalStyles.error}>{pinError}</p>
               )}
@@ -267,6 +230,7 @@ export default function AssignmentList() {
                 </div>
               )}
 
+              {/* Buttons */}
               <div style={modalStyles.actions}>
                 <button
                   type="button"
@@ -275,7 +239,6 @@ export default function AssignmentList() {
                 >
                   Close
                 </button>
-
                 <button
                   type="submit"
                   style={modalStyles.primaryButton}
@@ -310,7 +273,7 @@ const modalStyles = {
     width: "100%",
     maxWidth: "420px",
     boxShadow: "0 4px 12px rgba(0,0,0,0.6)",
-    border: "1px solid #333",
+    border: "1px solid "#333",
     fontFamily: "Arial, sans-serif",
   },
   title: {
@@ -335,7 +298,7 @@ const modalStyles = {
     width: "100%",
     padding: "8px 10px",
     borderRadius: "6px",
-    border: "1px solid #444",
+    border: "1px solid "#444",
     backgroundColor: "#000",
     color: "#fff",
   },
@@ -349,7 +312,7 @@ const modalStyles = {
     marginBottom: "12px",
     padding: "10px 12px",
     borderRadius: "6px",
-    border: "1px solid #FFD700",
+    border: "1px solid "#FFD700",
     backgroundColor: "#222",
   },
   pinValue: {
@@ -377,7 +340,7 @@ const modalStyles = {
   secondaryButton: {
     padding: "8px 14px",
     borderRadius: "6px",
-    border: "1px solid #666",
+    border: "1px solid "#666",
     backgroundColor: "transparent",
     color: "#fff",
     cursor: "pointer",
