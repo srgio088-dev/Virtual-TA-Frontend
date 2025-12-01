@@ -216,21 +216,17 @@ export default function AssignmentList() {
                 />
               </div>
 
-              {/* Display errors / PIN */}
               {pinError && (
                 <p style={modalStyles.error}>{pinError}</p>
               )}
 
               {pinResult && (
                 <div style={modalStyles.pinBox}>
-                  <p style={{ margin: 0 }}>
-                    Share this PIN with the student:
-                  </p>
+                  <p style={{ margin: 0 }}>Share this PIN with the student:</p>
                   <div style={modalStyles.pinValue}>{pinResult}</div>
                 </div>
               )}
 
-              {/* Buttons */}
               <div style={modalStyles.actions}>
                 <button
                   type="button"
@@ -298,7 +294,7 @@ const modalStyles = {
     width: "100%",
     padding: "8px 10px",
     borderRadius: "6px",
-    border: "1px solid "#444",
+    border: "1px solid #444",
     backgroundColor: "#000",
     color: "#fff",
   },
@@ -312,7 +308,7 @@ const modalStyles = {
     marginBottom: "12px",
     padding: "10px 12px",
     borderRadius: "6px",
-    border: "1px solid "#FFD700",
+    border: "1px solid #FFD700",
     backgroundColor: "#222",
   },
   pinValue: {
@@ -340,7 +336,7 @@ const modalStyles = {
   secondaryButton: {
     padding: "8px 14px",
     borderRadius: "6px",
-    border: "1px solid "#666",
+    border: "1px solid #666",
     backgroundColor: "transparent",
     color: "#fff",
     cursor: "pointer",
