@@ -140,7 +140,7 @@ export default function PinSubmit() {
                 marginTop: "-4px",
               }}
             >
-              Format as: <strong>'Submission Name' - 'Your Name'</strong>
+              Format as: <strong>'SubmissionName' _ 'YourName'</strong>
             </p>
           </label>
 
