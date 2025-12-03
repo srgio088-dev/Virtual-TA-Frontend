@@ -64,6 +64,10 @@ export default function RubricPage() {
       <h1>Rubric for: {assignmentName}</h1>
 
       <div id="print-area">
+        <h2 style={{ fontWeight: "bold", marginBottom: "12px" }}>
+          {assignmentName}
+        </h2>
+        
         <div className="p-3 border rounded bg-white whitespace-pre-wrap">
           {rubric}
         </div>
