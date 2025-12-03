@@ -6,15 +6,6 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div style={styles.outer}>
-      {/* Left side image 
-      <img
-        src="/images/yosef.png"
-        alt="Left decoration"
-        style={styles.sideImageLeft}
-      />
-
-       MAIN CONTENT */}
       <div style={styles.container}>
         {/* Title and Logo Side by Side */}
         <div style={styles.topHeader}>
@@ -66,14 +57,6 @@ export default function Home() {
           </p>
         </footer>
       </div>
-
-      {/* Right side image
-      <img
-        src="/images/appstate_students.webp"
-        alt="Right decoration"
-        style={styles.sideImageRight}
-      /> */}
-    </div>
   );
 }
 
@@ -181,6 +164,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
