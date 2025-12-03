@@ -61,18 +61,6 @@ export default function Home() {
 }
 
 const styles = {
-  /* SIDE IMAGES */
-  sideImageLeft: {
-    width: "20%",
-    objectFit: "cover",
-  },
-
-  sideImageRight: {
-    width: "20%",
-    objectFit: "cover",
-    transform: "scaleX(-1)", // mirror for symmetry
-  },
-
   /* MAIN CONTAINER */
   container: {
     display: "flex",
@@ -90,7 +78,7 @@ const styles = {
   topHeader: {
     display: "flex",
     alignItems: "center",
-    gap: "15px",
+    {/*gap: "15px",*/}
     marginBottom: "20px",
   },
 
@@ -156,6 +144,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
