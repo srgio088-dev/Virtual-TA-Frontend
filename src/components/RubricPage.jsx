@@ -62,11 +62,6 @@ export default function RubricPage() {
   return (
     <div className="container">
       <h1>Rubric for: {assignmentName}</h1>
-
-      <div id="print-area">
-        <h2 style={{ fontWeight: "bold", marginBottom: "12px" }}>
-          {assignmentName}
-        </h2>
         
         <div className="p-3 border rounded bg-white whitespace-pre-wrap">
           {rubric}
@@ -103,7 +98,10 @@ export default function RubricPage() {
           className="btn"
           style={{ flex: 1 }}
           onClick={() => {
-            const printContent = document.getElementById("print-area").innerHTML;
+            const printContent = '
+              <h1><strong>${assignmentName}</strong></h1>
+                ${document.getElementById("print-area").innerHTML}
+            ';
             const w = window.open("", "_blank");
             w.document.write(`
               <html>
