@@ -81,7 +81,7 @@ export default function UploadForm() {
           fontSize: "1.1rem",
         }}
       >
-        Assignment
+        Please select an assignment below
       </label>
 
       <select
