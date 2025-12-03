@@ -61,7 +61,7 @@ export default function RubricPage() {
 
   return (
     <div className="container">
-      <h1>Rubric</h1>
+      <h1>Rubric for: {assignmentName}</h1>
 
       <div className="mb-3 text-sm">
         <strong>Assignment:</strong> {assignmentName}
