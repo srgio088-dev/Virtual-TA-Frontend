@@ -1,74 +1,62 @@
 // src/api/client.js
-
 export const API_BASE =
   import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
 
-// --- identity helpers -------------------------------------------------
+// Get the current Netlify Identity user's email (if logged in)
+function getAuthHeaders() {
+  let email = "";
 
-function getUserEmail() {
   try {
     const ni = window.netlifyIdentity;
-    if (ni) {
-      const u = ni.currentUser();
-      if (u) {
-        // Netlify user object always has `email`
-        return u.email;
-      }
+    const user = ni && ni.currentUser();
+    if (user && user.email) {
+      email = user.email;
     }
   } catch (e) {
-    // ignore, fall back to localStorage
+    // ignore – safest to just not send the header
   }
-  const stored = localStorage.getItem("virtualta_user_email");
-  return stored || null;
-}
 
-function authHeaders() {
-  const email = getUserEmail();
   return email ? { "X-User-Email": email } : {};
 }
 
-// --- generic fetch helpers --------------------------------------------
-
-async function doFetch(path, options = {}) {
-  const url = `${API_BASE}${path}`;
-  const res = await fetch(url, {
-    credentials: "include", // send cookies as well
-    ...options,
+export async function apiGet(path) {
+  const res = await fetch(`${API_BASE}${path}`, {
     headers: {
-      "Accept": "application/json",
-      ...(options.headers || {}),
-      ...authHeaders(),
+      ...getAuthHeaders(),
     },
   });
-
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(
-      `${options.method || "GET"} ${path} failed: ${res.status} ${text}`
-    );
+    throw new Error(`GET ${path} failed: ${res.status}`);
   }
-
-  // Some endpoints may return 204
-  if (res.status === 204) return null;
   return res.json();
 }
 
-export async function apiGet(path) {
-  return doFetch(path, { method: "GET" });
-}
-
 export async function apiPostJSON(path, data) {
-  return doFetch(path, {
+  const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
     body: JSON.stringify(data || {}),
   });
+  if (!res.ok) {
+    throw new Error(`POST ${path} failed: ${res.status}`);
+  }
+  return res.json();
 }
 
 export async function apiPostForm(path, formData) {
-  // Let the browser set Content-Type (multipart/form-data boundary)
-  return doFetch(path, {
+  const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
+    headers: {
+      // don’t set Content-Type here; the browser will add the multipart boundary
+      ...getAuthHeaders(),
+    },
     body: formData,
   });
+  if (!res.ok) {
+    throw new Error(`POST form ${path} failed: ${res.status}`);
+  }
+  return res.json();
 }
