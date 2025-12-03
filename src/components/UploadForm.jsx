@@ -50,14 +50,14 @@ export default function UploadForm() {
     className="card form"
     onSubmit={submit}
     style={{
-      margin: "50px auto",
+      margin: "0 auto",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      gap: "30px",
-      padding: "40px",
+      width: "80%",
+      padding: "20px",
       borderRadius: "12px",
-      backgroundColor: "#fff",
+      backgroundColor: "#ffffff",
       boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
     }}
   >
