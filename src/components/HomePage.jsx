@@ -61,15 +61,6 @@ export default function Home() {
 }
 
 const styles = {
-  /* NEW OUTER WRAPPER */
-  outer: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    minHeight: "100vh",
-    backgroundColor: "#f9f9f9",
-  },
-
   /* SIDE IMAGES */
   sideImageLeft: {
     width: "20%",
@@ -165,6 +156,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
