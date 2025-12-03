@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiPostJSON } from "../api/client";
 
-const API_BASE =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 export default function CreateAssignment() {
   const navigate = useNavigate();
@@ -11,7 +10,7 @@ export default function CreateAssignment() {
   const [baseName, setBaseName] = useState("");
   const [rubricText, setRubricText] = useState("");
   const [rubricFile, setRubricFile] = useState(null);
-  const [dueDate, setDueDate] = useState(""); // NEW 11/19
+  const [dueDate, setDueDate] = useState("");
   const [assignmentCount, setAssignmentCount] = useState(1);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [error, setError] = useState("");
@@ -39,20 +38,29 @@ export default function CreateAssignment() {
       return;
     }
 
-    const n = Math.max(1, Number(assignmentCount) || 1);
+    const count = Math.max(1, Number(assignmentCount) || 1);
     setIsSubmitting(true);
 
     try {
-      for (let i = 1; i <= n; i++) {
-        const name = n === 1 ? trimmedBaseName : `${trimmedBaseName} ${i}`;
+      // Get email from Netlify Identity
+      const ni = window.netlifyIdentity;
+      const user = ni && ni.currentUser();
+      const owner_email = user && user.email ? user.email : null;
 
-        // If a file is provided, use multipart/form-data so backend can use PdfReader
+      for (let i = 1; i <= count; i++) {
+        const name =
+          count === 1 ? trimmedBaseName : `${trimmedBaseName} ${i}`;
+
         if (rubricFile) {
+          // multipart/form-data path (supports rubric_file)
           const formData = new FormData();
           formData.append("name", name);
           formData.append("rubric", rubricText); // optional extra text
           formData.append("rubric_file", rubricFile);
           formData.append("due_date", dueDate || "");
+          if (owner_email) {
+            formData.append("owner_email", owner_email);
+          }
 
           const res = await fetch(`${API_BASE}/api/assignments`, {
             method: "POST",
@@ -61,14 +69,17 @@ export default function CreateAssignment() {
 
           if (!res.ok) {
             const msg = await res.text();
-            throw new Error(msg || "Failed to create assignment with rubric file.");
+            throw new Error(
+              msg || "Failed to create assignment with rubric file."
+            );
           }
         } else {
-          // Original JSON behavior (no file, just text rubric)
+          // JSON path (no file, just rubric text)
           await apiPostJSON("/api/assignments", {
             name,
             rubric: rubricText,
-            due_date: dueDate || null, // NEW 11/19
+            due_date: dueDate || null,
+            owner_email,
           });
         }
       }
