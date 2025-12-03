@@ -77,8 +77,7 @@ const styles = {
 
   topHeader: {
     display: "flex",
-    alignItems: "center",
-    {/*gap: "15px",*/}
+    alignItems: "center", //gap: "15px",
     marginBottom: "20px",
   },
 
@@ -144,6 +143,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
