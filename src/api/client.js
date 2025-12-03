@@ -1,59 +1,74 @@
-export const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// src/api/client.js
 
-/**
- * Helper that adds the logged-in Netlify Identity user's email
- * to every request as X-User-Email (if available).
- */
-function withAuth(init = {}) {
-  const headers = { ...(init.headers || {}) };
+export const API_BASE =
+  import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
 
+// --- identity helpers -------------------------------------------------
+
+function getUserEmail() {
   try {
-    if (typeof window !== "undefined" && window.netlifyIdentity) {
-      const user = window.netlifyIdentity.currentUser();
-      if (user && user.email) {
-        headers["X-User-Email"] = user.email;
+    const ni = window.netlifyIdentity;
+    if (ni) {
+      const u = ni.currentUser();
+      if (u) {
+        // Netlify user object always has `email`
+        return u.email;
       }
     }
-  } catch {
-    // if netlifyIdentity isn't ready, just skip the header
+  } catch (e) {
+    // ignore, fall back to localStorage
+  }
+  const stored = localStorage.getItem("virtualta_user_email");
+  return stored || null;
+}
+
+function authHeaders() {
+  const email = getUserEmail();
+  return email ? { "X-User-Email": email } : {};
+}
+
+// --- generic fetch helpers --------------------------------------------
+
+async function doFetch(path, options = {}) {
+  const url = `${API_BASE}${path}`;
+  const res = await fetch(url, {
+    credentials: "include", // send cookies as well
+    ...options,
+    headers: {
+      "Accept": "application/json",
+      ...(options.headers || {}),
+      ...authHeaders(),
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(
+      `${options.method || "GET"} ${path} failed: ${res.status} ${text}`
+    );
   }
 
-  return { ...init, headers };
+  // Some endpoints may return 204
+  if (res.status === 204) return null;
+  return res.json();
 }
 
 export async function apiGet(path) {
-  const res = await fetch(`${API_BASE}${path}`, withAuth());
-  if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
-  return res.json();
+  return doFetch(path, { method: "GET" });
 }
 
 export async function apiPostJSON(path, data) {
-  const init = withAuth({
+  return doFetch(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data || {}),
   });
-
-  const res = await fetch(`${API_BASE}${path}`, init);
-  if (!res.ok) throw new Error(`POST ${path} failed: ${res.status}`);
-  return res.json();
 }
 
 export async function apiPostForm(path, formData) {
-  const res = await fetch(`${API_BASE}${path}`, withAuth({
+  // Let the browser set Content-Type (multipart/form-data boundary)
+  return doFetch(path, {
     method: "POST",
     body: formData,
-  }));
-  if (!res.ok) throw new Error(`POST ${path} failed: ${res.status}`);
-  return res.json();
+  });
 }
-
-/** NEW: generic fetch used as default export */
-export async function apiFetch(path, init = {}) {
-  const res = await fetch(`${API_BASE}${path}`, withAuth(init));
-  if (!res.ok) throw new Error(`${init.method || "GET"} ${path} failed: ${res.status}`);
-  // handle 204
-  return res.status === 204 ? null : res.json();
-}
-
-export default apiFetch; // now it exists
