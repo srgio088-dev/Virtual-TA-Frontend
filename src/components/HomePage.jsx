@@ -100,7 +100,7 @@ const styles = {
   },
 
   header: {
-    marginBottom: "15px",
+    marginBottom: "0px",
   },
 
   subtitle: {
@@ -143,6 +143,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
