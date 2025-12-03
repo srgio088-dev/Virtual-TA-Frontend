@@ -2,7 +2,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; width: 100%; background: #f6f7fb; }
   .layout { min-height: 100vh; alignItems: center; justifyContent: center; display: grid; grid-template-rows: auto 1fr; }
-  .header { background: #000000; color: #ffe96f; padding: 0.75rem 1rem; }
+  .header { background: #000000; color: white; padding: 0.75rem 1rem; }
   .nav { display: flex; gap: 1rem; } 
   .nav a { color: white; text-decoration: none; }
   .nav a:hover { text-decoration: underline; }
