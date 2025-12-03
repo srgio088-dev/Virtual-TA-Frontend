@@ -1,22 +1,26 @@
 // src/api/client.js
+
 export const API_BASE =
   import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
 
 // Get the current Netlify Identity user's email (if logged in)
 function getAuthHeaders() {
-  let email = "";
-
   try {
     const ni = window.netlifyIdentity;
     const user = ni && ni.currentUser();
+
     if (user && user.email) {
-      email = user.email;
+      const email = user.email;
+      console.log("[Virtual TA] Sending X-User-Email:", email);
+      return { "X-User-Email": email };
+    } else {
+      console.log("[Virtual TA] No Netlify Identity user, not sending header");
     }
   } catch (e) {
-    // ignore – safest to just not send the header
+    console.warn("[Virtual TA] getAuthHeaders error:", e);
   }
 
-  return email ? { "X-User-Email": email } : {};
+  return {};
 }
 
 export async function apiGet(path) {
@@ -50,7 +54,7 @@ export async function apiPostForm(path, formData) {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
     headers: {
-      // don’t set Content-Type here; the browser will add the multipart boundary
+      // browser sets multipart boundary automatically
       ...getAuthHeaders(),
     },
     body: formData,
