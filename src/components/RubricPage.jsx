@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { apiGet } from "../api/client.js";
 
 export default function RubricPage() {
-  const { id } = useParams(); // assignment id from URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [assignmentName, setAssignmentName] = useState("—");
@@ -26,12 +26,10 @@ export default function RubricPage() {
   useEffect(() => {
     (async () => {
       try {
-        // Try the rubric endpoint first
         const r = await apiGet(`/api/assignments/${id}/rubric`);
         setRubric(r.rubric || "No rubric provided.");
         setAssignmentName(r.name || "—");
       } catch {
-        // Fallback: fetch assignment and read `.rubric`
         try {
           const a = await apiGet(`/api/assignments/${id}`);
           setRubric(a.rubric || "No rubric provided.");
@@ -45,37 +43,43 @@ export default function RubricPage() {
     })();
   }, [id]);
 
-  if (loading)
+  if (loading) {
     return (
       <div className="container">
         <p>Loading…</p>
       </div>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <div className="container">
         <p className="error">{error}</p>
       </div>
     );
+  }
 
   return (
     <div className="container">
       <h1>Rubric for: {assignmentName}</h1>
-        
-        <div className="p-3 border rounded bg-white whitespace-pre-wrap">
-          {rubric}
-        </div>
+
+      {/* This is what will print */}
+      <div
+        id="print-area"
+        className="p-3 border rounded bg-white whitespace-pre-wrap"
+      >
+        {rubric}
       </div>
 
       {/* Button row */}
-      <div className="button-row" 
+      <div
+        className="button-row"
         style={{
           display: "flex",
           gap: "12px",
           marginTop: "12px",
         }}
-        >
+      >
         <button
           type="button"
           className="btn"
@@ -85,23 +89,16 @@ export default function RubricPage() {
           Back to Submissions
         </button>
 
-        {/*<button 
-          type="button" 
-          className="btn" 
-          style={{ flex: 1 }} 
-          onClick={() => window.print()}
-        >
-          Print
-        </button>*/}
         <button
           type="button"
           className="btn"
           style={{ flex: 1 }}
           onClick={() => {
-            const printContent = '
+            const printContent = `
               <h1><strong>${assignmentName}</strong></h1>
-                ${document.getElementById("print-area").innerHTML}
-            ';
+              ${document.getElementById("print-area").innerHTML}
+            `;
+
             const w = window.open("", "_blank");
             w.document.write(`
               <html>
