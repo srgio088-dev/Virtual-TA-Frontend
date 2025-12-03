@@ -7,14 +7,14 @@ export default function Home() {
 
   return (
     <div style={styles.outer}>
-      {/* Left side image */}
+      {/* Left side image 
       <img
         src="/images/yosef.png"
         alt="Left decoration"
         style={styles.sideImageLeft}
       />
 
-      {/* MAIN CONTENT */}
+       MAIN CONTENT */}
       <div style={styles.container}>
         {/* Title and Logo Side by Side */}
         <div style={styles.topHeader}>
@@ -67,12 +67,12 @@ export default function Home() {
         </footer>
       </div>
 
-      {/* Right side image */}
+      {/* Right side image
       <img
         src="/images/appstate_students.webp"
         alt="Right decoration"
         style={styles.sideImageRight}
-      />
+      /> */}
     </div>
   );
 }
@@ -181,6 +181,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
