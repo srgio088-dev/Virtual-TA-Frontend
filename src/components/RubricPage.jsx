@@ -126,7 +126,7 @@ export default function RubricPage() {
             w.close();
           }}
         >
-          Print
+          Print Rubric
         </button>
 
         <button
@@ -142,7 +142,7 @@ export default function RubricPage() {
             )
           }
         >
-          Download
+          Download Rubric
         </button>
       </div>
     </div>
