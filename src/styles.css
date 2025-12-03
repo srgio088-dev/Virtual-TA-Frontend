@@ -40,7 +40,6 @@ button:hover { filter: brightness(0.9); }
 
 .assignment-main {
   display: flex;
-  alignItems: "center";
   flex-direction: column;
 }
 
