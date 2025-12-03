@@ -87,6 +87,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+    margin: "0 auto",
     alignItems: "center",
     width: "60%",
     minHeight: "90vh",
@@ -164,6 +165,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
