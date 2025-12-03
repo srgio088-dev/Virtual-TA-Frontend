@@ -9,7 +9,7 @@ export default function Home() {
     <div style={styles.outer}>
       {/* Left side image */}
       <img
-        src="/images/appstate_students.webp"
+        src="/images/yosef.png"
         alt="Left decoration"
         style={styles.sideImageLeft}
       />
@@ -181,5 +181,6 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
