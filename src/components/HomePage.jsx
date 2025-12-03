@@ -89,7 +89,7 @@ const styles = {
     justifyContent: "space-between",
     margin: "0 auto",
     alignItems: "center",
-    width: "60%",
+    width: "80%",
     minHeight: "90vh",
     textAlign: "center",
     padding: "20px",
@@ -165,6 +165,7 @@ const styles = {
     color: "#555",
   },
 };
+
 
 
 
