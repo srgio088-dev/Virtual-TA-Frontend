@@ -63,12 +63,7 @@ export default function RubricPage() {
     <div className="container">
       <h1>Rubric for: {assignmentName}</h1>
 
-      <div className="mb-3 text-sm">
-        <strong>Assignment:</strong> {assignmentName}
-      </div>
-
       <div id="print-area">
-        <h1>{assignmentName}</h1>
         <div className="p-3 border rounded bg-white whitespace-pre-wrap">
           {rubric}
         </div>
