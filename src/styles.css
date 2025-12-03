@@ -24,7 +24,7 @@ button:hover { filter: brightness(0.9); }
 .dropzone {
   border: 2px dashed #bbb;
   border-radius: 10px;
-  padding: 16px;
+  padding: 10px;
   cursor: pointer;
   text-align: center;
 }
@@ -40,6 +40,7 @@ button:hover { filter: brightness(0.9); }
 
 .assignment-main {
   display: flex;
+  alignItems: "center";
   flex-direction: column;
 }
 
