@@ -105,7 +105,6 @@ export default function AssignmentSubmissions() {
   const subs = assignment.submissions || [];
 
   return (
-    // widen THIS page's content area
     <div
       className="container"
       style={{
@@ -150,7 +149,7 @@ export default function AssignmentSubmissions() {
       ) : (
         <ul className="list" style={{ listStyle: "none", padding: 0 }}>
           {subs.map((s) => {
-            // safe student display:
+            // 👇 this is the important part
             const studentDisplay = (s.student_name || "").trim();
 
             return (
@@ -193,3 +192,4 @@ export default function AssignmentSubmissions() {
     </div>
   );
 }
+
