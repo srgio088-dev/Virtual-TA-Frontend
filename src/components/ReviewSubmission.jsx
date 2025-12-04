@@ -46,13 +46,14 @@ export default function ReviewSubmission() {
 
   // New simpler resolver that trusts the database
   function resolveNames(sub) {
-    const assignmentDisplay = assignmentName || "Unknown Assignment";
+  const assignmentDisplay = assignmentName || "Unknown Assignment";
 
-    const rawStudent = (sub?.student_name || "").trim();
-    const studentDisplay = rawStudent || "Unknown Student";
+  const rawStudent = (sub?.student_name ?? "").trim();
+  const studentDisplay = rawStudent; // no automatic "Unknown"
 
-    return { assignmentDisplay, studentDisplay };
-  }
+  return { assignmentDisplay, studentDisplay };
+}
+
 
   function downloadFeedback() {
     if (!submission) return;
