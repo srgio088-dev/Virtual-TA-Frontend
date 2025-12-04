@@ -161,7 +161,10 @@ export default function AssignmentSubmissions() {
               }}
             >
               <div>
-                <strong>{s.student_name || "Unknown"}</strong>
+                const displayName = (s.student_name || "").trim();
+                ...
+                <strong>{displayName}</strong>
+
                 <div className="muted">
                   AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final:{" "}
                   {s.final_grade || "—"}
