@@ -5,20 +5,20 @@ import { apiGet, apiPostJSON } from "../api/client";
 export default function ReviewSubmission() {
   const { id } = useParams(); // submission id
   const navigate = useNavigate();
+
   const [submission, setSubmission] = useState(null);
   const [finalGrade, setFinalGrade] = useState("");
   const [error, setError] = useState("");
   const [assignmentName, setAssignmentName] = useState("");
 
   useEffect(() => {
-    (async () => {
+    async function load() {
       try {
         const data = await apiGet(`/api/submissions/${id}`);
         console.log("🔍 /api/submissions/:id response:", data);
         setSubmission(data);
         setFinalGrade(data.final_grade ?? "");
 
-        // Load the assignment name from the backend instead of guessing
         if (data.assignment_id) {
           try {
             const a = await apiGet(`/api/assignments/${data.assignment_id}`);
@@ -28,9 +28,12 @@ export default function ReviewSubmission() {
           }
         }
       } catch (e) {
+        console.error(e);
         setError(e.message || "Failed to load submission.");
       }
-    })();
+    }
+
+    load();
   }, [id]);
 
   async function saveFinal(e) {
@@ -44,21 +47,12 @@ export default function ReviewSubmission() {
     }
   }
 
-  // New simpler resolver that trusts the database
-  function resolveNames(sub) {
-  const assignmentDisplay = assignmentName || "Unknown Assignment";
-
-  const rawStudent = (sub?.student_name ?? "").trim();
-  const studentDisplay = rawStudent; // no automatic "Unknown"
-
-  return { assignmentDisplay, studentDisplay };
-}
-
-
   function downloadFeedback() {
     if (!submission) return;
 
-    const { assignmentDisplay, studentDisplay } = resolveNames(submission);
+    const assignmentDisplay = assignmentName || "Unknown Assignment";
+    const studentDisplay = (submission.student_name || "").trim();
+
     const suggested = submission.ai_grade ?? "N/A";
     const final = finalGrade || submission.final_grade || "N/A";
     const feedback = submission.ai_feedback || "";
@@ -78,7 +72,7 @@ export default function ReviewSubmission() {
       type: "text/plain;charset=utf-8",
     });
 
-    const rawName = `${assignmentDisplay}_${studentDisplay}`;
+    const rawName = `${assignmentDisplay}_${studentDisplay || "student"}`;
     const safeName = rawName.replace(/[^a-z0-9_-]+/gi, "_").toLowerCase();
 
     const url = URL.createObjectURL(blob);
@@ -98,6 +92,7 @@ export default function ReviewSubmission() {
       </div>
     );
   }
+
   if (!submission) {
     return (
       <div className="container">
@@ -106,7 +101,8 @@ export default function ReviewSubmission() {
     );
   }
 
-  const { assignmentDisplay, studentDisplay } = resolveNames(submission);
+  const assignmentDisplay = assignmentName || "Unknown Assignment";
+  const studentDisplay = (submission.student_name || "").trim();
 
   return (
     <div className="container">
@@ -169,4 +165,3 @@ export default function ReviewSubmission() {
     </div>
   );
 }
-
