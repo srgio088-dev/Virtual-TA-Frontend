@@ -149,45 +149,45 @@ export default function AssignmentSubmissions() {
         <p>No submissions yet.</p>
       ) : (
         <ul className="list" style={{ listStyle: "none", padding: 0 }}>
-          {subs.map((s) => (
-            <li
-              key={s.id}
-              className="card"
-              // make EACH CARD wider but keep the same vertical stack + single border
-              style={{
-                width: "100%",
-                //maxWidth: "1200px", // adjust this number to taste
-                margin: "0 auto 12px",
-              }}
-            >
-              <div>
-                const displayName = (s.student_name || "").trim();
-                ...
-                <strong>{displayName}</strong>
+          {subs.map((s) => {
+            // safe student display:
+            const studentDisplay = (s.student_name || "").trim();
 
-                <div className="muted">
-                  AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final:{" "}
-                  {s.final_grade || "—"}
+            return (
+              <li
+                key={s.id}
+                className="card"
+                style={{
+                  width: "100%",
+                  margin: "0 auto 12px",
+                }}
+              >
+                <div>
+                  <strong>{studentDisplay}</strong>
+                  <div className="muted">
+                    AI: {s.ai_grade || "—"} &nbsp; | &nbsp; Final:{" "}
+                    {s.final_grade || "—"}
+                  </div>
                 </div>
-              </div>
 
-              <div className="row" style={{ gap: 12 }}>
-                <button
-                  className="btn"
-                  onClick={() => navigate(`/review/${s.id}`)}
-                >
-                  Open Review
-                </button>
+                <div className="row" style={{ gap: 12 }}>
+                  <button
+                    className="btn"
+                    onClick={() => navigate(`/review/${s.id}`)}
+                  >
+                    Open Review
+                  </button>
 
-                <button
-                  className="btn"
-                  onClick={() => onDeleteSubmission(s.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
+                  <button
+                    className="btn"
+                    onClick={() => onDeleteSubmission(s.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
