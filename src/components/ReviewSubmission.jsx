@@ -8,6 +8,7 @@ export default function ReviewSubmission() {
   const [submission, setSubmission] = useState(null);
   const [finalGrade, setFinalGrade] = useState("");
   const [error, setError] = useState("");
+  const [assignmentName, setAssignmentName] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -16,6 +17,16 @@ export default function ReviewSubmission() {
         console.log("🔍 /api/submissions/:id response:", data);
         setSubmission(data);
         setFinalGrade(data.final_grade ?? "");
+
+        // Load the assignment name from the backend instead of guessing
+        if (data.assignment_id) {
+          try {
+            const a = await apiGet(`/api/assignments/${data.assignment_id}`);
+            setAssignmentName(a.name || "");
+          } catch (err) {
+            console.error("Failed to load assignment info", err);
+          }
+        }
       } catch (e) {
         setError(e.message || "Failed to load submission.");
       }
@@ -33,49 +44,14 @@ export default function ReviewSubmission() {
     }
   }
 
-  /*
-    EXAMPLE FILENAME: DiscussionPost1_JohnSmith.docx
-
-    LEFT  of "_" = assignment
-    RIGHT of "_" = student
-
-    If ANYTHING fails -> N/A
-  */
-  
+  // New simpler resolver that trusts the database
   function resolveNames(sub) {
-    try {
-      if (!sub || !sub.file_path) {
-        return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
-      }
+    const assignmentDisplay = assignmentName || "Unknown Assignment";
 
-  // Get just the filename
-      const filename = sub.file_path.split(/[\\/]/).pop();
+    const rawStudent = (sub?.student_name || "").trim();
+    const studentDisplay = rawStudent || "Unknown Student";
 
-      // Remove the extension
-      const withoutExt = filename.replace(/\.[^/.]+$/, "");
-
-      // Find underscore
-      const underscoreIndex = withoutExt.indexOf("_");
-
-      if (underscoreIndex === -1) {
-        return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
-      }
-
-      const assignmentRaw = withoutExt.slice(0, underscoreIndex);
-      const studentRaw = withoutExt.slice(underscoreIndex + 1);
-
-      if (!assignmentRaw || !studentRaw) {
-        return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
-      }
-
-      return {
-        assignmentDisplay: assignmentRaw,
-        studentDisplay: studentRaw,
-      };
-    } catch (err) {
-      console.error("Name parsing failed:", err);
-      return { assignmentDisplay: "N/A", studentDisplay: "N/A" };
-    }
+    return { assignmentDisplay, studentDisplay };
   }
 
   function downloadFeedback() {
@@ -192,3 +168,4 @@ export default function ReviewSubmission() {
     </div>
   );
 }
+
