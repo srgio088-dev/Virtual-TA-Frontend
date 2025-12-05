@@ -129,6 +129,13 @@ export default function AssignmentSubmissions() {
         >
           View Rubric
         </button>
+        <button 
+          type="button" 
+          className="btn" 
+          style={{ flex: 1 }}
+          onClick={downloadCSV}>
+          Download All AI Feedback (CSV)
+        </button>
         <button
           type="button"
           className="btn"
@@ -136,13 +143,6 @@ export default function AssignmentSubmissions() {
           onClick={() => navigate(`/assignments`)}
         >
           Back to Assignment List
-        </button>
-        <button 
-          type="button" 
-          className="btn" 
-          style={{ flex: 1 }}
-          onClick={downloadCSV}>
-          Download All AI Feedback (CSV)
         </button>
       </div>
 
