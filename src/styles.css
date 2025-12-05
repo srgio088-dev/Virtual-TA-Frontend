@@ -20,7 +20,7 @@ body::before {
 
   z-index: -1;
 }
-  .layout { min-height: 100vh; alignItems: center; justifyContent: center; display: flex; grid-template-rows: auto 1fr; }
+  .layout { min-height: 100vh; alignItems: center; justifyContent: center; display: grid; grid-template-rows: auto 1fr; }
   .header { margin: 0; background: #000000; color: white; padding: 0rem 0rem; }
   .nav { display: flex; gap: 1rem; } 
   .nav a { color: white; text-decoration: none; }
