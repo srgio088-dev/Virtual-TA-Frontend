@@ -33,7 +33,7 @@ export default function AssignmentList() {
   }, []);
 
   async function onDelete(id) {
-    if (!confirm("Delete this assignment?")) return;
+    if (!confirm("Are you sure you want to delete this assignment?")) return;
     await fetch(
       `${
         import.meta.env.VITE_API_URL || "http://127.0.0.1:5000"
