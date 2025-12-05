@@ -194,7 +194,7 @@ export default function EditAssignment() {
             fontWeight: "bold",
           }}
         >
-          Rubric
+          Edit Rubric
         </h2>
         <textarea
           rows={16}
