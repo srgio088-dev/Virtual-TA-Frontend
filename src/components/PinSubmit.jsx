@@ -68,7 +68,7 @@ export default function PinSubmit() {
       return;
     }
 
-    // 🔍 Parse filename: "<anything> - <anything> - <Student Name>.ext"
+    {/*// 🔍 Parse filename: "<anything> - <anything> - <Student Name>.ext"
     const fullName = file.name || "";
     const withoutExt = fullName.replace(/\.[^/.]+$/, ""); // strip extension
     const parts = withoutExt.split(" - ");
@@ -80,8 +80,27 @@ export default function PinSubmit() {
       // last part = student name, rest = submission/assignment name
       studentName = parts[parts.length - 1].trim();
       submissionName = parts.slice(0, parts.length - 1).join(" - ").trim();
-    }
+    }*/}
 
+    // 🔍 Parse filename: "Assignment_StudentName.ext"
+    const fullName = file.name || "";
+    
+    // remove extension
+    const withoutExt = fullName.replace(/\.[^/.]+$/, "");
+    
+    // split on underscore
+    const parts = withoutExt.split("_");
+    
+    // default values
+    let submissionName = withoutExt;
+    let studentName = "Unknown";
+    
+    // expected: ["Assignment", "StudentName"]
+    if (parts.length >= 2) {
+      submissionName = parts[0].trim();
+      studentName = parts[1].trim();
+    }
+    
     const formData = new FormData();
     // backend expects at least: student_name, assignment_id, file
     formData.append("student_name", studentName);
