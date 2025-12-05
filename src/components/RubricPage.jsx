@@ -80,15 +80,23 @@ export default function RubricPage() {
           marginTop: "12px",
         }}
       >
+
         <button
           type="button"
           className="btn"
           style={{ flex: 1 }}
-          onClick={() => navigate(`/assignment/${id}`)}
+          onClick={() =>
+            downloadText(
+              `rubric-${(assignmentName || "assignment")
+                .replace(/\s+/g, "_")
+                .toLowerCase()}.txt`,
+              rubric || ""
+            )
+          }
         >
-          Back to Submissions
+          Download Rubric
         </button>
-
+        
         <button
           type="button"
           className="btn"
@@ -122,22 +130,16 @@ export default function RubricPage() {
         >
           Print Rubric
         </button>
-
+        
         <button
           type="button"
           className="btn"
           style={{ flex: 1 }}
-          onClick={() =>
-            downloadText(
-              `rubric-${(assignmentName || "assignment")
-                .replace(/\s+/g, "_")
-                .toLowerCase()}.txt`,
-              rubric || ""
-            )
-          }
+          onClick={() => navigate(`/assignment/${id}`)}
         >
-          Download Rubric
+          Back to Submissions
         </button>
+        
       </div>
     </div>
   );
