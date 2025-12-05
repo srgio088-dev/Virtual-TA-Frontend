@@ -76,11 +76,13 @@ button:hover { filter: brightness(0.9); }
   gap: 12px;
   width: 100%;                
   justify-content: space-between;
+  padding-bottom: .5rem;
 }
 
 .assignment-actions button {
   flex: 1;   
   text-align: center;
+  padding-bottom: .5rem;
 }
 
 .assignment-card:hover .assignment-actions {
