@@ -137,7 +137,11 @@ export default function AssignmentSubmissions() {
         >
           Back to Assignment List
         </button>
-        <button type="button" className="btn" onClick={downloadCSV}>
+        <button 
+          type="button" 
+          className="btn" 
+          style={{ flex: 1 }}
+          onClick={downloadCSV}>
           Download All AI Feedback (CSV)
         </button>
       </div>
