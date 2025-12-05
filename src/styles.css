@@ -3,7 +3,7 @@
 body { 
   margin: 0; 
   width: 100%; 
-  padding: 1rem;
+  padding: 0rem;
   background-image: url("/images/Linn_Cove.webp"); 
   background-size: cover;        /* Fill the screen */
   background-position: center;   /* Center the image */
